@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorEggGreen"
+        android:paddingRight="70dp"
+        android:paddingLeft="70dp"
+        tools:context=".RegisterActivity">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+        <TextView
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:textColor="@color/colorBlack"
+                android:layout_height="wrap_content"
+                android:text="MENDIAM"
+                android:textStyle="bold"
+                android:layout_margin="8dp"
+                android:textSize="35sp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/colorBlack"
+                android:layout_marginBottom="40dp"
+                android:gravity="center"
+                android:text="Membaca adalah jendela ilmu. Bisa diem ngga tod"/>
+
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:textAllCaps="false"
+                android:text="Sign Up with Facebook"
+                android:drawableLeft="@drawable/ic_notifications_black_24dp"
+                android:background="@drawable/rectangle_corner"/>
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign Up with Google"
+                android:padding="8dp"
+                android:textAllCaps="false"
+                android:layout_margin="8dp"
+                android:drawableLeft="@drawable/ic_notifications_black_24dp"
+                android:background="@drawable/rectangle_corner"/>
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign Up with Email"
+                android:textAllCaps="false"
+                android:padding="8dp"
+                android:layout_margin="8dp"
+                android:drawableLeft="@drawable/ic_notifications_black_24dp"
+                android:background="@drawable/rectangle_corner"/>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:gravity="center">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+
+                      android:text="Sudah punya akun ? "/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textColor="@color/colorGreen"
+                      android:text=" Sign In"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
