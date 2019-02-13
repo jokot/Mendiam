@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.example.jokot.mendiam">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.example.jokot.mendiam">
 
     <application
             android:allowBackup="true"
@@ -10,7 +11,7 @@
             android:supportsRtl="true"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".MainActivity"
+                android:name=".RegisterActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,21 +20,29 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
                 android:name=".FullscreenActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:label="@string/title_activity_fullscreen"
                 android:theme="@style/FullscreenTheme">
         </activity>
-        <activity android:name=".LoginActivity"
-                  android:theme="@style/Theme.Design.NoActionBar">
-
+        <activity
+                android:name=".LoginActivity"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".RegisterActivity"
-                  android:theme="@style/Theme.Design.NoActionBar">
+        <activity
+                android:name=".MainActivity"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".ProfileActivity">
+        <activity
+                android:name=".ProfileActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".LoginEmailActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".SearchActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

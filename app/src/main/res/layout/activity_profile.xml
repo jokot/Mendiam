@@ -1,10 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@color/colorDarkWhite"
         tools:context=".ProfileActivity">
+    <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:elevation="0dp"
+            android:elevation="0dp"
+            android:background="@color/colorWhite">
 
-</android.support.constraint.ConstraintLayout>
+        <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:elevation="0dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/constrain_profile">
+
+                <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/iv_back"
+                        app:srcCompat="@drawable/ic_keyboard_backspace_black_24dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_margin="16dp"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
+                        android:layout_width="70dp" android:layout_height="70dp"
+                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp" app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+                        android:background="@color/colorBlack"
+                        android:layout_marginTop="32dp" app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/iv_profile"/>
+
+                <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Joko Triyanto" app:layout_constraintTop_toBottomOf="@+id/iv_profile"
+                        app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+                        android:textSize="25sp"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" android:id="@+id/tv_profile"/>
+
+                <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Trying to be Android Developer"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_profile"
+                        app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textSize="15sp"
+                        android:id="@+id/tv_deskripsi"/>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_deskripsi">
+                    <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:id="@+id/v_profile_horizontal"
+                            android:background="@color/colorGrey"/>
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:padding="8dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                            <TextView
+                                    android:id="@+id/tv_jml_following"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="8dp"
+                                    android:textStyle="bold"
+                                    android:text="1"/>
+                            <TextView
+                                    android:id="@+id/tv_following"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="following"/>
+                        </LinearLayout>
+                        <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/colorGrey"
+                        android:id="@+id/v_profile_vertical"/>
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:padding="8dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                            <TextView
+                                    android:id="@+id/tv_jml_follower"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="8dp"
+                                    android:textStyle="bold"
+                                    android:text="1"/>
+                            <TextView
+                                    android:id="@+id/tv_follower"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Follower"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    app:layout_collapseMode="pin"
+                    android:id="@+id/toolbar_profile"
+                    android:elevation="0dp"
+                    android:background="@color/colorWhite"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    android:layout_height="?android:actionBarSize"
+                    android:layout_gravity="center_vertical">
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                    <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/iv_toolbar_back"
+                            app:srcCompat="@drawable/ic_keyboard_backspace_black_24dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginEnd="16dp"/>
+
+                    <TextView
+                            android:id="@+id/tv_toolbar_profile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorBlack"
+                            android:text="Jokot"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorDarkWhite"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <android.support.design.widget.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite">
+
+                <android.support.design.widget.TabLayout
+                        android:id="@+id/tab_layout_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <android.support.design.widget.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:text="stories"/>
+
+                    <android.support.design.widget.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="claps"/>
+
+                </android.support.design.widget.TabLayout>
+
+            </android.support.design.widget.AppBarLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" android:orientation="vertical">
+
+                <android.support.v4.view.ViewPager
+                        android:id="@+id/container_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp" android:layout_weight="1">
+
+                </android.support.v4.view.ViewPager>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

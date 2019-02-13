@@ -9,9 +9,11 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
+        android:clickable="true"
+        android:id="@+id/ll_nav_bar"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:orientation="vertical"
-        android:gravity="bottom">
+        android:gravity="bottom" android:focusable="true">
 
     <ImageView
             android:layout_width="wrap_content"

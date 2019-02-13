@@ -2,35 +2,33 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var adapterMain : MainAdapter
-
     companion object {
-
+        val MY_PREF = "my pref"
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        initRecyclerView()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.frame_fragment, HomeFragment())
+            .commit()
+
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -38,13 +36,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
-    }
 
-    fun initRecyclerView(){
-        adapterMain = MainAdapter()
+        val navigationView : NavigationView = findViewById(R.id.nav_view)
+        val header = navigationView.getHeaderView(0)
 
-        rvMain.adapter = adapterMain
-        rvMain.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        val headerView = header.findViewById<LinearLayout>(R.id.ll_nav_bar)
+
+        headerView.setOnClickListener {
+            intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        iv_search.setOnClickListener {
+            intent = Intent(this,SearchActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     override fun onBackPressed() {
@@ -71,25 +79,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        }
 //    }
 
+    private fun changeFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frame_fragment, fragment)
+            .commit()
+    }
+
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
+
             R.id.nav_home -> {
-
-
-                intent = Intent(this,MainActivity::class.java)
-                startActivity(intent)
-                finish()
-
+                changeFragment(HomeFragment())
+                tb_label.text = "Home"
             }
             R.id.nav_bookmark -> {
-                intent = Intent(this,RegisterActivity::class.java)
-                startActivity(intent)
+                changeFragment(BookmarkFragment())
+                tb_label.text = "Bookmark"
 
             }
             R.id.nav_interest -> {
-                intent = Intent(this,LoginActivity::class.java)
-                startActivity(intent)
+                changeFragment(InterestFragment())
+                tb_label.text = "Interest"
 
             }
             R.id.nav_new_story -> {
@@ -101,4 +114,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+
 }
