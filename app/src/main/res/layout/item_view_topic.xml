@@ -22,6 +22,7 @@
             android:layout_marginStart="16sp"
             android:text="Books"
             android:textSize="16sp"
+            android:id="@+id/tv_topic"
             android:textColor="@color/colorBlack"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -29,9 +30,10 @@
     <Button
             android:layout_width="85dp"
             android:layout_height="30dp"
-            android:background="@drawable/rectangle_btn_following"
-            android:textColor="@color/colorWhite"
+            android:background="@drawable/rectangle_btn_follow"
+            android:textColor="@color/colorGreen"
             android:textAllCaps="false"
-            android:text="Following"/>
+            android:id="@+id/btn_follow"
+            android:text="Follow"/>
 
 </LinearLayout>

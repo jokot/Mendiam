@@ -38,7 +38,9 @@ class BookmarkFragment : Fragment() {
     }
 
     private fun initRecycle(){
-        bookmarkAdapter = MainAdapter()
+        bookmarkAdapter = MainAdapter{
+
+        }
 
         rv_bookmark.adapter = bookmarkAdapter
         rv_bookmark.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)

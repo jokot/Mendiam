@@ -1,6 +1,7 @@
 package com.example.jokot.mendiam
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -9,19 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_people.*
 
-
-//// TODO: Rename parameter arguments, choose names that match
-//// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
-//
-///**
-// * A simple [Fragment] subclass.
-// *
-// */
 class PeopleFragment : Fragment() {
 
-    lateinit var peopleAdapter: PeopleAdapter
+    private lateinit var peopleAdapter: PeopleAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +28,10 @@ class PeopleFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        peopleAdapter = PeopleAdapter()
+        peopleAdapter = PeopleAdapter {
+            val intent = Intent(context, ProfileActivity::class.java)
+            startActivity(intent)
+        }
 
         rv_people.adapter = peopleAdapter
         rv_people.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

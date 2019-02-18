@@ -1,6 +1,7 @@
 package com.example.jokot.mendiam
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -36,7 +37,10 @@ class TopicFragment : Fragment() {
     }
 
     private fun initRecyclerView(){
-        topicAdapter = TopicAdapter()
+        topicAdapter = TopicAdapter(){
+            val intent = Intent(context,ReadActivity::class.java)
+            startActivity(intent)
+        }
 
         rv_topic.adapter = topicAdapter
         rv_topic.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)

@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_new_story -> {
-                intent = Intent(this,FullscreenActivity::class.java)
+                intent = Intent(this,NewStoryActivity::class.java)
                 startActivity(intent)
             }
         }

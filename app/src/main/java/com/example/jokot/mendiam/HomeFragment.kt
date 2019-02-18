@@ -1,5 +1,6 @@
 package com.example.jokot.mendiam
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -54,7 +55,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecycler(){
-        homeAdapter = MainAdapter()
+        homeAdapter = MainAdapter{
+            val intent = Intent(context,ReadActivity::class.java)
+            startActivity(intent)
+        }
 
         rvMain.adapter = homeAdapter
         rvMain.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)

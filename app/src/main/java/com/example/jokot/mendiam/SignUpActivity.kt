@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.activity_sign_up.*
 
-class RegisterActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        setContentView(R.layout.activity_sign_up)
         val editor = getSharedPreferences(MainActivity.MY_PREF, Context.MODE_PRIVATE).edit()
         val pref = getSharedPreferences(MainActivity.MY_PREF, Context.MODE_PRIVATE)
         val register = pref.getInt("register",0)
@@ -30,7 +30,12 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         tv_sign_in.setOnClickListener {
-            intent = Intent(this,LoginActivity::class.java)
+            intent = Intent(this,SignInActivity::class.java)
+            startActivity(intent)
+        }
+
+        btn_up_email.setOnClickListener {
+            intent = Intent(this, SignUpEmailActivity::class.java)
             startActivity(intent)
         }
 

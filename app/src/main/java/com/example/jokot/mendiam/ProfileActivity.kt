@@ -37,6 +37,11 @@ class ProfileActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
             finish()
         }
 
+        btn_edit.setOnClickListener {
+            intent = Intent(this,EditProfileActivity::class.java)
+            startActivity(intent)
+        }
+
         app_bar_profile.addOnOffsetChangedListener(this)
     }
 
