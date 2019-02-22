@@ -47,6 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sign In with Google"
                 android:padding="8dp"
+                android:id="@+id/btn_in_google"
                 android:textAllCaps="false"
                 android:textColor="@color/colorBlack"
                 android:layout_margin="8dp"

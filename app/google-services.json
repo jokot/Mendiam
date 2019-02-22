@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "278088700011",
+    "firebase_url": "https://mendiam-a3be7.firebaseio.com",
+    "project_id": "mendiam-a3be7",
+    "storage_bucket": "mendiam-a3be7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278088700011:android:a62168884bba95ab",
+        "android_client_info": {
+          "package_name": "com.example.jokot.mendiam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278088700011-tl78er6990ibv40430k7oh98jbdu8lo1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jokot.mendiam",
+            "certificate_hash": "88b31483d6836c26b0c31d3bad802d7e5f282ff7"
+          }
+        },
+        {
+          "client_id": "278088700011-4vt1u18h545pmdv77tek7vemtt13e1vh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCET8tJmeWI8w4FSSi-jltwRp9tu-B5BKU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278088700011-eegpu3gtn795f67cbd2mvs0i0ev28s53.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

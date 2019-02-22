@@ -46,7 +46,7 @@
                         android:id="@+id/iv_profile"/>
 
                 <Button android:layout_width="80dp" android:layout_height="35dp"
-                        android:text="Edit" app:layout_constraintEnd_toEndOf="parent"
+                        android:text="Keluar" app:layout_constraintEnd_toEndOf="parent"
                         android:textAllCaps="false"
                         android:layout_margin="16dp"
                         android:id="@+id/btn_edit"
@@ -54,7 +54,8 @@
                         app:layout_constraintTop_toTopOf="parent"/>
                 <TextView
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Joko Triyanto" app:layout_constraintTop_toBottomOf="@+id/iv_profile"
+                        android:text="Joko Triyanto"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_profile"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="8dp" android:layout_marginRight="8dp"

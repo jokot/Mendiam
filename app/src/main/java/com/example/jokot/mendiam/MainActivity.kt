@@ -9,15 +9,15 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.LinearLayout
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    companion object {
-        val MY_PREF = "my pref"
-    }
+//    private var mutableList = mutableListOf<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .add(R.id.frame_fragment, HomeFragment())
             .commit()
 
+        loadData()
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -41,6 +42,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val header = navigationView.getHeaderView(0)
 
         val headerView = header.findViewById<LinearLayout>(R.id.ll_nav_bar)
+
+//        val headerText = header.findViewById<TextView>(R.id.tv_header_main)
 
         headerView.setOnClickListener {
             intent = Intent(this, ProfileActivity::class.java)
@@ -61,6 +64,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             super.onBackPressed()
         }
+    }
+
+    private fun loadData(){
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -8,19 +8,27 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.View
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_profile.*
 
 class ProfileActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
 
     lateinit var mSectionPageAdapter: SectionPageAdapter
 
+    private var firebaseAuth = FirebaseAuth.getInstance()
+
+    private var firebaseUser = firebaseAuth.currentUser
+    private var firebaseDatabase:DatabaseReference = FirebaseDatabase.getInstance().reference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
         mSectionPageAdapter = SectionPageAdapter(supportFragmentManager)
+
+        loadData()
 
         container_profile.adapter = mSectionPageAdapter
         container_profile.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab_layout_profile))
@@ -38,8 +46,11 @@ class ProfileActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
         }
 
         btn_edit.setOnClickListener {
-            intent = Intent(this,EditProfileActivity::class.java)
-            startActivity(intent)
+            firebaseAuth.signOut()
+            startActivity(Intent(this,SignUpActivity::class.java))
+            finish()
+//            intent = Intent(this,EditProfileActivity::class.java)
+//            startActivity(intent)
         }
 
         app_bar_profile.addOnOffsetChangedListener(this)
@@ -56,37 +67,33 @@ class ProfileActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListene
                 iv_toolbar_back.visibility = View.VISIBLE
                 toolbar_profile.visibility = View.VISIBLE
 
-//                tv_profile.visibility = View.GONE
-//                iv_back.visibility = View.GONE
-//                iv_profile.visibility = View.GONE
-//                iv_back.visibility = View.GONE
-//                tv_deskripsi.visibility = View.GONE
-//                tv_follower.visibility = View.GONE
-//                tv_jml_follower.visibility = View.GONE
-//                tv_jml_following.visibility = View.GONE
-//                tv_following.visibility = View.GONE
-//                v_profile_horizontal.visibility = View.GONE
-//                v_profile_vertical.visibility = View.GONE
             }
 
             in -170..0 ->{
-//                tv_profile.visibility = View.VISIBLE
-//                iv_back.visibility = View.VISIBLE
-//                iv_profile.visibility = View.VISIBLE
-//                iv_back.visibility = View.VISIBLE
-//                tv_deskripsi.visibility = View.VISIBLE
-//                tv_follower.visibility = View.VISIBLE
-//                tv_jml_follower.visibility = View.VISIBLE
-//                tv_jml_following.visibility = View.VISIBLE
-//                tv_following.visibility = View.VISIBLE
-//                v_profile_horizontal.visibility = View.VISIBLE
-//                v_profile_vertical.visibility = View.VISIBLE
 
                 toolbar_profile.visibility = View.GONE
                 tv_toolbar_profile.visibility = View.GONE
                 iv_toolbar_back.visibility = View.GONE
             }
         }
+    }
+
+    private fun loadData(){
+        tv_profile.text = firebaseAuth.currentUser?.displayName
+
+        firebaseDatabase.child("user").child(firebaseUser!!.uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val ds = dataSnapshot.children
+                    ds.mapNotNull {
+
+                    }
+                }
+            })
+
     }
 
     inner class SectionPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
