@@ -11,8 +11,9 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".BaseActivity">
+        </activity>
         <activity
                 android:name=".NewStoryActivity"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -38,7 +39,7 @@
         <activity
                 android:name=".ReadActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:label="@string/title_activity_fullscreen"
+                android:label="@string/title_activity_read"
                 android:theme="@style/FullscreenTheme">
         </activity>
         <activity

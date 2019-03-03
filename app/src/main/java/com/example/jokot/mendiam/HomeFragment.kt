@@ -7,6 +7,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.jokot.mendiam.model.Story
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -30,7 +35,7 @@ class HomeFragment : Fragment() {
 //    private var param2: String? = null
 //    private var listener: OnFragmentInteractionListener? = null
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
+    //    override fun onCreate(savedInstanceState: Bundle?) {
 ////        super.onCreate(savedInstanceState)
 ////        arguments?.let {
 ////            param1 = it.getString(ARG_PARAM1)
@@ -38,11 +43,20 @@ class HomeFragment : Fragment() {
 ////        }
 ////    }
 
-    lateinit var homeAdapter: MainAdapter
+    private lateinit var homeAdapter: MainAdapter
+    private var database = FirebaseDatabase.getInstance().reference
+    private var list: MutableList<Story> = mutableListOf()
+    private var temp: MutableList<Story> = mutableListOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initData()
         initRecycler()
+        sr_home.setOnRefreshListener {
+            rvMain.visibility = View.INVISIBLE
+            getStory()
+        }
+
     }
 
 
@@ -54,14 +68,55 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    private fun initRecycler(){
-        homeAdapter = MainAdapter{
-            val intent = Intent(context,ReadActivity::class.java)
+    private fun initData(){
+        pb_home.visibility = View.VISIBLE
+        getStory()
+    }
+
+    private fun initRecycler() {
+        homeAdapter = MainAdapter(list) {
+            val intent = Intent(context, ReadActivity::class.java)
+            intent.putExtra("sid", it.sid)
             startActivity(intent)
         }
 
         rvMain.adapter = homeAdapter
-        rvMain.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        rvMain.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    }
+
+    private fun getStory() {
+        database.child("story").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val ds = dataSnapshot.children
+                temp.clear()
+                ds.mapNotNull {
+                    val sid = it.child("sid").getValue(String::class.java)
+                    val uid = it.child("uid").getValue(String::class.java)
+                    val judul = it.child("judul").getValue(String::class.java)
+                    val deskripsi = it.child("deskripsi").getValue(String::class.java)
+                    val name = it.child("name").getValue(String::class.java)
+                    temp.add(
+                        Story(
+                            sid.toString(),
+                            uid.toString(),
+                            judul.toString(),
+                            deskripsi.toString(),
+                            name.toString()
+                        )
+                    )
+                }
+                pb_home.visibility = View.INVISIBLE
+                list.clear()
+                list.addAll(temp)
+                homeAdapter.notifyDataSetChanged()
+                sr_home.isRefreshing = false
+                rvMain.visibility = View.VISIBLE
+            }
+        })
     }
 
 //    // TODO: Rename method, update argument and hook method into UI event

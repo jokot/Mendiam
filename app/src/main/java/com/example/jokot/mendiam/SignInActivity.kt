@@ -2,10 +2,8 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -16,7 +14,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
-class SignInActivity : AppCompatActivity(), View.OnClickListener {
+class SignInActivity : BaseActivity(), View.OnClickListener {
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -50,7 +48,8 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         val id = v?.id
         when (id) {
-            R.id.btn_in_facebook -> { }
+            R.id.btn_in_facebook -> {
+            }
             R.id.btn_in_google -> signIn()
             R.id.btn_in_email -> {
                 startActivity(Intent(this, SignInEmailActivity::class.java))
@@ -67,14 +66,17 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
         super.onStart()
 
         val currentUser = firebaseAuth.currentUser
-        updateUI(currentUser)
+        if (currentUser != null) {
+            updateUI(currentUser, null)
+        }
     }
 
-    private fun updateUI(currentUser: FirebaseUser?) {
+    private fun updateUI(currentUser: FirebaseUser?, msg: String?) {
         if (currentUser != null) {
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
-        }else{
+        } else {
+            toast(this, msg)
         }
     }
 
@@ -85,30 +87,32 @@ class SignInActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == RC_SIGN_IN){
+        if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
                 firebaseSignIn(account!!)
-            }catch (e:ApiException){
-                Log.w(TAG,"Result Failed = ${e.statusCode}",e)
-                Toast.makeText(this,"Result Failed",Toast.LENGTH_LONG).show()
+            } catch (e: ApiException) {
+                Log.w(TAG, "Result Failed = ${e.statusCode}", e)
+                updateUI(null, "Gagal Masuk")
 
             }
         }
     }
 
     private fun firebaseSignIn(account: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(account?.idToken,null)
+        showProgressDialog()
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
-            if(task.isSuccessful){
-                val user = firebaseAuth.currentUser
-                updateUI(user)
-            }else{
-                Log.w(TAG,"Sign in Filed")
-                Toast.makeText(this,"Sign in Filed",Toast.LENGTH_LONG).show()
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    updateUI(user, null)
+                } else {
+                    Log.w(TAG, "Sign in Filed")
+                    updateUI(null, "Gagal Masuk, Coba lagi")
+                }
+                hideProgressDialog()
             }
-        }
     }
 }

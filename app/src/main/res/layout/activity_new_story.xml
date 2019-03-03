@@ -26,7 +26,7 @@
                         app:srcCompat="@drawable/ic_close_black_24dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:id="@+id/btn_back"
+                        android:id="@+id/iv_back"
                         app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <TextView
@@ -36,6 +36,7 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp"
                         android:textSize="20sp"
+                        android:id="@+id/tv_publish"
                         android:textColor="@color/colorGreen"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -51,13 +52,64 @@
         <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorWhite"
                 android:padding="16dp">
-            <EditText
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textSize="20sp"
-                    android:background="@color/colorBackground"
-                    android:id="@+id/et_new_story"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:hint="Judul . . ."
+                        android:background="@color/colorWhite"
+                        android:padding="8dp"
+                        android:textColor="@color/colorBlack"
+                        android:id="@+id/et_judul"
+                        android:layout_marginBottom="8dp"/>
+
+                <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/iv_image"
+                />
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:padding="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:id="@+id/ll_add_image"
+                        android:background="@drawable/rectangle_corner_15dp">
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/dashed_rectangle"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                        <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                app:srcCompat="@drawable/ic_image_grey_24dp"/>
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tambah Gambar"
+                                android:textSize="20sp"
+                                android:textColor="@color/colorGrey"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:id="@+id/et_story"
+                        android:hint="Cerita di sini . . . ."
+                        android:textColor="@color/colorBlack"
+                        android:background="@color/colorWhite"/>
+            </LinearLayout>
+
         </ScrollView>
 
     </LinearLayout>

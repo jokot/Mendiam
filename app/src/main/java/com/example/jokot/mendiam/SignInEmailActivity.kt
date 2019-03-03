@@ -2,12 +2,10 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_sign_in_email.*
 
-class SignInEmailActivity : AppCompatActivity() {
+class SignInEmailActivity : BaseActivity() {
     private var firebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +17,7 @@ class SignInEmailActivity : AppCompatActivity() {
             val password = et_password.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Isi data dengan Benar", Toast.LENGTH_LONG).show()
+                toast(this, "Isi Semua kolom !")
             } else {
                 signIn(email, password)
             }
@@ -27,15 +25,17 @@ class SignInEmailActivity : AppCompatActivity() {
     }
 
     private fun signIn(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email,password)
+        showProgressDialog()
+        firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if(task.isSuccessful){
+                if (task.isSuccessful) {
                     intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
                     finish()
-                }else{
-                    Toast.makeText(applicationContext,"Gagal sign in",Toast.LENGTH_LONG).show()
+                } else {
+                    toast(applicationContext, "Email atau Password Anda Salah")
                 }
-        }
+                hideProgressDialog()
+            }
     }
 }

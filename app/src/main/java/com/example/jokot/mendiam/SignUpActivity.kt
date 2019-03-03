@@ -2,19 +2,14 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import com.example.jokot.mendiam.model.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.SignInButton
-import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -22,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 
-class SignUpActivity : AppCompatActivity(), View.OnClickListener {
+class SignUpActivity : BaseActivity(), View.OnClickListener {
 
     // [START declare_auth]
     private lateinit var auth: FirebaseAuth
@@ -75,7 +70,10 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-        updateUI(currentUser)
+        if (currentUser != null) {
+            updateUI(currentUser, null)
+        }
+
     }
     // [END on_start_check_user]
 
@@ -94,7 +92,7 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed = ${e.statusCode}", e)
                 // [START_EXCLUDE]
-                updateUI(null)
+                updateUI(null, "Registrasi dengan Google gagal")
                 // [END_EXCLUDE]
             }
         }
@@ -105,7 +103,7 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
         // [START_EXCLUDE silent]
-//        showProgressDialog()
+        showProgressDialog()
         // [END_EXCLUDE]
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
@@ -117,22 +115,24 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                     Log.d(TAG, "signInWithCredential:success")
 
                     val user = auth.currentUser
-                    val userRef = rootRef.child("user").child(user!!.uid)
-                    val dataUser = User(user.uid,user.displayName.toString(),user.email.toString())
+                    val dataUser = User(
+                        user!!.uid,
+                        user.displayName.toString(),
+                        user.email.toString()
+                    )
+                    rootRef.child("user").child(user.uid).setValue(dataUser)
 
-                    userRef.setValue(dataUser)
-                    updateUI(user)
-
+                    updateUI(user, null)
 
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
 //                    Snackbar.make(main_layout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
-                    updateUI(null)
+                    updateUI(null, "Gagal masuk, Coba Lagi")
                 }
 
                 // [START_EXCLUDE]
-//                hideProgressDialog()
+                hideProgressDialog()
                 // [END_EXCLUDE]
             }
     }
@@ -145,11 +145,12 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
     }
     // [END signin]
 
-    private fun updateUI(user: FirebaseUser?) {
-        if (user!=null){
+    private fun updateUI(user: FirebaseUser?, msg: String?) {
+        if (user != null) {
             startActivity(Intent(applicationContext, MainActivity::class.java))
-//            Toast.makeText(this, "${user.displayName} Berhasil Sign Up", Toast.LENGTH_LONG).show()
             finish()
+        } else {
+            toast(this, msg)
         }
     }
 

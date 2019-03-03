@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_topic.*
 // *
 // */
 class TopicFragment : Fragment() {
-    lateinit var topicAdapter :TopicAdapter
+    lateinit var topicAdapter: TopicAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,14 +36,14 @@ class TopicFragment : Fragment() {
         initRecyclerView()
     }
 
-    private fun initRecyclerView(){
-        topicAdapter = TopicAdapter(){
-            val intent = Intent(context,ReadActivity::class.java)
+    private fun initRecyclerView() {
+        topicAdapter = TopicAdapter() {
+            val intent = Intent(context, ReadActivity::class.java)
             startActivity(intent)
         }
 
         rv_topic.adapter = topicAdapter
-        rv_topic.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        rv_topic.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
 }

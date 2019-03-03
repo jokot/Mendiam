@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_interest.*
 // *
 // */
 class InterestFragment : Fragment() {
-    lateinit var mSectionPagesAdapter :SectionPagesAdapter
+    lateinit var mSectionPagesAdapter: SectionPagesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,17 +43,17 @@ class InterestFragment : Fragment() {
 
     }
 
-    inner class SectionPagesAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm){
+    inner class SectionPagesAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         override fun getItem(position: Int): Fragment? {
-            when(position){
+            when (position) {
                 0 -> {
                     return TopicFragment()
                 }
-                1->{
+                1 -> {
                     return PeopleFragment()
                 }
 
-                else->{
+                else -> {
                     return null
                 }
             }

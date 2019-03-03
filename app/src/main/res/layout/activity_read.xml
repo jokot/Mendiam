@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        tools:context=".ReadActivity">
+    <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical" android:layout_alignParentStart="true"
+                      android:layout_marginLeft="0dp" android:layout_marginStart="0dp"
+                      android:id="@+id/ll_read"
+                      android:layout_alignParentLeft="true">
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@color/colorWhite">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Judul"
+                        android:textStyle="bold"
+                        android:textSize="30sp"
+                        android:textColor="@color/colorBlack"
+                        android:id="@+id/tv_judul"/>
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+                    <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@color/colorBlack"
+                            android:id="@+id/iv_user"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:textColor="@color/colorBlack"
+                            android:text="Jokot"
+                            android:id="@+id/tv_author"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="28 Feb 18"
+                            android:id="@+id/tv_date"/>
+                </LinearLayout>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dummy_content"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorBlack"
+                        android:id="@+id/tv_deskripsi"/>
+
+                <!-- The primary full-screen view. This can be replaced with whatever view
+                     is needed to present your content, e.g. VideoView, SurfaceView,
+                     TextureView, etc. -->
+                <!--<TextView-->
+                <!--android:id="@+id/fullscreen_content"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:keepScreenOn="true"-->
+                <!--android:textColor="@color/colorBlack"-->
+                <!--android:textStyle="bold"-->
+                <!--android:textSize="50sp"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/dummy_content"/>-->
+
+                <!-- This FrameLayout insets its children based on system windows using
+                     android:fitsSystemWindows. -->
+                <!--<FrameLayout android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:fitsSystemWindows="true">-->
+
+                <!--<LinearLayout android:id="@+id/fullscreen_content_controls"-->
+                <!--style="?metaButtonBarStyle"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom|center_horizontal"-->
+                <!--android:background="@color/black_overlay"-->
+                <!--android:orientation="horizontal"-->
+                <!--tools:ignore="UselessParent">-->
+
+                <!--<Button android:id="@+id/dummy_button"-->
+                <!--style="?metaButtonBarButtonStyle"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="@string/dummy_button"/>-->
+
+                <!--</LinearLayout>-->
+                <!--</FrameLayout>-->
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    android:orientation="vertical">
+                <TextView
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23 Claps"
+                        android:id="@+id/tv_clap"
+                        android:layout_marginLeft="16dp"/>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorGrey"/>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+                    <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@color/colorBlack"/>
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical">
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/tv_author_name"
+                                android:text="jokot"/>
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:id="@+id/tv_author_about"
+                                  android:text="Trying to be Android Developer"/>
+
+                    </LinearLayout>
+                    <Button android:layout_width="90dp"
+                            android:layout_height="35dp"
+                            android:background="@drawable/rectangle_btn_follow"
+                            android:text="Follow"/>
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorGrey"/>
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:padding="16dp">-->
+
+                <!--</LinearLayout>-->
+
+                <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/colorGrey"/>-->
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:id="@+id/rv_read"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp">
+
+            </android.support.v7.widget.RecyclerView>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+                <LinearLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:id="@+id/ll_write_response"
+                        android:background="@color/colorWhite">
+                    <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/colorBlack"/>
+                    <TextView
+                            android:layout_marginStart="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Write a Response..."
+                            android:layout_marginLeft="8dp"/>
+                </LinearLayout>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Response(10)"
+                        android:id="@+id/tv_response"
+                        android:layout_marginLeft="16dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/pb_read"
+                android:layout_height="wrap_content"/>
+    </android.support.design.widget.CoordinatorLayout>
+
+</ScrollView>

@@ -1,11 +1,11 @@
 package com.example.jokot.mendiam
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
@@ -27,17 +27,17 @@ class SearchActivity : AppCompatActivity() {
         tab_layout_search.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container_search))
     }
 
-    inner class SectionPageAdapter(fm:FragmentManager):FragmentPagerAdapter(fm){
+    inner class SectionPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         override fun getItem(position: Int): Fragment? {
-            return when(position){
-                0->{
+            return when (position) {
+                0 -> {
                     HomeFragment()
                 }
-                1->{
+                1 -> {
 
                     PeopleFragment()
                 }
-                else->{
+                else -> {
                     null
                 }
             }

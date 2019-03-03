@@ -4,22 +4,21 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".BookmarkFragment">
+        tools:context=".MyStoryFragment">
 
     <ProgressBar
             style="@style/ProgressBarTheme"
-            android:id="@+id/pb_bookmark"/>
+            android:id="@+id/pb_my_story"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/sr_bookmark">
+            android:id="@+id/sr_my_story">
         <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/rv_bookmark">
-
-        </android.support.v7.widget.RecyclerView>
-
+                android:id="@+id/rv_my_story"/>
     </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </FrameLayout>

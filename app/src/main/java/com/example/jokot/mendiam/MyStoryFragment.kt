@@ -14,7 +14,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.fragment_bookmark.*
+import kotlinx.android.synthetic.main.fragment_my_story.*
 
 
 //// TODO: Rename parameter arguments, choose names that match
@@ -26,18 +26,15 @@ import kotlinx.android.synthetic.main.fragment_bookmark.*
 // * A simple [Fragment] subclass.
 // *
 // */
-class BookmarkFragment : Fragment() {
+class MyStoryFragment : Fragment() {
 
-    lateinit var bookmarkAdapter: MainAdapter
+    private lateinit var adapter : MyStoryAdapter
 
-    private var listBookmarkId: MutableList<String> = mutableListOf()
-
-    //    private var tempStoryId : MutableList<StoryId> = mutableListOf()
-    private var listBookmark: MutableList<Story> = mutableListOf()
+    private var listStoryId : MutableList<String> = mutableListOf()
+    private var listStory : MutableList<Story> = mutableListOf()
 
     private var database = FirebaseDatabase.getInstance().reference
     private var auth = FirebaseAuth.getInstance()
-
     private val uid = auth.currentUser?.uid.toString()
 
     override fun onCreateView(
@@ -45,88 +42,90 @@ class BookmarkFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bookmark, container, false)
+        return inflater.inflate(R.layout.fragment_my_story, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initData()
-        initRecycle()
-        sr_bookmark.setOnRefreshListener {
-            getBookmark()
+        initRecycler()
+
+        sr_my_story.setOnRefreshListener {
+            getStory()
         }
     }
 
-    private fun initRecycle() {
-        bookmarkAdapter = MainAdapter(listBookmark){
+    private fun initRecycler(){
+        adapter = MyStoryAdapter(listStory)
 
-        }
-
-        rv_bookmark.adapter = bookmarkAdapter
-        rv_bookmark.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
+        rv_my_story.adapter = adapter
+        rv_my_story.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
     }
 
-    private fun initData() {
-        pb_bookmark.visibility = View.VISIBLE
-        getBookmarkId(object : CallbackLoading {
+    private fun initData(){
+        pb_my_story.visibility = View.VISIBLE
+        getSCount(object : CallbackLoading{
             override fun onCallback() {
-                getBookmark()
-                pb_bookmark.visibility = View.GONE
+                getStory()
+                pb_my_story.visibility = View.GONE
             }
+
         })
     }
 
-    private fun getBookmarkId(callbackLoading: CallbackLoading) {
-        database.child("bookmark").child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun getSCount(callbackLoading: CallbackLoading){
+        database.child("user").child(uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val ds = dataSnapshot.children
-                    ds.mapNotNull {
-                        val id = it.key
-                        if (id != null) {
-                            listBookmarkId.add(id)
-                        }
+                    val sCount = dataSnapshot.child("sCount").getValue(Int::class.java)
+                    if (sCount != null) {
+                        makeListStoryID(sCount)
                     }
                     callbackLoading.onCallback()
                 }
+
             })
     }
 
-    private fun getBookmark() {
-        listBookmark.clear()
-        for (id in listBookmarkId) {
-            database.child("story").child(id)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun makeListStoryID(sCount: Int) {
+        for(count in 1..sCount){
+            listStoryId.add(uid+count.toString())
+        }
+    }
+
+
+    private fun getStory() {
+        listStory.clear()
+        for(sid in listStoryId){
+            database.child("story").child(sid)
+                .addListenerForSingleValueEvent(object : ValueEventListener{
                     override fun onCancelled(p0: DatabaseError) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val sid = dataSnapshot.child("sid").getValue(String::class.java)
                         val uid = dataSnapshot.child("uid").getValue(String::class.java)
                         val judul = dataSnapshot.child("judul").getValue(String::class.java)
                         val deskripsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
                         val name = dataSnapshot.child("name").getValue(String::class.java)
-                        listBookmark.add(
+                        listStory.add(
                             Story(
-                                sid.toString(),
+                                sid,
                                 uid.toString(),
                                 judul.toString(),
                                 deskripsi.toString(),
                                 name.toString()
                             )
                         )
-
-                        bookmarkAdapter.notifyDataSetChanged()
-                        sr_bookmark.isRefreshing = false
+                        adapter.notifyDataSetChanged()
+                        sr_my_story.isRefreshing = false
                     }
+
                 })
         }
-
     }
 }

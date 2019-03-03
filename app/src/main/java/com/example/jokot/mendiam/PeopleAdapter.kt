@@ -5,15 +5,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.jokot.mendiam.model.User
 import kotlinx.android.synthetic.main.item_view_people.view.*
 
 
 class PeopleAdapter(
-    private val clickListener: (String) -> Unit
+    private val list: MutableList<User>,
+    private val clickListener: (User) -> Unit
 //    , private val btnClickListener: (String, Int) -> Unit
 ) : RecyclerView.Adapter<PeopleAdapter.ItemViewHolder>() {
 
-    private val listPeople = mutableListOf("Joko Triyanto", "Sajangnim", "Kang Comel", "Bin Nasrul", "Jkt12348")
+//    private val listPeople = mutableListOf("Joko Triyanto", "Sajangnim", "Kang Comel", "Bin Nasrul", "Jkt12348")
 
     private var n = 0
 
@@ -24,21 +26,21 @@ class PeopleAdapter(
     }
 
     override fun getItemCount(): Int {
-        return listPeople.size
+        return list.size
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bindItem(
-            listPeople[position], clickListener
+            list[position], clickListener
 //            , btnClickListener
         )
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bindItem(list: String, clickListener: (String) -> Unit) {
+        fun bindItem(list: User, clickListener: (User) -> Unit) {
 
-            itemView.tv_nama_people.text = list
+            itemView.tv_nama_people.text = list.userName
 
             itemView.btn_follow.setOnClickListener {
 

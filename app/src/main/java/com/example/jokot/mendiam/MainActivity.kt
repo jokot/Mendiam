@@ -10,14 +10,20 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-//    private var mutableList = mutableListOf<User>()
+    //    private var mutableList = mutableListOf<User>()
+    private var database = FirebaseDatabase.getInstance().reference
+    private var auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +35,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .add(R.id.frame_fragment, HomeFragment())
             .commit()
 
-        loadData()
-
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -38,21 +42,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
 
-        val navigationView : NavigationView = findViewById(R.id.nav_view)
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
         val header = navigationView.getHeaderView(0)
 
         val headerView = header.findViewById<LinearLayout>(R.id.ll_nav_bar)
 
-//        val headerText = header.findViewById<TextView>(R.id.tv_header_main)
+
+
+
+        loadName()
 
         headerView.setOnClickListener {
             intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
         iv_search.setOnClickListener {
-            intent = Intent(this,SearchActivity::class.java)
+            intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
 
@@ -66,7 +72,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun loadData(){
+    private fun loadName() {
+
+        database
+            .child("user")
+            .child(auth.currentUser!!.uid)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    toast(this@MainActivity,"Selamat Datang di Mendiam")
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val name = dataSnapshot.child("userName").getValue(String::class.java)
+                    val navigationView: NavigationView = findViewById(R.id.nav_view)
+                    val header = navigationView.getHeaderView(0)
+                    val headerText = header.findViewById<TextView>(R.id.tv_header_main)
+                    headerText.text = name
+                }
+
+            })
+
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -112,7 +137,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_new_story -> {
-                intent = Intent(this,NewStoryActivity::class.java)
+                intent = Intent(this, NewStoryActivity::class.java)
                 startActivity(intent)
             }
         }
