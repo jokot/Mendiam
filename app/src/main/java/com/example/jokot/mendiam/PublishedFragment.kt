@@ -26,9 +26,9 @@ import kotlinx.android.synthetic.main.fragment_my_story.*
 // * A simple [Fragment] subclass.
 // *
 // */
-class MyStoryFragment : Fragment() {
+class PublishedFragment : Fragment() {
 
-    private lateinit var adapter : MyStoryAdapter
+    private lateinit var adapter : StoriesAdapter
 
     private var listStoryId : MutableList<String> = mutableListOf()
     private var listStory : MutableList<Story> = mutableListOf()
@@ -56,7 +56,9 @@ class MyStoryFragment : Fragment() {
     }
 
     private fun initRecycler(){
-        adapter = MyStoryAdapter(listStory)
+        adapter = StoriesAdapter("published",listStory){
+
+        }
 
         rv_my_story.adapter = adapter
         rv_my_story.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)

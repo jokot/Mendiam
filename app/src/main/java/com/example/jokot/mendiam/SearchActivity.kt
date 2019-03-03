@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
 
-    lateinit var mSectionPageAdapter: SectionPageAdapter
+    private lateinit var mSectionPageAdapter: SectionPageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

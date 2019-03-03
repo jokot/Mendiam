@@ -106,4 +106,7 @@
     <string name="claps">Claps</string>
     <string name="topics">Topics</string>
     <string name="people">People</string>
+    <string name="draf">Draf</string>
+    <string name="story">Story</string>
+    <string name="pub">Public</string>
 </resources>

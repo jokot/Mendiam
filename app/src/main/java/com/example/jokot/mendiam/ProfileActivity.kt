@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_profile.*
 class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
 
 
-    lateinit var mSectionPageAdapter: SectionPageAdapter
+    private lateinit var mSectionPageAdapter: SectionPageAdapter
 
     private var firebaseAuth = FirebaseAuth.getInstance()
 
@@ -165,7 +165,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         override fun getItem(position: Int): Fragment? {
             return when (position) {
                 0 -> {
-                    MyStoryFragment()
+                    PublishedFragment()
                 }
                 1 -> {
                     PeopleFragment()

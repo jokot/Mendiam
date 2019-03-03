@@ -19,18 +19,22 @@
                 android:id="@+id/nav_new_story"
 
                 android:title="New Story"/>
+        <item
+                android:id="@+id/nav_stories"
+
+                android:title="Stories"/>
     </group>
     <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item-->
-                    <!--android:id="@+id/nav_share"-->
+    <!--<menu>-->
+    <!--<item-->
+    <!--android:id="@+id/nav_share"-->
 
-                    <!--android:title="Share"/>-->
-            <!--<item-->
-                    <!--android:id="@+id/nav_send"-->
+    <!--android:title="Share"/>-->
+    <!--<item-->
+    <!--android:id="@+id/nav_send"-->
 
-                    <!--android:title="Send"/>-->
-        <!--</menu>-->
+    <!--android:title="Send"/>-->
+    <!--</menu>-->
     <!--</item>-->
 
 </menu>

@@ -1,47 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".InterestFragment">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".StoriesFragment">
     <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:theme="@style/AppTheme.PopupOverlay">
+
         <android.support.design.widget.TabLayout
-                android:id="@+id/tab_layout"
-                android:background="@color/colorBlack"
-                app:tabTextColor="@color/colorGrey"
-                app:tabSelectedTextColor="@color/colorWhite"
-                app:tabIndicatorColor="@color/colorWhite"
                 android:layout_width="match_parent"
+                android:background="@color/colorBlack"
+                app:tabTextColor="@color/colorDarkWhite"
+                app:tabSelectedTextColor="@color/colorWhite"
                 app:tabMode="scrollable"
+                app:tabIndicatorColor="@color/colorWhite"
                 app:tabTextAppearance="@style/MyCustomTextAppearance"
-                android:layout_height="match_parent">
-
+                android:id="@+id/tl_stories"
+                android:layout_height="wrap_content">
             <android.support.design.widget.TabItem
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/topics"/>
-
+                    android:layout_width="wrap_content"
+                    android:text="@string/draf"/>
             <android.support.design.widget.TabItem
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/people"/>
+                    android:layout_width="wrap_content"
+                    android:text="@string/pub"/>
+
         </android.support.design.widget.TabLayout>
-
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/container">
+            android:id="@+id/vp_stories">
 
     </android.support.v4.view.ViewPager>
-
 </LinearLayout>
+
+

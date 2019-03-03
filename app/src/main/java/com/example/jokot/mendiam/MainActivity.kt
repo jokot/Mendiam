@@ -140,6 +140,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 intent = Intent(this, NewStoryActivity::class.java)
                 startActivity(intent)
             }
+
+            R.id.nav_stories ->{
+                changeFragment(StoriesFragment())
+                tb_label.text = "Stories"
+            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
