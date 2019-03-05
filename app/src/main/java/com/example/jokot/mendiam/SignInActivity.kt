@@ -74,7 +74,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
     private fun updateUI(currentUser: FirebaseUser?, msg: String?) {
         if (currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            finishAffinity()
         } else {
             toast(this, msg)
         }

@@ -42,6 +42,8 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         tv_edit.setOnClickListener(this)
         constrain_profile.setOnClickListener(this)
         tv_keluar.setOnClickListener(this)
+        ll_follower.setOnClickListener(this)
+        ll_following.setOnClickListener(this)
 
         app_bar_profile.addOnOffsetChangedListener(this)
     }
@@ -52,13 +54,25 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             R.id.iv_back -> {
                 intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-                finish()
+                finishAffinity()
             }
             R.id.tv_keluar ->{
                 firebaseAuth.signOut()
                 intent = Intent(applicationContext,SignUpActivity::class.java)
                 startActivity(intent)
                 finishAffinity()
+            }
+
+            R.id.ll_following -> {
+                intent = Intent(this,FollowActivity::class.java)
+                intent.putExtra("follow","following")
+                startActivity(intent)
+            }
+
+            R.id.ll_follower -> {
+                intent = Intent(this,FollowActivity::class.java)
+                intent.putExtra("follow","follower")
+                startActivity(intent)
             }
 
             R.id.tv_edit -> {
@@ -82,7 +96,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             R.id.iv_toolbar_back -> {
                 intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-                finish()
+                finishAffinity()
             }
         }
     }

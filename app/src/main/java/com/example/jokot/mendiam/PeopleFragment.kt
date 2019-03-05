@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.model.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -20,10 +21,14 @@ class PeopleFragment : Fragment() {
 
     private lateinit var peopleAdapter: PeopleAdapter
 
-    private var list: MutableList<User> = mutableListOf()
+    private var listUser: MutableList<User> = mutableListOf()
     private var temp: MutableList<User> = mutableListOf()
+    private var listFollowingId : MutableList<String> = mutableListOf()
+    private var tempId: MutableList<String> = mutableListOf()
 
-    private var fbDatabase = FirebaseDatabase.getInstance().reference
+    private var database = FirebaseDatabase.getInstance().reference
+    private var auth = FirebaseAuth.getInstance()
+    private var uid = auth.currentUser?.uid.toString()
 
 
     override fun onCreateView(
@@ -39,32 +44,68 @@ class PeopleFragment : Fragment() {
         initData()
         initRecycler()
         sr_people.setOnRefreshListener {
-            rv_people.visibility = View.INVISIBLE
             initData()
         }
     }
 
     private fun initRecycler() {
-        peopleAdapter = PeopleAdapter(list) {
+        peopleAdapter = PeopleAdapter(listUser,listFollowingId, {
             val intent = Intent(context, ProfileActivity::class.java)
             startActivity(intent)
-        }
+        },{
+            database.child("following").child(uid).child(it.id).removeValue()
+            database.child("follower").child(it.id).child(uid).removeValue()
+        },{
+            database.child("following").child(uid).child(it.id).setValue(true)
+            database.child("follower").child(it.id).child(uid).setValue(true)
+        })
         rv_people.adapter = peopleAdapter
         rv_people.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun initData() {
-        getPeople(object : CallbackLoading{
+        rv_people.visibility = View.GONE
+        getFollowingId(object : CallbackLoading{
             override fun onCallback() {
-                pb_people.visibility = View.GONE
-                sr_people.isRefreshing = false
+                getPeople(object : CallbackLoading{
+                    override fun onCallback() {
+                        rv_people.visibility = View.VISIBLE
+                        pb_people.visibility = View.GONE
+                        sr_people.isRefreshing = false
+                    }
+                })
             }
 
         })
+
+    }
+
+    private fun getFollowingId(callbackLoading: CallbackLoading){
+        database.child("following").child(uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val ds = dataSnapshot.children
+                    tempId.clear()
+                    ds.mapNotNull {
+                        val id = it.key
+                        if(id != null){
+                            tempId.add(id.toString())
+                        }
+                    }
+                    listFollowingId.clear()
+                    listFollowingId.addAll(tempId)
+                    callbackLoading.onCallback()
+                }
+
+            })
     }
 
     private fun getPeople(callbackLoading: CallbackLoading) {
-        fbDatabase.child("user").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("user").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -73,14 +114,17 @@ class PeopleFragment : Fragment() {
                 val ds = dataSnapshot.children
                 temp.clear()
                 ds.mapNotNull {
-                    val id = it.child("id").getValue(String::class.java)
-                    val userName = it.child("userName").getValue(String::class.java)
-                    val email = it.child("email").getValue(String::class.java)
+                    val id = it.child("id").getValue(String::class.java).toString()
+                    val userName = it.child("userName").getValue(String::class.java).toString()
+                    val email = it.child("email").getValue(String::class.java).toString()
+                    val about = it.child("about").getValue(String::class.java).toString()
 
-                    temp.add(User(id.toString(), userName.toString(), email.toString()))
+                    if(id != uid && id != "null"){
+                        temp.add(User(id, userName, email,about))
+                    }
                 }
-                list.clear()
-                list.addAll(temp)
+                listUser.clear()
+                listUser.addAll(temp)
                 peopleAdapter.notifyDataSetChanged()
                 rv_people.visibility = View.VISIBLE
                 sr_people.isRefreshing = false

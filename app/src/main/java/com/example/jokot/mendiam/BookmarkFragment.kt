@@ -1,6 +1,7 @@
 package com.example.jokot.mendiam
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.jokot.mendiam.callback.CallbackLoading
+import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.Story
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -28,7 +30,7 @@ import kotlinx.android.synthetic.main.fragment_bookmark.*
 // */
 class BookmarkFragment : Fragment() {
 
-    lateinit var bookmarkAdapter: MainAdapter
+    lateinit var adapter: StoryAdapter
 
     private var listBookmarkId: MutableList<String> = mutableListOf()
 
@@ -53,26 +55,33 @@ class BookmarkFragment : Fragment() {
         initData()
         initRecycle()
         sr_bookmark.setOnRefreshListener {
-            getBookmark()
+            initData()
         }
     }
 
     private fun initRecycle() {
-        bookmarkAdapter = MainAdapter(listBookmark){
+        adapter = StoryAdapter(listBookmark, listBookmarkId, {
+            database.child("bookmark").child(uid).child(it.sid).setValue(true)
+        }, {
+            database.child("bookmark").child(uid).child(it.sid).removeValue()
+            listBookmark.remove(it)
+//            adapter.notifyDataSetChanged()
+        }, {
+            val intent = Intent(context, ReadActivity::class.java)
+            intent.putExtra("sid", it.sid)
+            startActivity(intent)
+        })
 
-        }
-
-        rv_bookmark.adapter = bookmarkAdapter
+        rv_bookmark.adapter = adapter
         rv_bookmark.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
     }
 
     private fun initData() {
-        pb_bookmark.visibility = View.VISIBLE
+        rv_bookmark.visibility = View.GONE
         getBookmarkId(object : CallbackLoading {
             override fun onCallback() {
-                getBookmark()
-                pb_bookmark.visibility = View.GONE
+                getBookmarks()
             }
         })
     }
@@ -86,6 +95,7 @@ class BookmarkFragment : Fragment() {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val ds = dataSnapshot.children
+                    listBookmarkId.clear()
                     ds.mapNotNull {
                         val id = it.key
                         if (id != null) {
@@ -97,36 +107,59 @@ class BookmarkFragment : Fragment() {
             })
     }
 
-    private fun getBookmark() {
+    private fun getBookmarks() {
+        adapter.notifyDataSetChanged()
+        rv_bookmark.visibility = View.GONE
+        if (listBookmarkId.size != 0) {
+            val lastBId = listBookmarkId[listBookmarkId.size - 1]
+            getBookmark(object : CallbackString {
+                override fun onCallback(lastId: String) {
+                    if (lastId == lastBId) {
+                        rv_bookmark.visibility = View.VISIBLE
+                        pb_bookmark.visibility = View.GONE
+                        sr_bookmark.isRefreshing = false
+                    }
+                }
+            })
+        } else {
+            listBookmark.clear()
+            adapter.notifyDataSetChanged()
+            rv_bookmark.visibility = View.VISIBLE
+            pb_bookmark.visibility = View.GONE
+            sr_bookmark.isRefreshing = false
+        }
+    }
+
+    private fun getBookmark(callbackString: CallbackString) {
         listBookmark.clear()
-        for (id in listBookmarkId) {
-            database.child("story").child(id)
+        for (sid in listBookmarkId) {
+            database.child("story").child(sid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val sid = dataSnapshot.child("sid").getValue(String::class.java)
-                        val uid = dataSnapshot.child("uid").getValue(String::class.java)
+                        val id = dataSnapshot.child("uid").getValue(String::class.java)
                         val judul = dataSnapshot.child("judul").getValue(String::class.java)
                         val deskripsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
                         val name = dataSnapshot.child("name").getValue(String::class.java)
+
                         listBookmark.add(
                             Story(
-                                sid.toString(),
-                                uid.toString(),
+                                sid,
+                                id.toString(),
                                 judul.toString(),
                                 deskripsi.toString(),
                                 name.toString()
                             )
                         )
 
-                        bookmarkAdapter.notifyDataSetChanged()
-                        sr_bookmark.isRefreshing = false
+                        adapter.notifyDataSetChanged()
+                        callbackString.onCallback(sid)
                     }
                 })
-        }
 
+        }
     }
 }

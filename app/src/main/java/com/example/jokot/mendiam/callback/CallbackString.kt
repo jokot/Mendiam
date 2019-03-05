@@ -1,5 +1,5 @@
 package com.example.jokot.mendiam.callback
 
-interface CallbackStory {
+interface CallbackString {
     fun onCallback(lastId : String)
 }

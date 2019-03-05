@@ -57,7 +57,7 @@ class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
                         writeNewUser(user)
 
                         startActivity(Intent(applicationContext, MainActivity::class.java))
-                        finish()
+                        finishAffinity()
                     } else {
                         toast(applicationContext, "Email sudah di Registrasikan")
                     }

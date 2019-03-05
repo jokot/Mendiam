@@ -31,7 +31,7 @@ class SignInEmailActivity : BaseActivity() {
                 if (task.isSuccessful) {
                     intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
-                    finish()
+                    finishAffinity()
                 } else {
                     toast(applicationContext, "Email atau Password Anda Salah")
                 }

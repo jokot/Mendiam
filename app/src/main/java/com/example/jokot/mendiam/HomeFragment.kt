@@ -7,7 +7,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.model.Story
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -43,20 +45,22 @@ class HomeFragment : Fragment() {
 ////        }
 ////    }
 
-    private lateinit var homeAdapter: MainAdapter
+    private lateinit var adapter: StoryAdapter
     private var database = FirebaseDatabase.getInstance().reference
-    private var list: MutableList<Story> = mutableListOf()
-    private var temp: MutableList<Story> = mutableListOf()
+    private var listStory: MutableList<Story> = mutableListOf()
+    private var tempStory: MutableList<Story> = mutableListOf()
+    private var listBookmarkId: MutableList<String> = mutableListOf()
+
+    private var auth = FirebaseAuth.getInstance()
+    private val uid = auth.currentUser?.uid.toString()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initData()
         initRecycler()
         sr_home.setOnRefreshListener {
-            rvMain.visibility = View.INVISIBLE
-            getStory()
+            initData()
         }
-
     }
 
 
@@ -68,19 +72,33 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    private fun initData(){
-        pb_home.visibility = View.VISIBLE
-        getStory()
+    private fun initData() {
+        rvMain.visibility = View.INVISIBLE
+        getBookmarkId(object : CallbackLoading{
+            override fun onCallback() {
+                getStory()
+                pb_home.visibility = View.INVISIBLE
+                sr_home.isRefreshing = false
+                rvMain.visibility = View.VISIBLE
+            }
+        })
     }
 
     private fun initRecycler() {
-        homeAdapter = MainAdapter(list) {
+        adapter = StoryAdapter(listStory,listBookmarkId,{
+            database.child("bookmark").child(uid).child(it.sid).setValue(true)
+
+        }, {
+            database.child("bookmark").child(uid).child(it.sid).removeValue()
+//            listStory.remove(it)
+//            adapter.notifyDataSetChanged()
+        },{
             val intent = Intent(context, ReadActivity::class.java)
             intent.putExtra("sid", it.sid)
             startActivity(intent)
-        }
+        })
 
-        rvMain.adapter = homeAdapter
+        rvMain.adapter = adapter
         rvMain.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
@@ -92,14 +110,14 @@ class HomeFragment : Fragment() {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val ds = dataSnapshot.children
-                temp.clear()
+                tempStory.clear()
                 ds.mapNotNull {
                     val sid = it.child("sid").getValue(String::class.java)
                     val uid = it.child("uid").getValue(String::class.java)
                     val judul = it.child("judul").getValue(String::class.java)
                     val deskripsi = it.child("deskripsi").getValue(String::class.java)
                     val name = it.child("name").getValue(String::class.java)
-                    temp.add(
+                    tempStory.add(
                         Story(
                             sid.toString(),
                             uid.toString(),
@@ -109,14 +127,34 @@ class HomeFragment : Fragment() {
                         )
                     )
                 }
-                pb_home.visibility = View.INVISIBLE
-                list.clear()
-                list.addAll(temp)
-                homeAdapter.notifyDataSetChanged()
-                sr_home.isRefreshing = false
-                rvMain.visibility = View.VISIBLE
+
+                listStory.clear()
+                listStory.addAll(tempStory)
+                adapter.notifyDataSetChanged()
             }
         })
+    }
+
+    private fun getBookmarkId(callbackLoading: CallbackLoading){
+        database.child("bookmark").child(uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val ds = dataSnapshot.children
+                    listBookmarkId.clear()
+                    ds.mapNotNull {
+                        val bid = it.key
+                        if(bid != null){
+                            listBookmarkId.add(bid)
+                        }
+
+                    }
+                    callbackLoading.onCallback()
+                }
+
+            })
     }
 
 //    // TODO: Rename method, update argument and hook method into UI event

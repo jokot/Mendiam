@@ -10,9 +10,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:background="@color/colorWhite"
             android:padding="16dp">
-        <ImageView android:layout_width="70dp"
-                   android:layout_height="70dp"
+        <ImageView android:layout_width="65dp"
+                   android:layout_height="65dp"
                    android:src="@mipmap/ic_example_topic"/>
 
         <LinearLayout
@@ -31,12 +32,13 @@
 
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
+                      android:id="@+id/tv_about"
                       android:text="Trying to be Android Developer"/>
 
         </LinearLayout>
 
         <Button android:layout_width="90dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:background="@drawable/rectangle_btn_follow"
                 android:textAllCaps="false"
                 android:id="@+id/btn_follow"

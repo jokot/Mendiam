@@ -86,8 +86,10 @@ class ReadActivity : AppCompatActivity() {
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val name = dataSnapshot.child("userName").getValue(String::class.java)
-//                        val aboit = dataSnapshot.child("about").getValue(String::class.java)
+
+//                        val about = dataSnapshot.child("about").getValue(String::class.java)
 //                        val image = dataSnapshot.child("image").getValue(Int::class.java)
+
                         tv_author.text = name
                         tv_author_name.text = name
                         pb_read.visibility = View.INVISIBLE

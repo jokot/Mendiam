@@ -1,6 +1,7 @@
 package com.example.jokot.mendiam
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -8,13 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.jokot.mendiam.callback.CallbackLoading
+import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.Story
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.fragment_my_story.*
+import kotlinx.android.synthetic.main.fragment_published.*
 
 
 //// TODO: Rename parameter arguments, choose names that match
@@ -28,10 +30,10 @@ import kotlinx.android.synthetic.main.fragment_my_story.*
 // */
 class PublishedFragment : Fragment() {
 
-    private lateinit var adapter : StoriesAdapter
+    private lateinit var adapter: StoriesAdapter
 
-    private var listStoryId : MutableList<String> = mutableListOf()
-    private var listStory : MutableList<Story> = mutableListOf()
+    private var listStoryId: MutableList<String> = mutableListOf()
+    private var listStory: MutableList<Story> = mutableListOf()
 
     private var database = FirebaseDatabase.getInstance().reference
     private var auth = FirebaseAuth.getInstance()
@@ -42,7 +44,7 @@ class PublishedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_story, container, false)
+        return inflater.inflate(R.layout.fragment_published, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,35 +53,65 @@ class PublishedFragment : Fragment() {
         initRecycler()
 
         sr_my_story.setOnRefreshListener {
-            getStory()
+            initData()
         }
     }
 
-    private fun initRecycler(){
-        adapter = StoriesAdapter("published",listStory){
-
-        }
+    private fun initRecycler() {
+        adapter = StoriesAdapter("published", listStory,{
+            val intent = Intent(context,ReadActivity::class.java)
+            intent.putExtra("sid",it.sid)
+            startActivity(intent)
+        },{
+            val intent = Intent(context,NewStoryActivity::class.java)
+            intent.putExtra("sid",it.sid)
+            startActivity(intent)
+        },{
+            database.child("story").child(uid).child(it.sid).removeValue()
+            listStory.remove(it)
+            adapter.notifyDataSetChanged()
+        })
 
         rv_my_story.adapter = adapter
-        rv_my_story.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        rv_my_story.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
-    private fun initData(){
-        pb_my_story.visibility = View.VISIBLE
-        getSCount(object : CallbackLoading{
-            override fun onCallback() {
-                getStory()
-                pb_my_story.visibility = View.GONE
-            }
+    private fun getStories(){
+        rv_my_story.visibility = View.GONE
+        if(listStoryId.size !=0){
+            val lastSId = listStoryId[listStoryId.size - 1]
+            getStory(object : CallbackString {
+                override fun onCallback(lastId: String) {
+                    if (lastId == lastSId) {
+                        rv_my_story.visibility = View.VISIBLE
+                        pb_my_story.visibility = View.GONE
+                        sr_my_story.isRefreshing = false
+                    }
+                }
+            })
+        }else{
+            listStory.clear()
+            adapter.notifyDataSetChanged()
+            rv_my_story.visibility = View.VISIBLE
+            pb_my_story.visibility = View.GONE
+            sr_my_story.isRefreshing = false
+        }
+    }
 
+    private fun initData() {
+        rv_my_story.visibility = View.GONE
+        getSCount(object : CallbackLoading {
+            override fun onCallback() {
+                getStories()
+            }
         })
     }
 
-    private fun getSCount(callbackLoading: CallbackLoading){
+    private fun getSCount(callbackLoading: CallbackLoading) {
         database.child("user").child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener{
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -94,17 +126,17 @@ class PublishedFragment : Fragment() {
     }
 
     private fun makeListStoryID(sCount: Int) {
-        for(count in 1..sCount){
-            listStoryId.add(uid+count.toString())
+        for (count in 1..sCount) {
+            listStoryId.add(uid + count.toString())
         }
     }
 
 
-    private fun getStory() {
+    private fun getStory(callbackString: CallbackString) {
         listStory.clear()
-        for(sid in listStoryId){
+        for (sid in listStoryId) {
             database.child("story").child(sid)
-                .addListenerForSingleValueEvent(object : ValueEventListener{
+                .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
@@ -124,7 +156,7 @@ class PublishedFragment : Fragment() {
                             )
                         )
                         adapter.notifyDataSetChanged()
-                        sr_my_story.isRefreshing = false
+                        callbackString.onCallback(sid)
                     }
 
                 })

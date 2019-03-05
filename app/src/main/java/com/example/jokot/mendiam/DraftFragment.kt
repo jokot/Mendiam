@@ -1,6 +1,7 @@
 package com.example.jokot.mendiam
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -54,16 +55,29 @@ class DraftFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        adapter = StoriesAdapter("Edited", listDraft) {
+        adapter = StoriesAdapter("Edited", listDraft,{
+            val intent = Intent(context,NewStoryActivity::class.java)
+            intent.putExtra("did",it.sid)
+            startActivity(intent)
+        },{
+            val intent = Intent(context,NewStoryActivity::class.java)
+            intent.putExtra("did",it.sid)
+            startActivity(intent)
+        },{
+            database.child("draft").child(uid).child(it.sid).removeValue()
+            listDraft.remove(it)
+            adapter.notifyDataSetChanged()
+        })
 
-        }
         rv_draft.adapter = adapter
         rv_draft.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun initData() {
+        rv_draft.visibility = View.GONE
         getDraft(object : CallbackLoading {
             override fun onCallback() {
+                rv_draft.visibility = View.VISIBLE
                 pb_draft.visibility = View.GONE
                 sr_draft.isRefreshing = false
             }
@@ -82,12 +96,14 @@ class DraftFragment : Fragment() {
                     val ds = dataSnapshot.children
                     tempListDraft.clear()
                     ds.mapNotNull {
-                        val judul = it.child("judul").getValue(String::class.java)
-                        val deskripsi = it.child("deskripsi").getValue(String::class.java)
+                        val judul = it.child("judul").getValue(String::class.java).toString()
+                        val deskripsi = it.child("deskripsi").getValue(String::class.java).toString()
+                        val did = it.child("did").getValue(String::class.java).toString()
                         tempListDraft.add(
                             Story(
-                                judul = judul.toString(),
-                                deskripsi = deskripsi.toString()
+                                judul = judul,
+                                deskripsi = deskripsi,
+                                sid = did
                             )
                         )
                     }
@@ -96,7 +112,6 @@ class DraftFragment : Fragment() {
                     adapter.notifyDataSetChanged()
                     callbackLoading.onCallback()
                 }
-
             })
     }
 }

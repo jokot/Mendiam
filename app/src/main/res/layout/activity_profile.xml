@@ -96,7 +96,6 @@
                 </LinearLayout>
                 <TextView
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Joko Triyanto"
                         app:layout_constraintTop_toBottomOf="@+id/iv_profile"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
@@ -122,8 +121,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginTop="16dp"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_about"
-                        android:id="@+id/ll_follow">
+                        app:layout_constraintTop_toBottomOf="@+id/tv_about">
                     <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
@@ -132,12 +130,14 @@
                     <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:id="@+id/ll_follow"
                             android:orientation="horizontal">
                         <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:padding="8dp"
+                                android:id="@+id/ll_following"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
                             <TextView
@@ -163,6 +163,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:padding="8dp"
+                                android:id="@+id/ll_follower"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
                             <TextView
@@ -213,7 +214,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
                             android:textColor="@color/colorBlack"
-                            android:text="Jokot"/>
+                            android:text=""/>
                 </LinearLayout>
 
             </android.support.v7.widget.Toolbar>

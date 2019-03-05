@@ -102,11 +102,11 @@
     <string name="follower">Follower</string>
     <string name="edit">Edit</string>
     <string name="keluar">Keluar</string>
-    <string name="stories">Stories</string>
     <string name="claps">Claps</string>
     <string name="topics">Topics</string>
-    <string name="people">People</string>
     <string name="draf">Draf</string>
     <string name="story">Story</string>
     <string name="pub">Public</string>
+    <string name="people">People</string>
+    <string name="stories">Stories</string>
 </resources>

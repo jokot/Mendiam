@@ -11,11 +11,11 @@ import kotlinx.android.synthetic.main.item_view_people.view.*
 
 class PeopleAdapter(
     private val list: MutableList<User>,
-    private val clickListener: (User) -> Unit
-//    , private val btnClickListener: (String, Int) -> Unit
+    private val listFollowingId: MutableList<String>,
+    private val clickListener: (User) -> Unit,
+    private val clickUnFollow: (User) -> Unit,
+    private val clickFollowing: (User) -> Unit
 ) : RecyclerView.Adapter<PeopleAdapter.ItemViewHolder>() {
-
-//    private val listPeople = mutableListOf("Joko Triyanto", "Sajangnim", "Kang Comel", "Bin Nasrul", "Jkt12348")
 
     private var n = 0
 
@@ -31,16 +31,39 @@ class PeopleAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bindItem(
-            list[position], clickListener
-//            , btnClickListener
+            list[position],
+            listFollowingId,
+            clickListener,
+            clickUnFollow,
+            clickFollowing
         )
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        fun bindItem(list: User, clickListener: (User) -> Unit) {
+        fun bindItem(
+            list: User,
+            listUserFollowing: MutableList<String>,
+            clickListener: (User) -> Unit,
+            clickUnFollow: (User) -> Unit,
+            clickFollowing: (User) -> Unit
+        ) {
+            for (uid in listUserFollowing) {
+                if (uid == list.id) {
+                    n = 1
+                    itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)
+                    itemView.btn_follow.setTextColor(Color.parseColor("#ffffff"))
+                    itemView.btn_follow.text = "Following"
+                    break
+                } else {
+                    itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
+                    itemView.btn_follow.setTextColor(Color.parseColor("#04b595"))
+                    itemView.btn_follow.text = "Follow"
+                }
+            }
 
             itemView.tv_nama_people.text = list.userName
+            itemView.tv_about.text  = list.about
+
 
             itemView.btn_follow.setOnClickListener {
 
@@ -49,11 +72,13 @@ class PeopleAdapter(
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)
                     itemView.btn_follow.setTextColor(Color.parseColor("#ffffff"))
                     itemView.btn_follow.text = "Following"
+                    clickFollowing(list)
                 } else {
                     n--
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
                     itemView.btn_follow.setTextColor(Color.parseColor("#04b595"))
                     itemView.btn_follow.text = "Follow"
+                    clickUnFollow(list)
                 }
 
             }
