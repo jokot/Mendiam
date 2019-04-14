@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.activity_edit_profile.*
 
 class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var database = FirebaseDatabase.getInstance().reference
-    private var auth = FirebaseAuth.getInstance()
+    private val main = MainApps()
+    private var database = main.database.reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,7 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun getData(callbackLoading: CallbackLoading) {
-        database.child("user").child(auth.currentUser?.uid.toString())
+        database.child(main.user).child(main.uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -85,8 +85,8 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun dataBase(key: String, value: Any) {
-        database.child("user")
-            .child(auth.currentUser?.uid.toString())
+        database.child(main.user)
+            .child(main.uid)
             .child(key).setValue(value)
     }
 }

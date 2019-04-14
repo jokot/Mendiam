@@ -6,7 +6,6 @@ import android.view.View
 import com.example.jokot.mendiam.callback.CallbackUidReadStory
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_read.*
 
@@ -18,7 +17,8 @@ import kotlinx.android.synthetic.main.activity_read.*
 class ReadActivity : AppCompatActivity() {
 
     private var sid = ""
-    private var database = FirebaseDatabase.getInstance().reference
+    private val main = MainApps()
+    private var database = main.database.reference
 
 //    private val mHideHandler = Handler()
 //    private val mHidePart2Runnable = Runnable {
@@ -59,7 +59,11 @@ class ReadActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_read)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        sid = intent.getStringExtra("sid")
+
+        if (intent.getStringExtra("sid") != null) {
+            sid = intent.getStringExtra("sid")
+        }
+
         initData()
 
 //        mVisible = true
@@ -79,45 +83,67 @@ class ReadActivity : AppCompatActivity() {
         getStory(object : CallbackUidReadStory {
             override fun onCallback(uid: String) {
                 database.child("user").child(uid)
-                    .addListenerForSingleValueEvent(object : ValueEventListener{
-                    override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
 
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val name = dataSnapshot.child("userName").getValue(String::class.java)
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val name = dataSnapshot.child("userName").getValue(String::class.java)
 
 //                        val about = dataSnapshot.child("about").getValue(String::class.java)
 //                        val image = dataSnapshot.child("image").getValue(Int::class.java)
 
-                        tv_author.text = name
-                        tv_author_name.text = name
-                        pb_read.visibility = View.INVISIBLE
-                        ll_read.visibility = View.VISIBLE
-                    }
+                            tv_author.text = name
+                            tv_author_name.text = name
+                            pb_read.visibility = View.INVISIBLE
+                            ll_read.visibility = View.VISIBLE
+                        }
 
-                })
+                    })
             }
         })
     }
 
 
-    private fun getStory(callbackUidReadStory: CallbackUidReadStory){
-        database.child("story").child(sid)
-            .addListenerForSingleValueEvent(object :ValueEventListener{
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val judul = dataSnapshot.child("judul").getValue(String::class.java)
-                val deskipsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
-                val uid = dataSnapshot.child("uid").getValue(String::class.java)
-                tv_judul.text = judul
-                tv_deskripsi.text = deskipsi
-                callbackUidReadStory.onCallback(uid.toString())
-            }
+    private fun getStory(callbackUidReadStory: CallbackUidReadStory) {
+        database.child(main.story).child(sid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
 
-        })
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val judul = dataSnapshot.child("judul").getValue(String::class.java)
+                    val deskipsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
+                    val uid = dataSnapshot.child("uid").getValue(String::class.java)
+                    val imageContent = dataSnapshot.child("imageContent").getValue(Int::class.java)
+                    val textContent = dataSnapshot.child("textContent").getValue(Int::class.java)
+                    getStoryContent(imageContent, textContent)
+                    tv_judul.text = judul
+                    tv_deskripsi.text = deskipsi
+                    callbackUidReadStory.onCallback(uid.toString())
+                }
+
+            })
+    }
+
+    private fun getStoryContent(imageContent: Int?, textContent: Int?) {
+        for (i in 0 until textContent!!) {
+            database.child(main.story).child(sid)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val image =  dataSnapshot.child("image$i").getValue(String::class.java)
+                    val text =  dataSnapshot.child("text$i").getValue(String::class.java)
+                    
+                }
+
+            })
+        }
     }
 
 

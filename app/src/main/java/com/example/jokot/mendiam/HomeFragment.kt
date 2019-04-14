@@ -46,13 +46,14 @@ class HomeFragment : Fragment() {
 ////    }
 
     private lateinit var adapter: StoryAdapter
-    private var database = FirebaseDatabase.getInstance().reference
+    private val main = MainApps()
+    private var database = main.database.reference
+    private val uid = main.uid
+
     private var listStory: MutableList<Story> = mutableListOf()
     private var tempStory: MutableList<Story> = mutableListOf()
     private var listBookmarkId: MutableList<String> = mutableListOf()
 
-    private var auth = FirebaseAuth.getInstance()
-    private val uid = auth.currentUser?.uid.toString()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -86,10 +87,10 @@ class HomeFragment : Fragment() {
 
     private fun initRecycler() {
         adapter = StoryAdapter(listStory,listBookmarkId,{
-            database.child("bookmark").child(uid).child(it.sid).setValue(true)
+            database.child(main.bookmark).child(uid).child(it.sid).setValue(true)
 
         }, {
-            database.child("bookmark").child(uid).child(it.sid).removeValue()
+            database.child(main.bookmark).child(uid).child(it.sid).removeValue()
 //            listStory.remove(it)
 //            adapter.notifyDataSetChanged()
         },{
@@ -103,7 +104,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getStory() {
-        database.child("story").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child(main.story).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -136,7 +137,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getBookmarkId(callbackLoading: CallbackLoading){
-        database.child("bookmark").child(uid)
+        database.child(main.bookmark).child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

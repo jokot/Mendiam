@@ -17,9 +17,9 @@ import kotlinx.android.synthetic.main.activity_follow.*
 
 class FollowActivity : AppCompatActivity() {
 
-    private var database = FirebaseDatabase.getInstance().reference
-    private var auth = FirebaseAuth.getInstance()
-    private val uid = auth.currentUser?.uid.toString()
+    private val main = MainApps()
+    private var database = main.database.reference
+    private val uid = main.uid
 
     private lateinit var adapter: PeopleAdapter
 
@@ -50,19 +50,19 @@ class FollowActivity : AppCompatActivity() {
 
     private fun initRecycler() {
         adapter = PeopleAdapter(
-            listUser, if (follow == "follower") {
+            listUser, if (follow == main.follower) {
                 listFollowingId
             } else {
                 listUserId
             }, {
 
             }, {
-                database.child("following").child(uid).child(it.id).removeValue()
-                database.child("follower").child(it.id).child(uid).removeValue()
+                database.child(main.following).child(uid).child(it.id).removeValue()
+                database.child(main.follower).child(it.id).child(uid).removeValue()
                 listUser.remove(it)
             }, {
-                database.child("following").child(uid).child(it.id).setValue(true)
-                database.child("follower").child(it.id).child(uid).setValue(true)
+                database.child(main.following).child(uid).child(it.id).setValue(true)
+                database.child(main.follower).child(it.id).child(uid).setValue(true)
             })
 
         rv_follow.adapter = adapter
@@ -72,7 +72,7 @@ class FollowActivity : AppCompatActivity() {
 
     private fun initData() {
         rv_follow.visibility = View.GONE
-        if (follow == "follower") {
+        if (follow == main.follower) {
             getFollowingId(object : CallbackLoading {
                 override fun onCallback() {
                     getUserId(object : CallbackLoading {
@@ -114,7 +114,7 @@ class FollowActivity : AppCompatActivity() {
     }
 
     private fun getFollowingId(callbackLoading: CallbackLoading) {
-        database.child("following").child(uid)
+        database.child(main.following).child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
 
@@ -138,7 +138,7 @@ class FollowActivity : AppCompatActivity() {
     private fun getUser(callbackString: CallbackString) {
         listUser.clear()
         for (id in listUserId) {
-            database.child("user").child(id)
+            database.child(main.user).child(id)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -33,9 +33,9 @@ class DraftFragment : Fragment() {
     private var listDraft: MutableList<Story> = mutableListOf()
     private var tempListDraft: MutableList<Story> = mutableListOf()
 
-    private var database = FirebaseDatabase.getInstance().reference
-    private var auth = FirebaseAuth.getInstance()
-    private val uid = auth.currentUser?.uid.toString()
+    private val main = MainApps()
+    private var database = main.database.reference
+    private val uid = main.uid
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +64,7 @@ class DraftFragment : Fragment() {
             intent.putExtra("did",it.sid)
             startActivity(intent)
         },{
-            database.child("draft").child(uid).child(it.sid).removeValue()
+            database.child(main.draft).child(uid).child(it.sid).removeValue()
             listDraft.remove(it)
             adapter.notifyDataSetChanged()
         })
@@ -86,7 +86,7 @@ class DraftFragment : Fragment() {
     }
 
     private fun getDraft(callbackLoading: CallbackLoading) {
-        database.child("draft").child(uid)
+        database.child(main.draft).child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

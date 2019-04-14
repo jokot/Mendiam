@@ -37,10 +37,9 @@ class BookmarkFragment : Fragment() {
     //    private var tempStoryId : MutableList<StoryId> = mutableListOf()
     private var listBookmark: MutableList<Story> = mutableListOf()
 
-    private var database = FirebaseDatabase.getInstance().reference
-    private var auth = FirebaseAuth.getInstance()
-
-    private val uid = auth.currentUser?.uid.toString()
+    private val main = MainApps()
+    private var database = main.database.reference
+    private val uid = main.uid
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,9 +60,9 @@ class BookmarkFragment : Fragment() {
 
     private fun initRecycle() {
         adapter = StoryAdapter(listBookmark, listBookmarkId, {
-            database.child("bookmark").child(uid).child(it.sid).setValue(true)
+            database.child(main.bookmark).child(uid).child(it.sid).setValue(true)
         }, {
-            database.child("bookmark").child(uid).child(it.sid).removeValue()
+            database.child(main.bookmark).child(uid).child(it.sid).removeValue()
             listBookmark.remove(it)
 //            adapter.notifyDataSetChanged()
         }, {
@@ -87,7 +86,7 @@ class BookmarkFragment : Fragment() {
     }
 
     private fun getBookmarkId(callbackLoading: CallbackLoading) {
-        database.child("bookmark").child(uid)
+        database.child(main.bookmark).child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -133,7 +132,7 @@ class BookmarkFragment : Fragment() {
     private fun getBookmark(callbackString: CallbackString) {
         listBookmark.clear()
         for (sid in listBookmarkId) {
-            database.child("story").child(sid)
+            database.child(main.story).child(sid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
 
