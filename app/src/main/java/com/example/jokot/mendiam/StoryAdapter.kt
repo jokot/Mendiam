@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.jokot.mendiam.model.Story
 import kotlinx.android.synthetic.main.item_view.view.*
+import kotlinx.android.synthetic.main.item_view_sotries.view.*
 
 class StoryAdapter(
     private var list: MutableList<Story>
@@ -37,6 +38,7 @@ class StoryAdapter(
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var judul = view.findViewById<TextView>(R.id.tv_judul)
         var deskripsi = view.findViewById<TextView>(R.id.tv_deskripsi)
+        var date = view.findViewById<TextView>(R.id.tv_date)
 
         fun bindItem(
             listStory: Story
@@ -58,6 +60,7 @@ class StoryAdapter(
             }
 
             judul.text = listStory.judul
+            date.text = listStory.date
             deskripsi.text = listStory.deskripsi
             itemView.tv_name.text = listStory.name
 

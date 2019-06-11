@@ -45,12 +45,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
                 android:name=".ReadActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:label="@string/title_activity_read"
                 android:theme="@style/FullscreenTheme">
         </activity>
+        <!--android:label="@string/title_activity_read"-->
+
         <activity
                 android:name=".SignInActivity"
                 android:theme="@style/AppTheme.NoActionBar">

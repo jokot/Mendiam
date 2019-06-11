@@ -11,6 +11,7 @@ import android.view.View
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
 
 class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
@@ -156,6 +157,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                     val autor = dataSnapshot.child("about").getValue(String::class.java)
                     val fingCount = dataSnapshot.child("fingCount").getValue(Int::class.java)
                     val ferCount = dataSnapshot.child("ferCount").getValue(Int::class.java)
+                    val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
                     tv_profile.text = name
                     tv_toolbar_profile.text = name
 
@@ -168,11 +170,12 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                     if(autor != null){
                         tv_about.text = autor
                     }
+                    if(urlPic != ""){
+                        Picasso.get().load(urlPic).into(iv_profile)
+                    }
                     callbackLoading.onCallback()
                 }
             })
-
-
     }
 
     inner class SectionPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {

@@ -1,9 +1,11 @@
 package com.example.jokot.mendiam
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -39,18 +41,21 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseUser = firebaseAuth.currentUser
 
-        btn_in_facebook.setOnClickListener(this)
         tv_sign_up.setOnClickListener(this)
-        btn_in_google.setOnClickListener(this)
+//        btn_in_google.setOnClickListener(this)
         btn_in_email.setOnClickListener(this)
+        google_button.setOnClickListener(this)
+
+        val tv = google_button.getChildAt(0) as TextView
+        tv.text = "Sign in with Google"
+        tv.setTextColor(Color.parseColor("#000000"))
     }
 
     override fun onClick(v: View?) {
         val id = v?.id
         when (id) {
-            R.id.btn_in_facebook -> {
-            }
-            R.id.btn_in_google -> signIn()
+            R.id.google_button -> signIn()
+//            R.id.btn_in_google -> signIn()
             R.id.btn_in_email -> {
                 startActivity(Intent(this, SignInEmailActivity::class.java))
             }

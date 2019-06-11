@@ -74,6 +74,8 @@
                 <EditText
                         style="@style/EditTextNewStory"
                         android:id="@+id/et_story"/>
+                        <!--android:fontFamily="@font/times_new_roman"-->
+
                 <!--<ImageView-->
                         <!--android:layout_width="match_parent"-->
                         <!--android:layout_height="wrap_content"-->

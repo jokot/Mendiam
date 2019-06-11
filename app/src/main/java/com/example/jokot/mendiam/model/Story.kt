@@ -6,6 +6,7 @@ class Story(
     val judul: String = "",
     val deskripsi: String = "",
     val name: String = "",
+    val date: String = "",
     val image: String? = "",
     val imageContent: Int = 0,
     val textContent: Int = 0

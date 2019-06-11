@@ -1,9 +1,14 @@
 package com.example.jokot.mendiam
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 
-fun Context.toast(context: Context, msg: String, length: Int = Toast.LENGTH_LONG) {
-    Toast.makeText(context, msg, length).show()
+fun Context.toast( msg: String, length: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(this, msg, length).show()
+}
+
+fun Context.log(msg: String?){
+    Log.d("LOG_D",msg)
 }
 

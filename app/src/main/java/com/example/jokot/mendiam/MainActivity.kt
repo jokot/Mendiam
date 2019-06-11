@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
@@ -22,8 +24,10 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     //    private var mutableList = mutableListOf<User>()
-    private var database = FirebaseDatabase.getInstance().reference
-    private var auth = FirebaseAuth.getInstance()
+    private val main = MainApps()
+    private var database = main.database.reference
+    private var auth = main.auth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +52,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val headerView = header.findViewById<LinearLayout>(R.id.ll_nav_bar)
 
 
+        main.getUName(main.getUId()) {
+            if (main.getPref(main.userName,"s",this)=="") {
+                main.editorPref(main.userName, it, this)
+            }
+        }
 
-
-        loadName()
+        loadProfile()
 
         headerView.setOnClickListener {
             intent = Intent(this, ProfileActivity::class.java)
@@ -64,6 +72,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+//    private fun getUserName(){
+//        if (main.getPref(main.userName,"s",this)=="") {
+//            database.child("user").child(main.getUId())
+//                .addListenerForSingleValueEvent(object : ValueEventListener {
+//                    override fun onCancelled(p0: DatabaseError) {
+//
+//                    }
+//
+//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                        val name = dataSnapshot.child("userName").getValue(String::class.java)!!
+//                        main.editorPref(main.userName,name,this@MainActivity)
+//
+//                    }
+//                })
+//        }
+//    }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -72,21 +97,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun loadName() {
+    private fun loadProfile() {
 
         database
             .child("user")
             .child(auth.currentUser!!.uid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-                    toast(this@MainActivity,"Selamat Datang di Mendiam")
+                    toast("Selamat Datang di Mendiam")
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val name = dataSnapshot.child("userName").getValue(String::class.java)
+                    val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
                     val navigationView: NavigationView = findViewById(R.id.nav_view)
                     val header = navigationView.getHeaderView(0)
                     val headerText = header.findViewById<TextView>(R.id.tv_header_main)
+                    val headerImage = header.findViewById<ImageView>(R.id.iv_header)
+                    if(urlPic != ""){
+                        Picasso.get().load(urlPic).into(headerImage)
+                    }
                     headerText.text = name
                 }
 

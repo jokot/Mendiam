@@ -1,13 +1,20 @@
 package com.example.jokot.mendiam
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.view.View
-import com.example.jokot.mendiam.callback.CallbackUidReadStory
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_read.*
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -19,6 +26,8 @@ class ReadActivity : AppCompatActivity() {
     private var sid = ""
     private val main = MainApps()
     private var database = main.database.reference
+    private var myid = main.auth.uid.toString()
+    private var authorId = ""
 
 //    private val mHideHandler = Handler()
 //    private val mHidePart2Runnable = Runnable {
@@ -60,11 +69,13 @@ class ReadActivity : AppCompatActivity() {
         setContentView(R.layout.activity_read)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
         if (intent.getStringExtra("sid") != null) {
             sid = intent.getStringExtra("sid")
         }
 
         initData()
+        setUpClick()
 
 //        mVisible = true
 
@@ -77,76 +88,225 @@ class ReadActivity : AppCompatActivity() {
 //        dummy_button.setOnTouchListener(mDelayHideTouchListener)
     }
 
+    private fun setUpClick() {
+        btn_follow.setOnClickListener {
+            follow()
+        }
+        ll_author.setOnClickListener {
+            startActivity(Intent(applicationContext, ProfileActivity::class.java))
+            finish()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else-> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun initData() {
         pb_read.visibility = View.VISIBLE
         ll_read.visibility = View.INVISIBLE
-        getStory(object : CallbackUidReadStory {
-            override fun onCallback(uid: String) {
-                database.child("user").child(uid)
-                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        getStory { uid
+                   , textContent
+            ->
+            getStoryContent(textContent)
+            database.child("user").child(uid)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        toast(p0.message)
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val name = dataSnapshot.child("userName").getValue(String::class.java)
+
+                        val about = dataSnapshot.child("about").getValue(String::class.java)
+                        val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
+
+                        if (about != "") {
+                            tv_author_about.text = about
                         }
-
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            val name = dataSnapshot.child("userName").getValue(String::class.java)
-
-//                        val about = dataSnapshot.child("about").getValue(String::class.java)
-//                        val image = dataSnapshot.child("image").getValue(Int::class.java)
-
-                            tv_author.text = name
-                            tv_author_name.text = name
-                            pb_read.visibility = View.INVISIBLE
-                            ll_read.visibility = View.VISIBLE
+                        if (urlPic != "") {
+                            Picasso.get().load(urlPic).into(iv_user)
+                            Picasso.get().load(urlPic).into(iv_author)
                         }
+                        tv_author.text = name
+                        tv_author_name.text = name
 
-                    })
-            }
-        })
+                        pb_read.visibility = View.INVISIBLE
+                        ll_read.visibility = View.VISIBLE
+
+                    }
+                })
+        }
     }
 
-
-    private fun getStory(callbackUidReadStory: CallbackUidReadStory) {
+    private fun getStory(
+        onDataChange: (
+            String
+            , Int
+        ) -> Unit
+    ) {
         database.child(main.story).child(sid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    toast(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val judul = dataSnapshot.child("judul").getValue(String::class.java)
                     val deskipsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
                     val uid = dataSnapshot.child("uid").getValue(String::class.java)
-                    val imageContent = dataSnapshot.child("imageContent").getValue(Int::class.java)
+                    val date = dataSnapshot.child("date").getValue(String::class.java)
+//                    val imageContent = dataSnapshot.child("imageContent").getValue(Int::class.java)
                     val textContent = dataSnapshot.child("textContent").getValue(Int::class.java)
-                    getStoryContent(imageContent, textContent)
+
+//                    toast(this@ReadActivity,"$imageContent $textContent")
                     tv_judul.text = judul
+                    tv_date.text = date
                     tv_deskripsi.text = deskipsi
-                    callbackUidReadStory.onCallback(uid.toString())
+
+                    cekFollow(uid!!)
+                    authorId = uid
+                    onDataChange(
+                        uid!!
+                        , textContent!!
+                    )
+//                    getStoryContent(textContent)
                 }
 
             })
     }
 
-    private fun getStoryContent(imageContent: Int?, textContent: Int?) {
+    private fun getStoryContent(textContent: Int?) {
         for (i in 0 until textContent!!) {
-            database.child(main.story).child(sid)
+            database.child(main.storyContent).child(sid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+                    override fun onCancelled(p0: DatabaseError) {
+                    }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val image =  dataSnapshot.child("image$i").getValue(String::class.java)
-                    val text =  dataSnapshot.child("text$i").getValue(String::class.java)
-                    
-                }
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-            })
+//                        val image = dataSnapshot.child("image$i").getValue(String::class.java)
+                        val text = dataSnapshot.child("text$i").getValue(String::class.java)
+
+                        loadContent(i,
+//                            image,
+                            text)
+                    }
+
+                })
         }
     }
 
+//    private fun addText() {
+//        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
+////                val newContext = ContextThemeWrapper(applicationContext, R.style.EditTextNewStory)
+//        val myEditText = TextView(applicationContext)
+//
+//        myEditText.layoutParams = (
+//                LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//                ))
+//        myEditText.setTextColor(Color.parseColor("#000000"))
+//        val padding = 16
+//        val scale: Float = resources.displayMetrics.density
+//        val paddingDp: Int = (padding * scale + 0.5f).toInt()
+//        myEditText.setPadding(paddingDp, 0, paddingDp, 0)
+//
+////        myEditText.typeface = Typeface.createFromAsset(assets,"font/times_new_roman.ttf")
+//        myEditText.setBackgroundResource(R.color.colorWhite)
+//        myEditText.id = TEXT_BASE_ID + textId
+//        myEditText.setOnClickListener {
+//            toast(myEditText.id.toString())
+//        }
+//
+//        setUpOnKeyEditText(myEditText)
+//
+//        layoutParent.addView(myEditText)
+//
+//        textId++
+//    }
 
+    private fun loadContent(
+        id: Int,
+//                            url: String?,
+        text: String?
+    ) {
+        if (id >= 0) {
+            val layoutParent = findViewById<LinearLayout>(R.id.ll_content)
+//            val newImage = ImageView(applicationContext)
+
+//            newImage.layoutParams = (
+//                    LinearLayout.LayoutParams(
+//                        LinearLayout.LayoutParams.MATCH_PARENT,
+//                        LinearLayout.LayoutParams.WRAP_CONTENT
+//                    ))
+//
+//            layoutParent.addView(newImage)
+//            Picasso.get().load(url).into(newImage).run {
+            val textView = TextView(applicationContext)
+
+            textView.layoutParams = (
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ))
+
+            textView.text = text
+            layoutParent.addView(textView)
+//            }
+        } else {
+            tv_deskripsi.text = text
+        }
+    }
+
+    private fun cekFollow(uid: String) {
+        database.child("following").child(myid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    toast(p0.message)
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.child(uid).exists()) {
+                        changeButtonFollow("Following")
+                    } else {
+                        changeButtonFollow("Follow")
+                    }
+                }
+
+            })
+    }
+
+    private fun follow() {
+        if (btn_follow.text.toString() == "Follow") {
+            database.child("following").child(myid).child(authorId).setValue(true)
+            database.child("follower").child(authorId).child(myid).setValue(true)
+            changeButtonFollow("Following")
+        } else {
+            database.child("following").child(myid).child(authorId).removeValue()
+            database.child("follower").child(authorId).child(myid).removeValue()
+            changeButtonFollow("Follow")
+        }
+    }
+
+    private fun changeButtonFollow(string: String) {
+        btn_follow.text = string
+        if (string == "Following") {
+            btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)
+            btn_follow.setTextColor(Color.parseColor("#ffffff"))
+        } else {
+            btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
+            btn_follow.setTextColor(Color.parseColor("#000000"))
+        }
+
+    }
 //    override fun onPostCreate(savedInstanceState: Bundle?) {
 //        super.onPostCreate(savedInstanceState)
 //
@@ -216,3 +376,25 @@ class ReadActivity : AppCompatActivity() {
 //        private val UI_ANIMATION_DELAY = 300
 //    }
 }
+//
+//@SuppressLint("StaticFieldLeak")
+//private class DownloadImageTask(internal var bmImage: ImageView) : AsyncTask<String, Void, Bitmap>() {
+//
+//    override fun doInBackground(vararg urls: String): Bitmap? {
+//        val urlDisplay = urls[0]
+//        var mIcon11: Bitmap? = null
+//        try {
+//            val `in` = java.net.URL(urlDisplay).openStream()
+//            mIcon11 = BitmapFactory.decodeStream(`in`)
+//        } catch (e: Exception) {
+//            Log.e("Error", e.message)
+//            e.printStackTrace()
+//        }
+//
+//        return mIcon11
+//    }
+//
+//    override fun onPostExecute(result: Bitmap) {
+//        bmImage.setImageBitmap(result)
+//    }
+//}

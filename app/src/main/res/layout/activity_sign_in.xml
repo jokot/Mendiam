@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@color/colorDarkEggGreen"
         android:gravity="center"
         tools:context=".SignInActivity">
@@ -33,36 +33,51 @@
                 android:textSize="20sp"
                 android:text="Selamat Datang Kembali"/>
 
-        <Button android:layout_width="match_parent"
+        <!--<Button android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="8dp"-->
+        <!--android:padding="8dp"-->
+        <!--android:textColor="@color/colorBlack"-->
+        <!--android:id="@+id/btn_in_facebook"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:text="Sign In with Facebook"-->
+        <!--android:drawableLeft="@drawable/ic_notifications_black_24dp"-->
+        <!--android:background="@drawable/rectangle_corner"/>-->
+        <!--<Button android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Sign In with Google"-->
+        <!--android:padding="8dp"-->
+        <!--android:id="@+id/btn_in_google"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textColor="@color/colorBlack"-->
+        <!--android:layout_margin="8dp"-->
+        <!--android:background="@drawable/rectangle_corner"/>-->
+        <com.google.android.gms.common.SignInButton
+                android:id="@+id/google_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:textSize="18sp">
+        </com.google.android.gms.common.SignInButton>
+        <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:textColor="@color/colorBlack"
-                android:id="@+id/btn_in_facebook"
-                android:textAllCaps="false"
-                android:text="Sign In with Facebook"
-                android:drawableLeft="@drawable/ic_notifications_black_24dp"
-                android:background="@drawable/rectangle_corner"/>
-        <Button android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign In with Google"
-                android:padding="8dp"
-                android:id="@+id/btn_in_google"
-                android:textAllCaps="false"
-                android:textColor="@color/colorBlack"
-                android:layout_margin="8dp"
-                android:drawableLeft="@drawable/ic_notifications_black_24dp"
-                android:background="@drawable/rectangle_corner"/>
-        <Button android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorBlack"
-                android:text="Sign In with Email"
-                android:textAllCaps="false"
-                android:padding="8dp"
-                android:layout_margin="8dp"
-                android:id="@+id/btn_in_email"
-                android:drawableLeft="@drawable/ic_notifications_black_24dp"
-                android:background="@drawable/rectangle_corner"/>
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+            <Button android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:text="Sign In with Email"
+                    android:textAllCaps="false"
+                    android:paddingStart="8dp"
+                    android:layout_margin="8dp"
+                    android:id="@+id/btn_in_email"
+                    android:drawableLeft="@drawable/ic_mail_outline_black_24dp"
+                    android:background="@drawable/rectangle_corner"
+                    android:paddingLeft="8dp"/>
+        </FrameLayout>
+
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -11,6 +11,6 @@
             android:layout_gravity="center"
             android:textSize="40sp"
             android:textColor="@color/colorGreen"
-            android:text="SPASH SCREEN"/>
+            android:text="SPLASH SCREEN"/>
 
 </FrameLayout>

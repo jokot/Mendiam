@@ -32,7 +32,9 @@ class PublishedFragment : Fragment() {
 
     private lateinit var adapter: StoriesAdapter
 
+    private var tempId: MutableList<String> = mutableListOf()
     private var listStoryId: MutableList<String> = mutableListOf()
+    private var temp: MutableList<Story> = mutableListOf()
     private var listStory: MutableList<Story> = mutableListOf()
 
     private var database = FirebaseDatabase.getInstance().reference
@@ -58,15 +60,15 @@ class PublishedFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        adapter = StoriesAdapter("published", listStory,{
-            val intent = Intent(context,ReadActivity::class.java)
-            intent.putExtra("sid",it.sid)
+        adapter = StoriesAdapter("published", listStory, {
+            val intent = Intent(context, ReadActivity::class.java)
+            intent.putExtra("sid", it.sid)
             startActivity(intent)
-        },{
-            val intent = Intent(context,NewStoryActivity::class.java)
-            intent.putExtra("sid",it.sid)
+        }, {
+            val intent = Intent(context, NewStoryActivity::class.java)
+            intent.putExtra("sid", it.sid)
             startActivity(intent)
-        },{
+        }, {
             database.child("story").child(uid).child(it.sid).removeValue()
             listStory.remove(it)
             adapter.notifyDataSetChanged()
@@ -76,9 +78,9 @@ class PublishedFragment : Fragment() {
         rv_my_story.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
-    private fun getStories(){
+    private fun getStories() {
         rv_my_story.visibility = View.GONE
-        if(listStoryId.size !=0){
+        if (listStoryId.size != 0) {
             val lastSId = listStoryId[listStoryId.size - 1]
             getStory(object : CallbackString {
                 override fun onCallback(lastId: String) {
@@ -89,7 +91,7 @@ class PublishedFragment : Fragment() {
                     }
                 }
             })
-        }else{
+        } else {
             listStory.clear()
             adapter.notifyDataSetChanged()
             rv_my_story.visibility = View.VISIBLE
@@ -118,6 +120,7 @@ class PublishedFragment : Fragment() {
                     val sCount = dataSnapshot.child("sCount").getValue(Int::class.java)
                     if (sCount != null) {
                         makeListStoryID(sCount)
+                        activity?.log(sCount.toString())
                     }
                     callbackLoading.onCallback()
                 }
@@ -126,19 +129,24 @@ class PublishedFragment : Fragment() {
     }
 
     private fun makeListStoryID(sCount: Int) {
+        listStoryId.clear()
         for (count in 1..sCount) {
             listStoryId.add(uid + count.toString())
+            activity?.log(listStoryId[count - 1])
         }
     }
 
 
     private fun getStory(callbackString: CallbackString) {
         listStory.clear()
+        activity?.log(listStoryId.toString())
         for (sid in listStoryId) {
+            activity?.log(sid)
             database.child("story").child(sid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
+
                     override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        activity?.toast(p0.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -155,6 +163,7 @@ class PublishedFragment : Fragment() {
                                 name.toString()
                             )
                         )
+
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(sid)
                     }

@@ -5,10 +5,12 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -23,6 +25,8 @@ import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_new_story.*
 import java.io.FileNotFoundException
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NewStoryActivity : BaseActivity(), View.OnClickListener {
     private val main = MainApps()
@@ -31,6 +35,8 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
     private var uid = main.uid
     private var storage = main.storage
 
+    private var counterAdd = 1
+    private var counterRemove = 1
     private var did = ""
 
     private var listImage = mutableListOf<String>()
@@ -47,13 +53,14 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             did = intent.getStringExtra("did")
             getDraft()
         }
+        setUpOnKeyEditText(et_story)
 
         img_add_image.setOnClickListener(this)
         iv_back.setOnClickListener(this)
         tv_publish.setOnClickListener(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    //    @RequiresApi(Build.VERSION_CODES.N)
     override fun onClick(v: View?) {
         val id = v?.id
         when (id) {
@@ -62,13 +69,86 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                 publish()
             }
             R.id.img_add_image -> {
-                requestImage()
+                toast("Coming soon")
+//                requestImage()
             }
         }
     }
 
+//    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+//        return when(keyCode){
+//            KeyEvent.KEYCODE_ENTER ->{
+//                toast("enter")
+//                true
+//            }
+//            KeyEvent.KEYCODE_DEL ->{
+//                toast("Delet")
+//                true
+//            }
+//            else -> super.onKeyUp(keyCode, event)
+//        }
+//
+//    }
+
+    private fun setUpOnKeyEditText(editText: EditText) {
+        editText.addTextChangedListener(object :TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null && s.isNotEmpty()) {
+                    if(s.elementAt(s.length-1) == '\n'){
+                        editText.text.delete(s.length-1,s.length)
+                        toast("enter")
+//                        if (counterAdd == 1) {
+                            log(textId.toString())
+                            addText()
+                            val newEditText = findViewById<EditText>(TEXT_BASE_ID + textId - 1)
+                            newEditText.requestFocus()
+//                            counterAdd++
+//                        } else {
+//                            counterAdd = 1
+//                        }
+                    }
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+        })
+
+        editText.setOnKeyListener { v, keyCode, event ->
+            if(event.action == KeyEvent.ACTION_DOWN){
+                when(keyCode){
+                    KeyEvent.KEYCODE_DEL ->{
+                        toast("Del")
+//                        if (counterRemove == 1) {
+                            if (editText != et_story) {
+                                removeText(editText)
+                                if (textId > 0) {
+                                    log(textId.toString())
+                                    val newEditText = findViewById<EditText>(TEXT_BASE_ID + textId - 1)
+                                    newEditText.requestFocus()
+                                } else {
+                                    val newEditText = findViewById<EditText>(R.id.et_story)
+                                    newEditText.requestFocus()
+                                }
+//                                counterRemove++
+                            }
+//                        } else {
+//                            counterRemove = 1
+//                        }
+
+                        return@setOnKeyListener true
+                    }
+                    else -> return@setOnKeyListener false
+                }
+            }
+            return@setOnKeyListener false
+        }
+    }
+
     // Open Storage to add Image
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
+//    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun requestImage() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -81,10 +161,9 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
         if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK) {
             try {
-                addView(data)
-
+//                addView(data)
                 val uri = data!!.data
-                uploadImage(uri)
+//                uploadImage(uri)
             } catch (e: FileNotFoundException) {
                 toast(this, "Something went wrong")
             }
@@ -95,8 +174,8 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
     private fun uploadImage(file: Uri) {
         val storageRef = storage.reference
-        val riversRef = storageRef.child(file.lastPathSegment)
-        var uploadTask = riversRef.putFile(file)
+        val riversRef = storageRef.child(file.lastPathSegment + ".jpg")
+        val uploadTask = riversRef.putFile(file)
 
         showProgressDialog()
         // Register observers to listen for when the download is done or if it fails
@@ -107,7 +186,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         }.addOnSuccessListener {
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             hideProgressDialog()
-            uploadTask = riversRef.putFile(file)
+//            uploadTask = riversRef.putFile(file)
             val urlTask = uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
                 if (!task.isSuccessful) {
                     task.exception?.let {
@@ -131,7 +210,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private fun addView(data: Intent?) {
+    private fun addImage(data: Intent?) {
         val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
         val imageUri: Uri? = data!!.data
         val imageStream: InputStream? = contentResolver.openInputStream(imageUri!!)
@@ -159,12 +238,17 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         addText()
 
         imageId++
-        textId++
+    }
+
+    private fun removeText(editText: EditText) {
+        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
+        layoutParent.removeView(editText)
+        textId--
     }
 
     private fun addText() {
         val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
-        //        val newContext = ContextThemeWrapper(applicationContext, R.style.EditTextNewStory)
+//                val newContext = ContextThemeWrapper(applicationContext, R.style.EditTextNewStory)
         val myEditText = EditText(applicationContext)
 
         myEditText.layoutParams = (
@@ -176,13 +260,20 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         val padding = 16
         val scale: Float = resources.displayMetrics.density
         val paddingDp: Int = (padding * scale + 0.5f).toInt()
-        myEditText.setPadding(paddingDp, 0, paddingDp, 0)
+        myEditText.setPadding(paddingDp, 0, paddingDp, paddingDp/2)
 
-        myEditText.hint = "Cerita di sini..."
+//        myEditText.typeface = Typeface.createFromAsset(assets,"font/times_new_roman.ttf")
         myEditText.setBackgroundResource(R.color.colorWhite)
         myEditText.id = TEXT_BASE_ID + textId
+        myEditText.setOnClickListener {
+            toast(myEditText.id.toString())
+        }
+
+        setUpOnKeyEditText(myEditText)
 
         layoutParent.addView(myEditText)
+
+        textId++
     }
 
     private fun publish() {
@@ -194,14 +285,15 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                 , id
                 , et_judul.text.toString()
                 , et_story.text.toString()
-                , auth.currentUser?.displayName.toString()
-                , listImage[0]
+                , main.getPref(main.userName,"s",this).toString()
+                , getCurrentDate()
+                , ""
                 , if (imageId > 0) imageId - 1 else 0
                 , textId
             )
 
             database.child("story").child(sid).setValue(story)
-
+//            database.child("user").child(id).child("sCount").setValue(sCount)
             publishContent()
 
             hideProgressDialog()
@@ -209,16 +301,22 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    private fun getCurrentDate(): String {
+        val c = Calendar.getInstance().time
+        val currentDate = SimpleDateFormat("d MMM YYYY")
+        return currentDate.format(c)
+    }
+
     private fun publishContent() {
         readData { sCount, id ->
             val sid = "$id$sCount"
 
 //            upload image url
-            if (listImage.size > 0) {
-                for (i in 1 until listImage.size) {
-                    database.child(main.storyContent).child(sid).child("image$i").setValue(listImage[i])
-                }
-            }
+//            if (listImage.size > 0) {
+//                for (i in 1 until listImage.size) {
+//                    database.child(main.storyContent).child(sid).child("image$i").setValue(listImage[i])
+//                }
+//            }
 
 //            add text to list
             for (i in 0 until textId) {
@@ -242,12 +340,18 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         database.child(main.user).child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-
+                    toast(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val count = dataSnapshot.child("sCount").getValue(Int::class.java)!!
-                    onDataChange(count + 1, uid)
+                    var count = dataSnapshot.child("sCount").getValue(Int::class.java)
+                    if (count == null) {
+                        count = 0
+                        onDataChange(count + 1, uid)
+                    } else {
+                        onDataChange(count + 1, uid)
+                    }
+
                 }
             })
     }
@@ -256,7 +360,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         database.child(main.draft).child(uid).child(did)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    toast(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {

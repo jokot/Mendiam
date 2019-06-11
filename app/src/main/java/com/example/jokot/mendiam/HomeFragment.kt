@@ -106,25 +106,33 @@ class HomeFragment : Fragment() {
     private fun getStory() {
         database.child(main.story).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val ds = dataSnapshot.children
                 tempStory.clear()
                 ds.mapNotNull {
+//                        it ->
                     val sid = it.child("sid").getValue(String::class.java)
                     val uid = it.child("uid").getValue(String::class.java)
                     val judul = it.child("judul").getValue(String::class.java)
                     val deskripsi = it.child("deskripsi").getValue(String::class.java)
+                    val date = it.child("date").getValue(String::class.java)
+
                     val name = it.child("name").getValue(String::class.java)
+//                    main.getUName(uid!!){
+//                        activity?.toast(it)
+//                        name=it
+//                    }
                     tempStory.add(
                         Story(
                             sid.toString(),
                             uid.toString(),
                             judul.toString(),
                             deskripsi.toString(),
-                            name.toString()
+                            name.toString(),
+                            date.toString()
                         )
                     )
                 }
