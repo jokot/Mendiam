@@ -40,6 +40,8 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
     private var counterAdd = 1
     private var counterRemove = 1
+    private var edit = ""
+    private var storyId = ""
     private var did = ""
     private var firstStory = ""
     private var firstImage = ""
@@ -63,15 +65,46 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         if (intent.getStringExtra("did") != null) {
             did = intent.getStringExtra("did")
             initDraft()
-        } else {
-//            addEditable(hintAwal)
         }
+        if (intent.getStringExtra("edit") != null) {
+            storyId = intent.getStringExtra("sid")
+            edit = intent.getStringExtra("edit")
+            initEditStory()
+//            log(edit)
+//            log(storyId)
+        }
+//        else {
+//            addEditable(hintAwal)
+//        }
 //        setupOnfocusJudul(et_judul)
         setUpOnKeyEditText(et_judul)
 
         img_add_image.setOnClickListener(this)
         iv_back.setOnClickListener(this)
         tv_publish.setOnClickListener(this)
+    }
+
+    private fun initEditStory() {
+        getStory {
+            for (i in 0 until it) {
+                database
+                    .child(main.storyContent)
+                    .child(storyId)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val image = dataSnapshot.child("image$i").getValue(String::class.java)
+                            val text = dataSnapshot.child("text$i").getValue(String::class.java)
+                            loadDraft(image, text)
+                        }
+
+                    })
+            }
+
+        }
     }
 
     private fun initDraft() {
@@ -131,9 +164,11 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.iv_back -> {
-                if (listId.isNotEmpty() || et_judul.text.isNotEmpty()) {
+                if ((listId.isNotEmpty() || et_judul.text.isNotEmpty()) && edit == "") {
                     publishDraft()
-                } else {
+                } else if(edit!=""){
+                    publish()
+                } else{
                     finish()
                 }
             }
@@ -619,7 +654,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             val sid = id + (sCount.toString())
 
             val story = Story(
-                sid
+                if (edit!="" ) storyId else sid
                 , id
                 , et_judul.text.toString()
                 , firstStory
@@ -629,12 +664,20 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                 , if (listId.size > 0) listId.size else 0
                 , if (listId.size > 0) listId.size else 0
             )
-            if(did!=""){
+            if (did != "") {
                 database.child("draft").child(id).child(did).removeValue()
                 database.child(main.draftContent).child(id).child(did).removeValue()
             }
-            database.child("story").child(sid).setValue(story)
-            database.child("user").child(id).child("sCount").setValue(sCount)
+            if(edit!=""){
+                database.child("story").child(storyId).removeValue()
+                database.child(main.storyContent).child(storyId).removeValue()
+                database.child("story").child(storyId).setValue(story)
+            }else{
+                database.child("user").child(id).child("sCount").setValue(sCount)
+                database.child("story").child(sid).setValue(story)
+            }
+
+
             publishContent(sCount, id)
 
             hideProgressDialog()
@@ -656,7 +699,11 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         if (listImage.size > 0) {
             for (i in 0 until listImage.size) {
 //                    if(listImage[i] != ""){
-                database.child(main.storyContent).child(sid).child("image$i").setValue(listImage[i])
+                if(edit!=""){
+                    database.child(main.storyContent).child(storyId).child("image$i").setValue(listImage[i])
+                }else{
+                    database.child(main.storyContent).child(sid).child("image$i").setValue(listImage[i])
+                }
 //                    }
             }
         }
@@ -664,7 +711,12 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 //            upload text
         if (listText.size > 0) {
             for (i in 0 until listText.size) {
-                database.child(main.storyContent).child(sid).child("text$i").setValue(listText[i])
+                if(edit!=""){
+                    database.child(main.storyContent).child(storyId).child("text$i").setValue(listText[i])
+                }else{
+                    database.child(main.storyContent).child(sid).child("text$i").setValue(listText[i])
+                }
+
             }
         }
 
@@ -691,7 +743,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     var count = dataSnapshot.child("sCount").getValue(Int::class.java)
                     var dCount = dataSnapshot.child("dCount").getValue(Int::class.java)
-                    log(count.toString()+"\n"+dCount.toString())
+                    log(count.toString() + "\n" + dCount.toString())
 
                     if (count == null && dCount == null) {
                         count = 0
@@ -706,7 +758,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                         dCount = 0
                         log("C")
                         onDataChange(count + 1, dCount + 1, uid)
-                    }else{
+                    } else {
                         log("D")
                         onDataChange(count!! + 1, dCount!! + 1, uid)
                     }
@@ -715,6 +767,25 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             })
     }
 
+
+    private fun getStory(onDataChange: (Int) -> Unit) {
+        database.child(main.story).child(storyId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    toast(p0.message)
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val judul = dataSnapshot.child("judul").getValue(String::class.java)
+                    val textContent = dataSnapshot.child("textContent").getValue(Int::class.java)
+//                    val did = dataSnapshot.child("did").getValue(String::class.java)
+                    if (textContent != null) {
+                        onDataChange(textContent)
+                    }
+                    et_judul.setText(judul)
+                }
+            })
+    }
 
     private fun getDraft(onDataChange: (Int) -> Unit) {
         database.child(main.draft).child(uid).child(did)
@@ -771,15 +842,15 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             )
             log("sampe buat objec draft")
 
-            if(did !=""){
+            if (did != "") {
                 database.child("draft").child(id).child(draftId).removeValue()
             }
             database.child("draft").child(id).child(draftId).setValue(draft)
-            if(did==""){
+            if (did == "") {
                 database.child("user").child(id).child("dCount").setValue(dCount)
             }
             log("sampe kirim ke draft dan dCount")
-            if(listId.isNotEmpty()){
+            if (listId.isNotEmpty()) {
                 publishDraftContent(dCount, id)
             }
             hideProgressDialog()

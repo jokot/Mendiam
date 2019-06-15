@@ -67,9 +67,10 @@ class PublishedFragment : Fragment() {
         }, {
             val intent = Intent(context, NewStoryActivity::class.java)
             intent.putExtra("sid", it.sid)
+            intent.putExtra("edit","true")
             startActivity(intent)
         }, {
-            database.child("story").child(uid).child(it.sid).removeValue()
+            database.child("story").child(it.sid).removeValue()
             listStory.remove(it)
             adapter.notifyDataSetChanged()
         })

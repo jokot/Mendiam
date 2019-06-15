@@ -5,8 +5,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
 import com.example.jokot.mendiam.model.User
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_view_people.view.*
+import java.lang.Exception
 
 
 class PeopleAdapter(
@@ -40,6 +45,7 @@ class PeopleAdapter(
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val progressBar = view.findViewById<ProgressBar>(R.id.pb_item_people)
         fun bindItem(
             list: User,
             listUserFollowing: MutableList<String>,
@@ -81,6 +87,22 @@ class PeopleAdapter(
                     clickUnFollow(list)
                 }
 
+            }
+            if(list.urlPic != ""){
+                Picasso
+                    .get()
+                    .load(list.urlPic)
+                    .error(R.drawable.ic_broken_image_24dp)
+                    .into(itemView.iv_user,object : Callback{
+                        override fun onSuccess() {
+                            progressBar.visibility = View.GONE
+                        }
+
+                        override fun onError(e: Exception?) {
+                            progressBar.visibility = View.GONE
+                        }
+
+                    })
             }
 
             itemView.setOnClickListener {

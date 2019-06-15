@@ -118,9 +118,10 @@ class PeopleFragment : Fragment() {
                     val userName = it.child("userName").getValue(String::class.java).toString()
                     val email = it.child("email").getValue(String::class.java).toString()
                     val about = it.child("about").getValue(String::class.java).toString()
+                    val image = it.child("urlPic").getValue(String::class.java).toString()
 
                     if(id != uid && id != "null"){
-                        temp.add(User(id, userName, email,about))
+                        temp.add(User(id, userName, email,about,image))
                     }
                 }
                 listUser.clear()

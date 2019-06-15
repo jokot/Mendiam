@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -16,9 +17,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -46,10 +50,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
 
-        val navigationView: NavigationView = findViewById(R.id.nav_view)
-        val header = navigationView.getHeaderView(0)
-
-        val headerView = header.findViewById<LinearLayout>(R.id.ll_nav_bar)
+        setUpOnClick()
 
 
         main.getUName(main.getUId()) {
@@ -60,16 +61,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         loadProfile()
 
+    }
+
+    private fun setUpOnClick(){
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        val header = navigationView.getHeaderView(0)
+
+        val headerView = header.findViewById<LinearLayout>(R.id.ll_nav_bar)
         headerView.setOnClickListener {
             intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 
+        iv_notif.setOnClickListener {
+            toast("Coming soon")
+        }
         iv_search.setOnClickListener {
             intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
-
     }
 
 //    private fun getUserName(){
@@ -115,7 +125,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val headerText = header.findViewById<TextView>(R.id.tv_header_main)
                     val headerImage = header.findViewById<ImageView>(R.id.iv_header)
                     if(urlPic != ""){
-                        Picasso.get().load(urlPic).into(headerImage)
+                        Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(headerImage,object:
+                            Callback {
+                            override fun onSuccess() {
+                                pb_header.visibility = View.GONE
+                            }
+
+                            override fun onError(e: Exception?) {
+                                pb_header.visibility = View.GONE
+                            }
+
+                        })
                     }
                     headerText.text = name
                 }

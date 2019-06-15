@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.activity_search.iv_search
+import kotlinx.android.synthetic.main.app_bar_main.*
 
 class SearchActivity : AppCompatActivity() {
 
@@ -18,13 +20,20 @@ class SearchActivity : AppCompatActivity() {
 
         mSectionPageAdapter = SectionPageAdapter(supportFragmentManager)
 
-        iv_back.setOnClickListener {
-            finish()
-        }
+        setUpOnClick()
 
         container_search.adapter = mSectionPageAdapter
         container_search.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab_layout_search))
         tab_layout_search.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container_search))
+    }
+
+    private fun setUpOnClick(){
+        iv_back.setOnClickListener {
+            finish()
+        }
+        iv_search.setOnClickListener {
+            toast("Coming soon")
+        }
     }
 
     inner class SectionPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {

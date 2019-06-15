@@ -37,15 +37,15 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:background="@color/colorGrey"
-
                     android:layout_weight="1"
                     android:hint="Search"
                     tools:ignore="NestedWeights"/>
             <ImageView
+                    android:id="@+id/iv_search"
                     android:layout_margin="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_menu_send"/>
+                    app:srcCompat="@drawable/ic_search_black_24dp"/>
         </LinearLayout>
 
     </LinearLayout>
