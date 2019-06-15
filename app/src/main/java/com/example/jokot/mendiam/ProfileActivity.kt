@@ -14,7 +14,6 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
-import java.lang.Exception
 
 class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
 
@@ -24,7 +23,8 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     private var firebaseAuth = FirebaseAuth.getInstance()
 
     private var firebaseUser = firebaseAuth.currentUser
-    private var firebaseDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+    private var database: DatabaseReference = FirebaseDatabase.getInstance().reference
+    private var main = MainApps()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,22 +59,22 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                 startActivity(intent)
                 finishAffinity()
             }
-            R.id.tv_keluar ->{
+            R.id.tv_keluar -> {
                 firebaseAuth.signOut()
-                intent = Intent(applicationContext,SignInActivity::class.java)
+                intent = Intent(applicationContext, SignInActivity::class.java)
                 startActivity(intent)
                 finishAffinity()
             }
 
             R.id.ll_following -> {
-                intent = Intent(this,FollowActivity::class.java)
-                intent.putExtra("follow","following")
+                intent = Intent(this, FollowActivity::class.java)
+                intent.putExtra("follow", "following")
                 startActivity(intent)
             }
 
             R.id.ll_follower -> {
-                intent = Intent(this,FollowActivity::class.java)
-                intent.putExtra("follow","follower")
+                intent = Intent(this, FollowActivity::class.java)
+                intent.putExtra("follow", "follower")
                 startActivity(intent)
             }
 
@@ -104,6 +104,77 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         }
     }
 
+    private fun getFollowing(CountChild: (Int) -> Unit) {
+        database.child(main.following).child(main.getUId()).
+                addListenerForSingleValueEvent(object :ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        log(dataSnapshot.childrenCount.toString())
+                        CountChild(dataSnapshot.childrenCount.toInt())
+                    }
+
+                })
+//            .addChildEventListener(object : ChildEventListener {
+//                override fun onCancelled(p0: DatabaseError) {
+//                }
+//
+//                override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+//                }
+//
+//                override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+//                }
+//
+//                override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
+//                    log(dataSnapshot.childrenCount.toString())
+//                    log(main.getUId())
+//                    CountChild(dataSnapshot.childrenCount.toInt())
+//                }
+//
+//                override fun onChildRemoved(p0: DataSnapshot) {
+//                }
+//
+//            })
+    }
+
+    private fun getFollower(CountChild: (Int) -> Unit) {
+        database.child(main.follower).child(main.getUId()).addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                CountChild(dataSnapshot.childrenCount.toInt())
+            }
+
+        })
+//            .addChildEventListener(object : ChildEventListener {
+//            override fun onCancelled(p0: DatabaseError) {
+//
+//            }
+//
+//            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+//
+//            }
+//
+//            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+//
+//            }
+//
+//            override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
+//                log(dataSnapshot.childrenCount.toString())
+//                CountChild(dataSnapshot.childrenCount.toInt())
+//            }
+//
+//            override fun onChildRemoved(p0: DataSnapshot) {
+//
+//            }
+
+//        })
+    }
+
     override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
         animatedToolbar(verticalOffset)
     }
@@ -127,7 +198,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     }
 
 
-    private fun initData(){
+    private fun initData() {
         ll_more.visibility = View.GONE
         pb_profile.visibility = View.VISIBLE
         iv_profile.visibility = View.INVISIBLE
@@ -135,21 +206,21 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         tv_about.visibility = View.INVISIBLE
         ll_follow.visibility = View.INVISIBLE
 
-        getProfile(object : CallbackLoading{
+        getProfile(object : CallbackLoading {
             override fun onCallback() {
+
                 iv_profile.visibility = View.VISIBLE
                 tv_profile.visibility = View.VISIBLE
                 tv_about.visibility = View.VISIBLE
                 ll_follow.visibility = View.VISIBLE
                 pb_profile.visibility = View.GONE
-
             }
 
         })
     }
 
     private fun getProfile(callbackLoading: CallbackLoading) {
-        firebaseDatabase.child("user").child(firebaseUser!!.uid)
+        database.child("user").child(firebaseUser!!.uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                 }
@@ -157,33 +228,41 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val name = dataSnapshot.child("userName").getValue(String::class.java)
                     val autor = dataSnapshot.child("about").getValue(String::class.java)
-                    val fingCount = dataSnapshot.child("fingCount").getValue(Int::class.java)
-                    val ferCount = dataSnapshot.child("ferCount").getValue(Int::class.java)
+//                    val fingCount = dataSnapshot.child("fingCount").getValue(Int::class.java)
+//                    val ferCount = dataSnapshot.child("ferCount").getValue(Int::class.java)
                     val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
                     tv_profile.text = name
                     tv_toolbar_profile.text = name
 
-                    if (fingCount!=null){
-                        tv_jml_following.text = fingCount.toString()
+//                    if (fingCount!=null){
+//                        tv_jml_following.text = fingCount.toString()
+//                    }
+//                    if(ferCount != null){
+//                        tv_jml_follower.text = ferCount.toString()
+//                    }
+                    getFollower {
+                        tv_jml_follower.text = it.toString()
                     }
-                    if(ferCount != null){
-                        tv_jml_follower.text = ferCount.toString()
+                    getFollowing {
+                        tv_jml_following.text = it.toString()
                     }
-                    if(autor != null){
+
+                    if (autor != null) {
                         tv_about.text = autor
                     }
-                    if(urlPic != ""){
+                    if (urlPic != "") {
 
-                        Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(iv_profile,object : Callback{
-                            override fun onSuccess() {
-                                pb_image.visibility = View.GONE
-                            }
+                        Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp)
+                            .into(iv_profile, object : Callback {
+                                override fun onSuccess() {
+                                    pb_image.visibility = View.GONE
+                                }
 
-                            override fun onError(e: Exception?) {
-                                pb_image.visibility = View.GONE
-                            }
+                                override fun onError(e: Exception?) {
+                                    pb_image.visibility = View.GONE
+                                }
 
-                        })
+                            })
                     }
                     callbackLoading.onCallback()
                 }
