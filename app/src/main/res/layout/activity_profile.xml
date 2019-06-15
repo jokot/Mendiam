@@ -39,10 +39,10 @@
                         android:layout_margin="16dp"
                         app:layout_constraintTop_toTopOf="parent"/>
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                        android:src="@color/colorBlack"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+
+                <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
@@ -50,10 +50,23 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="32dp"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="#FF000000"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:id="@+id/iv_profile"/>
+                        android:id="@+id/rl_image"
+                        app:layout_constraintTop_toTopOf="parent">
+                    <de.hdodenhof.circleimageview.CircleImageView
+
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            app:civ_border_width="1dp"
+                            app:civ_border_color="#FF000000"
+                            android:id="@+id/iv_profile"/>
+
+                    <ProgressBar
+                            android:id="@+id/pb_image"
+                            android:layout_centerInParent="true"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"/>
+
+                </RelativeLayout>
 
 
                 <ImageView
@@ -103,7 +116,7 @@
                 </LinearLayout>
                 <TextView
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@+id/iv_profile"
+                        app:layout_constraintTop_toBottomOf="@+id/rl_image"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="8dp" android:layout_marginRight="8dp"

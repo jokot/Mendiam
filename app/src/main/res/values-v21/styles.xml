@@ -51,4 +51,8 @@
         <item name="android:hint">Cerita di sini...</item>
         <item name="android:background">@color/colorWhite</item>
     </style>
+
+    <style name="TextReadStoryStyle">
+        <item name="android:fontFamily">@font/times_new_roman</item>
+    </style>
 </resources>

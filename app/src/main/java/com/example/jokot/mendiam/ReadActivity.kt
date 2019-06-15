@@ -133,8 +133,8 @@ class ReadActivity : AppCompatActivity() {
                             tv_author_about.text = about
                         }
                         if (urlPic != "") {
-                            Picasso.get().load(urlPic).into(iv_user)
-                            Picasso.get().load(urlPic).into(iv_author)
+                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(iv_user)
+                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(iv_author)
                         }
                         tv_author.text = name
                         tv_author_name.text = name
@@ -279,7 +279,7 @@ class ReadActivity : AppCompatActivity() {
             newImage.adjustViewBounds = true
             newLayout.addView(newImage)
             if (url != "") {
-                Picasso.get().load(url).into(newImage, object : Callback {
+                Picasso.get().load(url).error(R.drawable.ic_broken_image_24dp).into(newImage, object : Callback {
                     override fun onSuccess() {
                         progress.visibility = View.GONE
                         val newLayoutParam = (

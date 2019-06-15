@@ -11,8 +11,10 @@ import android.view.View
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
+import java.lang.Exception
 
 class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
 
@@ -171,7 +173,17 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                         tv_about.text = autor
                     }
                     if(urlPic != ""){
-                        Picasso.get().load(urlPic).into(iv_profile)
+
+                        Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(iv_profile,object : Callback{
+                            override fun onSuccess() {
+                                pb_image.visibility = View.GONE
+                            }
+
+                            override fun onError(e: Exception?) {
+                                pb_image.visibility = View.GONE
+                            }
+
+                        })
                     }
                     callbackLoading.onCallback()
                 }

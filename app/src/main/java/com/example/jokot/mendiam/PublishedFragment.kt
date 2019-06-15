@@ -163,7 +163,8 @@ class PublishedFragment : Fragment() {
                                     uid.toString(),
                                     judul.toString(),
                                     deskripsi.toString(),
-                                    name.toString()
+                                    name.toString(),
+                                    date.toString()
                                 )
                             )
                         }

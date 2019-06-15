@@ -63,6 +63,7 @@ class StoriesAdapter(
             itemView.tv_keterangan.text = keterangan
             itemView.tv_judul.text = listStory.judul
             itemView.tv_deskripsi.text = listStory.deskripsi
+            itemView.tv_date.text = listStory.date
 
             itemView.setOnClickListener{
                 clickListener(listStory)

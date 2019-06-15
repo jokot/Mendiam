@@ -99,11 +99,13 @@ class DraftFragment : Fragment() {
                         val judul = it.child("judul").getValue(String::class.java).toString()
                         val deskripsi = it.child("deskripsi").getValue(String::class.java).toString()
                         val did = it.child("did").getValue(String::class.java).toString()
+                        val date = it.child("date").getValue(String::class.java).toString()
                         tempListDraft.add(
                             Story(
                                 judul = judul,
                                 deskripsi = deskripsi,
-                                sid = did
+                                sid = did,
+                                date = date
                             )
                         )
                     }

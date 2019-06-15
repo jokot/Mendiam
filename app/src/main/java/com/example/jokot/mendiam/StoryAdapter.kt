@@ -82,14 +82,14 @@ class StoryAdapter(
                     .load(listStory.image )
 //                    .fit()
 //                    .placeholder(R.color.colorBlack)
-                    .error(R.color.colorBlack).
+                    .error(R.drawable.ic_broken_image_24dp).
                         into(image, object : Callback {
                             override fun onSuccess() {
                                 progress.visibility = View.GONE
                             }
 
                             override fun onError(e: Exception?) {
-
+                                progress.visibility = View.GONE
                             }
                         })
             }
