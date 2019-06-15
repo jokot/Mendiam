@@ -52,18 +52,18 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
     private var imageId = 0
     private val hintAwal = ""
     private val hintAkhir = ""
+    private var nextString = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_story)
 
-        addEditable(hintAwal)
-
         if (intent.getStringExtra("did") != null) {
             did = intent.getStringExtra("did")
             getDraft()
+        }else{
+            addEditable(hintAwal)
         }
-
         setupOnfocusJudul(et_judul)
         setUpOnKeyEditText(et_judul)
 
@@ -153,9 +153,18 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null && s.isNotEmpty()) {
-                    if (s.elementAt(s.length - 1) == '\n') {
+                    if(containtEnter(editText.text.toString())){
+//
+//                    }
+//                    if (s.elementAt(s.length - 1) == '\n') {
 //                        delete \n
-                        editText.text.delete(s.length - 1, s.length)
+                        val string = editText.text.toString()
+                        val stringSplit=string.split("\n")
+                        val prevString = stringSplit[0]
+                        nextString = stringSplit[1]
+
+//                        editText.text.delete(s.length - 1, s.length)
+                        editText.setText(prevString)
 
                         if (editText != et_judul) {
 //                            delete hint
@@ -200,6 +209,10 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             }
 
         })
+    }
+
+    private fun containtEnter(string:String):Boolean{
+        return string.contains("\n")
     }
 
     private fun getIndexId(id: Int): Int {
@@ -369,6 +382,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         )
 
         newImage.id = IMAGE_BASE_ID + viewId
+        newImage.adjustViewBounds = true
 //        newImage.setImageResource(R.color.colorBlack)
         if (getIndexId(newImage.id - IMAGE_BASE_ID + TEXT_BASE_ID) > 0) {
             param.addRule(RelativeLayout.BELOW, listId[getIndexId(idNow)])
@@ -385,13 +399,50 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         val index = getIndexId(editText.id)
 //        if (listId.size > 1) {
         if (editText.text.isNotEmpty()) {
-            imageView.setImageDrawable(null)
-            listImage.removeAt(index)
-            listImage.add(index, "")
+            if (imageView.drawable == null && index!=0){
+                val string = editText.text.toString()
+
+                val idBefore = listId[index - 1]
+                val textViewBefore = findViewById<EditText>(idBefore)
+                val stringBefore = textViewBefore.text.toString()
+                val stringNow = stringBefore+string
+                textViewBefore.setText(stringNow)
+
+                val lastIndex = listId.size - 1
+                removeId(index)
+                listImage.removeAt(index)
+                layoutParent.removeView(editText)
+                layoutParent.removeView(imageView)
+                if (index != 0 && index != lastIndex) {
+                    changeViewDeletePosition(index)
+                }
+            }else if(imageView.drawable == null &&  index==0){
+                val string = editText.text.toString()
+
+                val idBefore = R.id.et_judul
+                val textViewBefore = findViewById<EditText>(idBefore)
+                val stringBefore = textViewBefore.text.toString()
+                val stringNow = stringBefore+string
+                textViewBefore.setText(stringNow)
+
+                val lastIndex = listId.size - 1
+                removeId(index)
+                listImage.removeAt(index)
+                layoutParent.removeView(editText)
+                layoutParent.removeView(imageView)
+                if (index != 0 && index != lastIndex) {
+                    changeViewDeletePosition(index)
+                }
+
+            } else{
+                imageView.setImageDrawable(null)
+                listImage.removeAt(index)
+                listImage.add(index, "")
+            }
+
         }
 //            imageView.setImageResource(0)
         else {
-
             val lastiIndex = listId.size - 1
             removeId(index)
             listImage.removeAt(index)
@@ -477,6 +528,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
 //        myEditText.typeface = Typeface.createFromAsset(assets,"font/times_new_roman.ttf")
         myEditText.hint = hint
+        myEditText.setText(nextString)
         myEditText.setBackgroundResource(R.color.colorWhite)
         myEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_size))
         myEditText.id = TEXT_BASE_ID + viewId

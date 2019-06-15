@@ -15,7 +15,6 @@ import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_read.*
-import java.lang.Exception
 
 
 /**
@@ -160,7 +159,6 @@ class ReadActivity : AppCompatActivity() {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val judul = dataSnapshot.child("judul").getValue(String::class.java)
-                    val deskipsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
                     val uid = dataSnapshot.child("uid").getValue(String::class.java)
                     val date = dataSnapshot.child("date").getValue(String::class.java)
 //                    val imageContent = dataSnapshot.child("imageContent").getValue(Int::class.java)
@@ -210,7 +208,6 @@ class ReadActivity : AppCompatActivity() {
 
                 })
         }
-
         pb_read.visibility = View.INVISIBLE
         ll_read.visibility = View.VISIBLE
     }
@@ -233,7 +230,7 @@ class ReadActivity : AppCompatActivity() {
 
 //            add relative layout
             val newLayout = RelativeLayout(applicationContext)
-            if(url !=""){
+            if (url != "") {
                 newLayout.layoutParams = (
                         LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -241,7 +238,7 @@ class ReadActivity : AppCompatActivity() {
                         ))
                 newLayout.setBackgroundResource(R.color.colorGrey)
                 layoutParent.addView(newLayout)
-            }else{
+            } else {
                 newLayout.layoutParams = (
                         LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -252,15 +249,16 @@ class ReadActivity : AppCompatActivity() {
             }
 //            add progressbar
             val progress = ProgressBar(applicationContext)
-            if(url != ""){
-                progress.layoutParams = (
-                        RelativeLayout.LayoutParams(
+            if (url != "") {
+                val param = (RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.WRAP_CONTENT,
                             RelativeLayout.LayoutParams.WRAP_CONTENT
                         ))
+                param.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE)
+                progress.layoutParams = param
                 progress.bringToFront()
                 newLayout.addView(progress)
-            }else{
+            } else {
                 progress.layoutParams = (
                         RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -278,18 +276,18 @@ class ReadActivity : AppCompatActivity() {
                         RelativeLayout.LayoutParams.MATCH_PARENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT
                     ))
-
+            newImage.adjustViewBounds = true
             newLayout.addView(newImage)
             if (url != "") {
-                Picasso.get().load(url).into(newImage,object :Callback{
+                Picasso.get().load(url).into(newImage, object : Callback {
                     override fun onSuccess() {
                         progress.visibility = View.GONE
                         val newLayoutParam = (
                                 LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        ))
-
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                ))
+                        newImage.setBackgroundResource(R.color.colorWhite)
                         newLayout.layoutParams = newLayoutParam
                     }
 
@@ -314,7 +312,7 @@ class ReadActivity : AppCompatActivity() {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     ))
-
+            textView.setTextIsSelectable(true)
             textView.text = text
             textView.setTextColor(Color.parseColor("#000000"))
             textView.setBackgroundResource(R.color.colorWhite)

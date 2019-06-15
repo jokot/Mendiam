@@ -53,9 +53,6 @@
     </style>
 
     <style name="TextReadStoryStyle">
-        <item name="android:textColor">@color/colorBlack</item>
         <item name="android:fontFamily">@font/times_new_roman</item>
-        <item name="android:textSize">@dimen/font_size</item>
-        <item name="android:background">@color/colorWhite</item>
     </style>
 </resources>
