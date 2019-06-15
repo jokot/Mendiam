@@ -143,17 +143,23 @@ class BookmarkFragment : Fragment() {
                         val judul = dataSnapshot.child("judul").getValue(String::class.java)
                         val deskripsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
                         val name = dataSnapshot.child("name").getValue(String::class.java)
-
-                        listBookmark.add(
-                            Story(
-                                sid,
-                                id.toString(),
-                                judul.toString(),
-                                deskripsi.toString(),
-                                name.toString()
+                        val date = dataSnapshot.child("date").getValue(String::class.java)
+                        val image = dataSnapshot.child("image").getValue(String::class.java)
+                        if(id!=null){
+                            listBookmark.add(
+                                Story(
+                                    sid,
+                                    id.toString(),
+                                    judul.toString(),
+                                    deskripsi.toString(),
+                                    name.toString(),
+                                    date.toString(),
+                                    image.toString()
+                                )
                             )
-                        )
-
+                        }else{
+                            database.child(main.bookmark).child(uid).child(sid).removeValue()
+                        }
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(sid)
                     }

@@ -154,16 +154,19 @@ class PublishedFragment : Fragment() {
                         val judul = dataSnapshot.child("judul").getValue(String::class.java)
                         val deskripsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
                         val name = dataSnapshot.child("name").getValue(String::class.java)
-                        listStory.add(
-                            Story(
-                                sid,
-                                uid.toString(),
-                                judul.toString(),
-                                deskripsi.toString(),
-                                name.toString()
-                            )
-                        )
+                        val date = dataSnapshot.child("date").getValue(String::class.java)
 
+                        if(uid!=null){
+                            listStory.add(
+                                Story(
+                                    sid,
+                                    uid.toString(),
+                                    judul.toString(),
+                                    deskripsi.toString(),
+                                    name.toString()
+                                )
+                            )
+                        }
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(sid)
                     }
