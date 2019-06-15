@@ -59,7 +59,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             }
             R.id.tv_keluar ->{
                 firebaseAuth.signOut()
-                intent = Intent(applicationContext,SignUpActivity::class.java)
+                intent = Intent(applicationContext,SignInActivity::class.java)
                 startActivity(intent)
                 finishAffinity()
             }

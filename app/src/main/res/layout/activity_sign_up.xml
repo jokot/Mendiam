@@ -32,34 +32,58 @@
                 android:gravity="center"
                 android:textSize="20sp"
                 android:text="Membaca adalah jendela ilmu. Bisa diem ngga tod"/>
-
-        <Button android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:id="@+id/btn_up_facebook"
-                android:textAllCaps="false"
-                android:text="Sign Up with Facebook"
-                android:drawableLeft="@drawable/ic_notifications_black_24dp"
-                android:background="@drawable/rectangle_corner"/>
-        <Button android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign Up with Google"
-                android:padding="8dp"
-                android:textAllCaps="false"
+        <com.google.android.gms.common.SignInButton
                 android:id="@+id/btn_up_google"
-                android:layout_margin="8dp"
-                android:drawableLeft="@drawable/ic_notifications_black_24dp"
-                android:background="@drawable/rectangle_corner"/>
-        <Button android:layout_width="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:textSize="18sp">
+        </com.google.android.gms.common.SignInButton>
+        <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign Up with Email"
-                android:textAllCaps="false"
-                android:id="@+id/btn_up_email"
-                android:padding="8dp"
-                android:layout_margin="8dp"
-                android:drawableLeft="@drawable/ic_notifications_black_24dp"
-                android:background="@drawable/rectangle_corner"/>
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+            <Button android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:text="Sign up with Email"
+                    android:textAllCaps="false"
+                    android:paddingStart="8dp"
+                    android:layout_margin="8dp"
+                    android:id="@+id/btn_up_email"
+                    android:drawableLeft="@drawable/ic_mail_outline_black_24dp"
+                    android:background="@drawable/rectangle_corner"
+                    android:paddingLeft="8dp"/>
+        </FrameLayout>
+
+        <!--<Button android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="8dp"-->
+                <!--android:padding="8dp"-->
+                <!--android:id="@+id/btn_up_facebook"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:text="Sign Up with Facebook"-->
+                <!--android:drawableLeft="@drawable/ic_notifications_black_24dp"-->
+                <!--android:background="@drawable/rectangle_corner"/>-->
+        <!--<Button android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Sign Up with Google"-->
+                <!--android:padding="8dp"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:id="@+id/btn_up_google"-->
+                <!--android:layout_margin="8dp"-->
+                <!--android:drawableLeft="@drawable/ic_notifications_black_24dp"-->
+                <!--android:background="@drawable/rectangle_corner"/>/-->
+        <!--<Button android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Sign Up with Email"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:id="@+id/btn_up_email"-->
+                <!--android:padding="8dp"-->
+                <!--android:layout_margin="8dp"-->
+                <!--android:drawableLeft="@drawable/ic_notifications_black_24dp"-->
+                <!--android:background="@drawable/rectangle_corner"/>-->
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

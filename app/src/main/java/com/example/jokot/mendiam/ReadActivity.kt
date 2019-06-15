@@ -4,16 +4,18 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.TypedValue
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_read.*
+import java.lang.Exception
 
 
 /**
@@ -104,7 +106,7 @@ class ReadActivity : AppCompatActivity() {
                 onBackPressed()
                 return true
             }
-            else-> super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -115,6 +117,7 @@ class ReadActivity : AppCompatActivity() {
                    , textContent
             ->
             getStoryContent(textContent)
+            getMyPic()
             database.child("user").child(uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -137,8 +140,6 @@ class ReadActivity : AppCompatActivity() {
                         tv_author.text = name
                         tv_author_name.text = name
 
-                        pb_read.visibility = View.INVISIBLE
-                        ll_read.visibility = View.VISIBLE
 
                     }
                 })
@@ -168,14 +169,20 @@ class ReadActivity : AppCompatActivity() {
 //                    toast(this@ReadActivity,"$imageContent $textContent")
                     tv_judul.text = judul
                     tv_date.text = date
-                    tv_deskripsi.text = deskipsi
+//                    tv_deskripsi.text = deskipsi
 
-                    cekFollow(uid!!)
+                    if (uid != main.getUId()) {
+                        cekFollow(uid!!)
+                    } else {
+                        btn_follow.visibility = View.GONE
+                    }
+
                     authorId = uid
                     onDataChange(
                         uid!!
                         , textContent!!
                     )
+
 //                    getStoryContent(textContent)
                 }
 
@@ -191,66 +198,116 @@ class ReadActivity : AppCompatActivity() {
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-//                        val image = dataSnapshot.child("image$i").getValue(String::class.java)
+                        val image = dataSnapshot.child("image$i").getValue(String::class.java)
                         val text = dataSnapshot.child("text$i").getValue(String::class.java)
 
-                        loadContent(i,
-//                            image,
-                            text)
+                        loadContent(
+                            i,
+                            image,
+                            text
+                        )
                     }
 
                 })
         }
+
+        pb_read.visibility = View.INVISIBLE
+        ll_read.visibility = View.VISIBLE
     }
 
 //    private fun addText() {
-//        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
-////                val newContext = ContextThemeWrapper(applicationContext, R.style.EditTextNewStory)
-//        val myEditText = TextView(applicationContext)
-//
-//        myEditText.layoutParams = (
-//                LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT
-//                ))
-//        myEditText.setTextColor(Color.parseColor("#000000"))
+
 //        val padding = 16
 //        val scale: Float = resources.displayMetrics.density
 //        val paddingDp: Int = (padding * scale + 0.5f).toInt()
 //        myEditText.setPadding(paddingDp, 0, paddingDp, 0)
-//
-////        myEditText.typeface = Typeface.createFromAsset(assets,"font/times_new_roman.ttf")
-//        myEditText.setBackgroundResource(R.color.colorWhite)
-//        myEditText.id = TEXT_BASE_ID + textId
-//        myEditText.setOnClickListener {
-//            toast(myEditText.id.toString())
-//        }
-//
-//        setUpOnKeyEditText(myEditText)
-//
-//        layoutParent.addView(myEditText)
-//
-//        textId++
-//    }
 
     private fun loadContent(
         id: Int,
-//                            url: String?,
+        url: String?,
         text: String?
     ) {
         if (id >= 0) {
             val layoutParent = findViewById<LinearLayout>(R.id.ll_content)
-//            val newImage = ImageView(applicationContext)
 
-//            newImage.layoutParams = (
-//                    LinearLayout.LayoutParams(
-//                        LinearLayout.LayoutParams.MATCH_PARENT,
-//                        LinearLayout.LayoutParams.WRAP_CONTENT
-//                    ))
-//
-//            layoutParent.addView(newImage)
-//            Picasso.get().load(url).into(newImage).run {
-            val textView = TextView(applicationContext)
+
+//            add relative layout
+            val newLayout = RelativeLayout(applicationContext)
+            if(url !=""){
+                newLayout.layoutParams = (
+                        LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            500
+                        ))
+                newLayout.setBackgroundResource(R.color.colorGrey)
+                layoutParent.addView(newLayout)
+            }else{
+                newLayout.layoutParams = (
+                        LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ))
+
+                layoutParent.addView(newLayout)
+            }
+//            add progressbar
+            val progress = ProgressBar(applicationContext)
+            if(url != ""){
+                progress.layoutParams = (
+                        RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                        ))
+                progress.bringToFront()
+                newLayout.addView(progress)
+            }else{
+                progress.layoutParams = (
+                        RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                        ))
+                progress.visibility = View.GONE
+                newLayout.addView(progress)
+            }
+
+
+//            add image
+            val newImage = ImageView(applicationContext)
+            newImage.layoutParams = (
+                    RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT
+                    ))
+
+            newLayout.addView(newImage)
+            if (url != "") {
+                Picasso.get().load(url).into(newImage,object :Callback{
+                    override fun onSuccess() {
+                        progress.visibility = View.GONE
+                        val newLayoutParam = (
+                                LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ))
+
+                        newLayout.layoutParams = newLayoutParam
+                    }
+
+                    override fun onError(e: Exception?) {
+
+                    }
+
+                })
+            }
+
+            //            add text
+
+            val newContext = ContextThemeWrapper(applicationContext, R.style.TextReadStoryStyle)
+            val textView = TextView(newContext)
+            val padding = 8
+            val scale: Float = resources.displayMetrics.density
+            val paddingUp: Int = (padding * scale + 0.5f).toInt()
+            textView.setPadding(0, 0, 0, paddingUp)
 
             textView.layoutParams = (
                     LinearLayout.LayoutParams(
@@ -259,10 +316,12 @@ class ReadActivity : AppCompatActivity() {
                     ))
 
             textView.text = text
+            textView.setTextColor(Color.parseColor("#000000"))
+            textView.setBackgroundResource(R.color.colorWhite)
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_size))
             layoutParent.addView(textView)
-//            }
         } else {
-            tv_deskripsi.text = text
+//            tv_deskripsi.text = text
         }
     }
 
@@ -306,6 +365,24 @@ class ReadActivity : AppCompatActivity() {
             btn_follow.setTextColor(Color.parseColor("#000000"))
         }
 
+    }
+
+    private fun getMyPic() {
+        database.child(main.user)
+            .child(main.getUId())
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
+                    if (urlPic != null) {
+                        Picasso.get().load(urlPic).into(iv_my_pic)
+                    }
+                }
+
+            })
     }
 //    override fun onPostCreate(savedInstanceState: Bundle?) {
 //        super.onPostCreate(savedInstanceState)

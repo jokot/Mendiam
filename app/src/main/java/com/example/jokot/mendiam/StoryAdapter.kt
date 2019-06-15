@@ -4,10 +4,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.example.jokot.mendiam.model.Story
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_view.view.*
 import kotlinx.android.synthetic.main.item_view_sotries.view.*
+import java.lang.Exception
 
 class StoryAdapter(
     private var list: MutableList<Story>
@@ -39,6 +45,9 @@ class StoryAdapter(
         var judul = view.findViewById<TextView>(R.id.tv_judul)
         var deskripsi = view.findViewById<TextView>(R.id.tv_deskripsi)
         var date = view.findViewById<TextView>(R.id.tv_date)
+        var image = view.findViewById<ImageView>(R.id.iv_itemView_story)
+        var relativeLayout = view.findViewById<RelativeLayout>(R.id.rl_image)
+        var progress = view.findViewById<ProgressBar>(R.id.pb_image)
 
         fun bindItem(
             listStory: Story
@@ -64,6 +73,31 @@ class StoryAdapter(
             deskripsi.text = listStory.deskripsi
             itemView.tv_name.text = listStory.name
 
+            if(listStory.image!=""){
+                image.visibility = View.VISIBLE
+                relativeLayout.visibility = View.VISIBLE
+
+                progress.visibility = View.VISIBLE
+                Picasso.get()
+                    .load(listStory.image )
+//                    .fit()
+//                    .placeholder(R.color.colorBlack)
+                    .error(R.color.colorBlack).
+                        into(image, object : Callback {
+                            override fun onSuccess() {
+                                progress.visibility = View.GONE
+                            }
+
+                            override fun onError(e: Exception?) {
+
+                            }
+                        })
+            }
+            else{
+//                image.visibility = View.GONE
+                relativeLayout.visibility = View.GONE
+                image.setImageResource(R.color.colorWhite)
+            }
             itemView.iv_bookmark.setOnClickListener {
                 if (n == 0) {
                     n++

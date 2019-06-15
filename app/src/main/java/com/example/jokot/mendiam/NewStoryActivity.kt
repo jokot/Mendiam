@@ -1,20 +1,21 @@
 package com.example.jokot.mendiam
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import com.example.jokot.mendiam.model.Story
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -38,113 +39,175 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
     private var counterAdd = 1
     private var counterRemove = 1
     private var did = ""
+    private var firstStory = ""
+    private var firstImage = ""
+
 
     private var listImage = mutableListOf<String>()
     private var listText = mutableListOf<String>()
+    private var listId = mutableListOf<Int>()
 
-    private var textId = 0
+    private var viewId = 0
+    private var focusEdit = 0
     private var imageId = 0
+    private val hintAwal = ""
+    private val hintAkhir = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_story)
 
+        addEditable(hintAwal)
+
         if (intent.getStringExtra("did") != null) {
             did = intent.getStringExtra("did")
             getDraft()
         }
-        setUpOnKeyEditText(et_story)
+
+        setupOnfocusJudul(et_judul)
+        setUpOnKeyEditText(et_judul)
 
         img_add_image.setOnClickListener(this)
         iv_back.setOnClickListener(this)
         tv_publish.setOnClickListener(this)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupOnfocusJudul(editText: EditText){
+        editText.setOnTouchListener { _, _ ->
+            toast(editText.id.toString())
+//            focusEdit = editText.id
+            return@setOnTouchListener false
+        }
+    }
+
     //    @RequiresApi(Build.VERSION_CODES.N)
     override fun onClick(v: View?) {
         val id = v?.id
         when (id) {
-            R.id.iv_back -> finish()
+            R.id.iv_back -> {
+                finish()
+            }
             R.id.tv_publish -> {
                 publish()
             }
             R.id.img_add_image -> {
-                toast("Coming soon")
-//                requestImage()
+//                toast("Coming soon")
+                requestImage()
+                getFocuse()
+                log(focusEdit.toString())
             }
         }
     }
 
-//    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-//        return when(keyCode){
-//            KeyEvent.KEYCODE_ENTER ->{
-//                toast("enter")
-//                true
-//            }
-//            KeyEvent.KEYCODE_DEL ->{
-//                toast("Delet")
-//                true
-//            }
-//            else -> super.onKeyUp(keyCode, event)
-//        }
-//
-//    }
+    private fun addEditable(hint: String) {
+        val id = TEXT_BASE_ID + viewId
+//        addimageView(id)
+        addText(hint, id)
+        val newEditText = findViewById<EditText>(id)
+        newEditText.requestFocus()
+//        focusEdit = id
+    }
+
 
     private fun setUpOnKeyEditText(editText: EditText) {
-        editText.addTextChangedListener(object :TextWatcher{
+        if (editText != et_judul) {
+            editText.setOnKeyListener { v, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    when (keyCode) {
+                        KeyEvent.KEYCODE_DEL -> {
+
+                            val id = editText.id
+                            val imageView = findViewById<ImageView>(id - TEXT_BASE_ID + IMAGE_BASE_ID)
+
+                            val index = getIndexId(id)
+
+                            if (index > 0) {
+
+                                removeView(editText, imageView)
+//                            log(viewId.toString())
+                                val newEditText = findViewById<EditText>(listId[index - 1])
+                                newEditText.requestFocus()
+//                                focusEdit = listId[index - 1]
+                            } else if (index == 0) {
+                                removeView(editText, imageView)
+//                            val newEditText = findViewById<EditText>(listId[index])
+                                val newEditText = findViewById<EditText>(R.id.et_judul)
+                                newEditText.requestFocus()
+//                                focusEdit = R.id.et_judul
+//                            imageView.setImageDrawable(null)
+                            }
+                            log(listId.toString())
+                            log(listImage.toString())
+//                            log(focusEdit.toString())
+
+                            return@setOnKeyListener true
+                        }
+                        else -> return@setOnKeyListener false
+                    }
+                }
+                return@setOnKeyListener false
+            }
+        }
+
+        editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null && s.isNotEmpty()) {
-                    if(s.elementAt(s.length-1) == '\n'){
-                        editText.text.delete(s.length-1,s.length)
-                        toast("enter")
-//                        if (counterAdd == 1) {
-                            log(textId.toString())
-                            addText()
-                            val newEditText = findViewById<EditText>(TEXT_BASE_ID + textId - 1)
+                    if (s.elementAt(s.length - 1) == '\n') {
+//                        delete \n
+                        editText.text.delete(s.length - 1, s.length)
+
+                        if (editText != et_judul) {
+//                            delete hint
+                            editText.hint = hintAkhir
+
+//                            add created id to list
+                            val index = getIndexId(editText.id)
+                            listId.add(index + 1, TEXT_BASE_ID + viewId)
+                            listImage.add(index + 1, "")
+
+//                            add editText and imageView
+                            addText(hintAkhir, editText.id)
+                            changeViewEnterPosition(index)
+
+//                            set focus to created editText
+                            val newEditText = findViewById<EditText>(listId[index + 1])
                             newEditText.requestFocus()
-//                            counterAdd++
-//                        } else {
-//                            counterAdd = 1
-//                        }
+//                            focusEdit = listId[index + 1]
+                        } else {
+                            if (listId.isEmpty()) {
+                                addEditable(hintAwal)
+                            } else {
+                                addEditable(hintAkhir)
+                                listId.add(0, TEXT_BASE_ID + viewId - 1)
+                                listImage.add(0, "")
+                                changeViewDeletePosition(1)
+                            }
+                        }
+
+                        log(listId.toString())
+                        log(listImage.toString())
+//                        log(focusEdit.toString())
+
                     }
                 }
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
 
         })
+    }
 
-        editText.setOnKeyListener { v, keyCode, event ->
-            if(event.action == KeyEvent.ACTION_DOWN){
-                when(keyCode){
-                    KeyEvent.KEYCODE_DEL ->{
-                        toast("Del")
-//                        if (counterRemove == 1) {
-                            if (editText != et_story) {
-                                removeText(editText)
-                                if (textId > 0) {
-                                    log(textId.toString())
-                                    val newEditText = findViewById<EditText>(TEXT_BASE_ID + textId - 1)
-                                    newEditText.requestFocus()
-                                } else {
-                                    val newEditText = findViewById<EditText>(R.id.et_story)
-                                    newEditText.requestFocus()
-                                }
-//                                counterRemove++
-                            }
-//                        } else {
-//                            counterRemove = 1
-//                        }
+    private fun getIndexId(id: Int): Int {
+        return listId.indexOf(id)
+    }
 
-                        return@setOnKeyListener true
-                    }
-                    else -> return@setOnKeyListener false
-                }
-            }
-            return@setOnKeyListener false
-        }
+    private fun removeId(index: Int) {
+        listId.removeAt(index)
     }
 
     // Open Storage to add Image
@@ -161,9 +224,9 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
         if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK) {
             try {
-//                addView(data)
+                addImage(data)
                 val uri = data!!.data
-//                uploadImage(uri)
+                uploadImage(uri)
             } catch (e: FileNotFoundException) {
                 toast(this, "Something went wrong")
             }
@@ -172,9 +235,24 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    private fun getFocuse() {
+        var found = false
+        for (i in listId) {
+            val editText = findViewById<EditText>(i)
+            if (editText.isFocused) {
+                focusEdit =  i
+                found = true
+                break
+            }
+        }
+        if(!found){
+            focusEdit = R.id.et_judul
+        }
+    }
+
     private fun uploadImage(file: Uri) {
         val storageRef = storage.reference
-        val riversRef = storageRef.child(file.lastPathSegment + ".jpg")
+        val riversRef = storageRef.child(main.getCurrentTimeStamp() + ".jpg")
         val uploadTask = riversRef.putFile(file)
 
         showProgressDialog()
@@ -201,7 +279,20 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             urlTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val downloadUri = task.result
-                    listImage.add(downloadUri.toString())
+                    if (focusEdit != R.id.et_judul) {
+                        val index = getIndexId(focusEdit)
+                        listImage.add(index, downloadUri.toString())
+                        listImage.removeAt(index + 1)
+
+                    } else if (focusEdit == R.id.et_judul) {
+                        listImage.add(0, downloadUri.toString())
+                        listImage.removeAt(1)
+
+                    }
+                    log(listId.toString())
+                    log(listImage.toString())
+//                    log(focusEdit.toString())
+
                 } else {
                     toast(this, "Failed to upload")
                 }
@@ -211,90 +302,236 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun addImage(data: Intent?) {
-        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
+//        if (listImage.size > 0) {
+//            listImage.removeAt(listImage.size - 1)
+//        }
+//        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
+
         val imageUri: Uri? = data!!.data
         val imageStream: InputStream? = contentResolver.openInputStream(imageUri!!)
         val selectedImage: Bitmap = BitmapFactory.decodeStream(imageStream)
+
+        if (focusEdit != R.id.et_judul) {
+            val newImage = findViewById<ImageView>(focusEdit - TEXT_BASE_ID + IMAGE_BASE_ID)
+            newImage.setImageBitmap(selectedImage)
+        } else if (focusEdit == R.id.et_judul && listId.isEmpty()) {
+            addEditable(hintAwal)
+            val newImage = findViewById<ImageView>(IMAGE_BASE_ID + viewId - 1)
+            newImage.setImageBitmap(selectedImage)
+        } else if (focusEdit == R.id.et_judul && listId.isNotEmpty()) {
+            val newImage = findViewById<ImageView>(listId[0] - TEXT_BASE_ID + IMAGE_BASE_ID)
+            newImage.setImageBitmap(selectedImage)
+        }
+
+
+//        val newImage = ImageView(applicationContext)
+//
+//        newImage.layoutParams = (
+//                LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//                ))
+//
+//        newImage.id = IMAGE_BASE_ID + viewId
+//        layoutParent.addView(newImage)
+
+
+//        newImage.setImageBitmap(selectedImage)
+
+
+//        if (imageId > 1) {
+//            val text = findViewById<EditText>(TEXT_BASE_ID + viewId - 1)
+//            if (text.text.toString() == "") {
+//                text.hint = ""
+//            }
+//        } else {
+//            et_story.hint = ""
+//        }
+
+//        addEditable("")
+
+//        imageId++
+    }
+
+    private fun addimageView(idNow: Int) {
+        val layoutParent = findViewById<RelativeLayout>(R.id.rl_story)
         val newImage = ImageView(applicationContext)
 
-        newImage.layoutParams = (
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ))
+//        newImage.layoutParams = (
+//                LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    200
+//                ))
 
-        newImage.id = IMAGE_BASE_ID + imageId
-        layoutParent.addView(newImage)
-        newImage.setImageBitmap(selectedImage)
+        val param = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
 
-        if (imageId > 1) {
-            val text = findViewById<EditText>(TEXT_BASE_ID + textId - 1)
-            if (text.text.toString() == "") {
-                text.hint = ""
-            }
-        } else {
-            et_story.hint = ""
+        newImage.id = IMAGE_BASE_ID + viewId
+//        newImage.setImageResource(R.color.colorBlack)
+        if (getIndexId(newImage.id - IMAGE_BASE_ID + TEXT_BASE_ID) > 0) {
+            param.addRule(RelativeLayout.BELOW, listId[getIndexId(idNow)])
         }
-        addText()
-
-        imageId++
+//        else if (getIndexId(newImage.id- IMAGE_BASE_ID+ TEXT_BASE_ID) == 0){
+//            param.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+//        }
+        layoutParent.addView(newImage, param)
     }
 
-    private fun removeText(editText: EditText) {
-        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
-        layoutParent.removeView(editText)
-        textId--
+    private fun removeView(editText: EditText, imageView: ImageView) {
+        val layoutParent = findViewById<RelativeLayout>(R.id.rl_story)
+
+        val index = getIndexId(editText.id)
+//        if (listId.size > 1) {
+        if (editText.text.isNotEmpty()) {
+            imageView.setImageDrawable(null)
+            listImage.removeAt(index)
+            listImage.add(index, "")
+        }
+//            imageView.setImageResource(0)
+        else {
+
+            val lastiIndex = listId.size - 1
+            removeId(index)
+            listImage.removeAt(index)
+            layoutParent.removeView(editText)
+            layoutParent.removeView(imageView)
+            if (index != 0 && index != lastiIndex) {
+                changeViewDeletePosition(index)
+            }
+        }
+//        }else if(listId.size == 1){
+//            imageView.setImageDrawable(null)
+//        }
+
+//        if(editText.text.isEmpty()){
+//            editText.visibility = View.GONE
+//            imageView.setImageResource(0)
+//            imageView.visibility = View.GONE
+//        }else{
+//
+//        }
+
+//        imageId--
     }
 
-    private fun addText() {
-        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
+    private fun changeViewDeletePosition(index: Int) {
+        val nextImageView = findViewById<ImageView>(listId[index] - TEXT_BASE_ID + IMAGE_BASE_ID)
+        val idBefore = listId[index - 1]
+        val param = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        param.addRule(RelativeLayout.BELOW, idBefore)
+        nextImageView.layoutParams = param
+    }
+
+    private fun changeViewEnterPosition(index: Int) {
+        val lastIndex = listId.size - 1
+        if (index + 1 != 0 && index + 1 != lastIndex) {
+//            val newImageView = findViewById<ImageView>(listId[index+1]- TEXT_BASE_ID+ IMAGE_BASE_ID)
+            val oldImageView = findViewById<ImageView>(listId[index + 2] - TEXT_BASE_ID + IMAGE_BASE_ID)
+            val idNow = listId[index + 1]
+//            val idNext = listId[index+2]
+            val paramOld = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+            )
+            paramOld.addRule(RelativeLayout.BELOW, idNow)
+            oldImageView.layoutParams = paramOld
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun addText(hint: String, idNow: Int) {
+//        if(listId.isNotEmpty()){
+        if (listId.isEmpty()) {
+            listId.add(TEXT_BASE_ID + viewId)
+            listImage.add("")
+        }
+        addimageView(idNow)
+//        }
+//        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
+        val layoutParent = findViewById<RelativeLayout>(R.id.rl_story)
 //                val newContext = ContextThemeWrapper(applicationContext, R.style.EditTextNewStory)
         val myEditText = EditText(applicationContext)
 
-        myEditText.layoutParams = (
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ))
+//        myEditText.layoutParams = (
+//                LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//                ))
+
+        val param = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+
+
         myEditText.setTextColor(Color.parseColor("#000000"))
         val padding = 16
         val scale: Float = resources.displayMetrics.density
         val paddingDp: Int = (padding * scale + 0.5f).toInt()
-        myEditText.setPadding(paddingDp, 0, paddingDp, paddingDp/2)
+        myEditText.setPadding(paddingDp, 0, paddingDp, paddingDp / 2)
 
 //        myEditText.typeface = Typeface.createFromAsset(assets,"font/times_new_roman.ttf")
+        myEditText.hint = hint
         myEditText.setBackgroundResource(R.color.colorWhite)
-        myEditText.id = TEXT_BASE_ID + textId
-        myEditText.setOnClickListener {
+        myEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_size))
+        myEditText.id = TEXT_BASE_ID + viewId
+
+//        if(getIndexId(myEditText.id)>0){
+        param.addRule(RelativeLayout.BELOW, myEditText.id - TEXT_BASE_ID + IMAGE_BASE_ID)
+//        }
+
+        myEditText.setOnTouchListener { _, _ ->
             toast(myEditText.id.toString())
+//            log(myEditText.id.toString())
+//            focusEdit = myEditText.id - TEXT_BASE_ID
+            return@setOnTouchListener false
         }
 
         setUpOnKeyEditText(myEditText)
 
-        layoutParent.addView(myEditText)
+        layoutParent.addView(myEditText, param)
 
-        textId++
+        viewId++
     }
 
     private fun publish() {
         readData { sCount, id ->
+            addTextToList()
+            for (i in listText) {
+                if (i != "") {
+                    firstStory = i
+                    break
+                }
+            }
+            for (i in listImage) {
+                if (i != "") {
+                    firstImage = i
+                    break
+                }
+            }
+
             val sid = id + (sCount.toString())
 
             val story = Story(
                 sid
                 , id
                 , et_judul.text.toString()
-                , et_story.text.toString()
-                , main.getPref(main.userName,"s",this).toString()
+                , firstStory
+                , main.getPref(main.userName, "s", this).toString()
                 , getCurrentDate()
-                , ""
-                , if (imageId > 0) imageId - 1 else 0
-                , textId
+                , firstImage
+                , if (listId.size > 0) listId.size else 0
+                , if (listId.size > 0) listId.size else 0
             )
 
             database.child("story").child(sid).setValue(story)
-//            database.child("user").child(id).child("sCount").setValue(sCount)
-            publishContent()
+            database.child("user").child(id).child("sCount").setValue(sCount)
+            publishContent(sCount, id)
 
             hideProgressDialog()
             finish()
@@ -307,30 +544,34 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         return currentDate.format(c)
     }
 
-    private fun publishContent() {
-        readData { sCount, id ->
-            val sid = "$id$sCount"
+    private fun publishContent(sCount: Int, id: String) {
+//        readData { sCount, id ->
+        val sid = "$id$sCount"
 
 //            upload image url
-//            if (listImage.size > 0) {
-//                for (i in 1 until listImage.size) {
-//                    database.child(main.storyContent).child(sid).child("image$i").setValue(listImage[i])
-//                }
-//            }
-
-//            add text to list
-            for (i in 0 until textId) {
-                val text = findViewById<EditText>(TEXT_BASE_ID + i)
-                listText.add(text.text.toString())
+        if (listImage.size > 0) {
+            for (i in 0 until listImage.size) {
+//                    if(listImage[i] != ""){
+                database.child(main.storyContent).child(sid).child("image$i").setValue(listImage[i])
+//                    }
             }
+        }
 
 //            upload text
-            if (listText.size > 0) {
-                for (i in 0 until listText.size) {
-                    database.child(main.storyContent).child(sid).child("text$i").setValue(listText[i])
-                }
+        if (listText.size > 0) {
+            for (i in 0 until listText.size) {
+                database.child(main.storyContent).child(sid).child("text$i").setValue(listText[i])
             }
-            database.child(main.user).child(id).child("sCount").setValue(sCount)
+        }
+
+//        }
+    }
+
+    private fun addTextToList() {
+//        add text to list
+        for (i in listId) {
+            val text = findViewById<EditText>(i)
+            listText.add(text.text.toString())
         }
     }
 
@@ -368,7 +609,9 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                     val deskripsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
 
                     et_judul.setText(judul)
-                    et_story.setText(deskripsi)
+                    val firstEdit = findViewById<EditText>(TEXT_BASE_ID + viewId)
+                    firstEdit.setText(deskripsi)
+//                    et_story.setText(deskripsi)
                 }
 
             })
@@ -376,7 +619,8 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
     companion object {
         const val REQUEST_IMAGE = 2
-        const val IMAGE_BASE_ID = 200
+        const val IMAGE_BASE_ID = 500
         const val TEXT_BASE_ID = 100
     }
 }
+

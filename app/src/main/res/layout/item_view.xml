@@ -29,6 +29,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Ini Judulnya"
+                    android:maxLines="2"
                     android:textColor="@color/colorPrimary"
                     android:textSize="24sp"
                     android:layout_marginTop="8dp"
@@ -39,16 +40,31 @@
                     android:layout_height="wrap_content"
                     android:text="deskripsi"
                     android:fontFamily="@font/times_new_roman"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
+                    android:maxLines="3"
                     android:layout_marginTop="8dp"
                     android:id="@+id/tv_deskripsi"/>
         </LinearLayout>
-        <ImageView
+        <RelativeLayout
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_marginLeft="8dp"
-                android:src="@color/colorPrimary"
-                android:id="@+id/imageView2"/>
+                android:visibility="gone"
+                android:id="@+id/rl_image"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp">
+            <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:id="@+id/iv_itemView_story"
+            />
+            <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:foregroundGravity="center"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/pb_image"
+                    android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
     </LinearLayout>
     <LinearLayout
             android:layout_width="match_parent"

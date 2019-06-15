@@ -119,6 +119,7 @@ class HomeFragment : Fragment() {
                     val judul = it.child("judul").getValue(String::class.java)
                     val deskripsi = it.child("deskripsi").getValue(String::class.java)
                     val date = it.child("date").getValue(String::class.java)
+                    val image = it.child("image").getValue(String::class.java)
 
                     val name = it.child("name").getValue(String::class.java)
 //                    main.getUName(uid!!){
@@ -132,7 +133,8 @@ class HomeFragment : Fragment() {
                             judul.toString(),
                             deskripsi.toString(),
                             name.toString(),
-                            date.toString()
+                            date.toString(),
+                            image.toString()
                         )
                     )
                 }

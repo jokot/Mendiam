@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import java.sql.Timestamp
 
 @SuppressLint("Registered")
 class MainApps : Application() {
@@ -82,7 +83,7 @@ class MainApps : Application() {
         onCompleteGetUrl: (String) -> Unit
     ) {
         val storageRef = storage.reference
-        val riversRef = storageRef.child(file.lastPathSegment + ".jpg")
+        val riversRef = storageRef.child(getCurrentTimeStamp() + ".jpg")
         val uploadTask = riversRef.putFile(file)
 
         uploadTask.addOnFailureListener {
@@ -150,5 +151,11 @@ class MainApps : Application() {
             "b" -> pref.getBoolean(key, false)
             else -> ""
         }
+    }
+
+    fun getCurrentTimeStamp():String{
+        val t = System.currentTimeMillis()
+        val tT = Timestamp(t)
+        return tT.toString()
     }
 }
