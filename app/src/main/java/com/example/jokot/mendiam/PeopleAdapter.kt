@@ -103,6 +103,9 @@ class PeopleAdapter(
                         }
 
                     })
+            }else{
+                itemView.iv_user.setImageResource(R.drawable.ic_person_24dp)
+                progressBar.visibility = View.GONE
             }
 
             itemView.setOnClickListener {

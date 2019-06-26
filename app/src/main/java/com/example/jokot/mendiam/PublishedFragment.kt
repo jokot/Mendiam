@@ -71,6 +71,7 @@ class PublishedFragment : Fragment() {
             startActivity(intent)
         }, {
             database.child("story").child(it.sid).removeValue()
+            database.child("storyContent").child(it.sid).removeValue()
             listStory.remove(it)
             adapter.notifyDataSetChanged()
         })

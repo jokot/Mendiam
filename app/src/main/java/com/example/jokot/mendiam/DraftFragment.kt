@@ -65,6 +65,7 @@ class DraftFragment : Fragment() {
             startActivity(intent)
         },{
             database.child(main.draft).child(uid).child(it.sid).removeValue()
+            database.child(main.draftContent).child(uid).child(it.sid).removeValue()
             listDraft.remove(it)
             adapter.notifyDataSetChanged()
         })

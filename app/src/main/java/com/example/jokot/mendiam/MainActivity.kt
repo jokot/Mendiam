@@ -136,6 +136,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
 
                         })
+                    }else{
+                        pb_header.visibility = View.GONE
+                        headerImage.setImageResource(R.drawable.ic_person_24dp)
                     }
                     headerText.text = name
                 }
@@ -195,6 +198,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 changeFragment(StoriesFragment())
                 tb_label.text = "Stories"
             }
+//            R.id.nav_full_screen ->{
+//                startActivity(Intent(this,FullscreenActivity::class.java))
+//            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)

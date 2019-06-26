@@ -82,8 +82,9 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
     <string name="title_activity_read">Read it bitch</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">Programmers seem to have forgotten the real purpose of software, that is to solve a
+    <string name="dummy_button_read">Dummy Button</string>
+    <string name="dummy_content_read">Programmers seem to have forgotten the real purpose of software, that is to solve
+        a
         real-world problem. Programmers seem to have forgotten the real purpose of software, that is to solve a
         real-world problem. Programmers seem to have forgotten the real purpose of software, that is to solve a
         real-world problem. Programmers seem to have forgotten the real purpose of software, that is to solve a
@@ -109,4 +110,8 @@
     <string name="pub">Public</string>
     <string name="people">People</string>
     <string name="stories">Stories</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

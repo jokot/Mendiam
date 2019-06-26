@@ -23,6 +23,9 @@
                 android:id="@+id/nav_stories"
 
                 android:title="Stories"/>
+
+        <!--<item android:id="@+id/nav_full_screen"-->
+              <!--android:title="fulls creen"/>-->
     </group>
     <!--<item android:title="Communicate">-->
     <!--<menu>-->

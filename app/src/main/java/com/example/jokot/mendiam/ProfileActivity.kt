@@ -1,5 +1,6 @@
 package com.example.jokot.mendiam
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
@@ -14,6 +15,7 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
+import java.io.File
 
 class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
 
@@ -63,6 +65,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                 firebaseAuth.signOut()
                 intent = Intent(applicationContext, SignInActivity::class.java)
                 startActivity(intent)
+                deletAppDir(this)
                 finishAffinity()
             }
 
@@ -104,19 +107,50 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         }
     }
 
+    private fun deletAppDir(context: Context) {
+        try {
+            val dir = context.cacheDir
+            log(dir.parent)
+            val dirApp = File(dir.parent)
+            deletDir(dirApp)
+        } catch (e: Exception) {
+
+        }
+    }
+
+    private fun deletDir(dir: File?): Boolean {
+        if (dir != null && dir.isDirectory) {
+            val children = dir.list()
+            for (fileName in children) {
+                val success: Boolean = deletDir(File(dir, fileName))
+                log("delete dir")
+                if (!success) {
+                    log("delet selesai")
+                    return false
+                }
+            }
+            return dir.delete()
+        } else if (dir != null && dir.isFile) {
+            log("delet file")
+            return dir.delete()
+        } else {
+            log("gagal")
+            return false
+        }
+    }
+
     private fun getFollowing(CountChild: (Int) -> Unit) {
-        database.child(main.following).child(main.getUId()).
-                addListenerForSingleValueEvent(object :ValueEventListener{
-                    override fun onCancelled(p0: DatabaseError) {
+        database.child(main.following).child(main.getUId()).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
 
-                    }
+            }
 
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        log(dataSnapshot.childrenCount.toString())
-                        CountChild(dataSnapshot.childrenCount.toInt())
-                    }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                log(dataSnapshot.childrenCount.toString())
+                CountChild(dataSnapshot.childrenCount.toInt())
+            }
 
-                })
+        })
 //            .addChildEventListener(object : ChildEventListener {
 //                override fun onCancelled(p0: DatabaseError) {
 //                }
@@ -140,7 +174,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     }
 
     private fun getFollower(CountChild: (Int) -> Unit) {
-        database.child(main.follower).child(main.getUId()).addListenerForSingleValueEvent(object :ValueEventListener{
+        database.child(main.follower).child(main.getUId()).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -251,8 +285,8 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                         tv_about.text = autor
                     }
                     if (urlPic != "") {
-
-                        Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp)
+                        Picasso.get()
+                            .load(urlPic).error(R.drawable.ic_broken_image_24dp)
                             .into(iv_profile, object : Callback {
                                 override fun onSuccess() {
                                     pb_image.visibility = View.GONE
@@ -263,6 +297,9 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                                 }
 
                             })
+                    } else {
+                        pb_image.visibility = View.GONE
+                        iv_profile.setImageResource(R.drawable.ic_person_24dp)
                     }
                     callbackLoading.onCallback()
                 }
