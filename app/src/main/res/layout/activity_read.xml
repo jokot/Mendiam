@@ -131,7 +131,7 @@
                             android:layout_marginBottom="16dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 Likes"
+                            android:text="@string/likes"
                             android:id="@+id/tv_like"
                             android:layout_marginLeft="16dp"/>
 

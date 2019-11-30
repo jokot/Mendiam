@@ -1,5 +1,6 @@
 package com.example.jokot.mendiam
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -33,6 +34,7 @@ class ReadActivity : AppCompatActivity() {
     private var isLiked = false
     private var oldY = 1
     private var currentY = 0
+    private var storyLikesId: MutableList<String> = mutableListOf()
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -83,11 +85,13 @@ class ReadActivity : AppCompatActivity() {
                 isLiked = false
                 removeStoryLikes()
                 removeLikedStory()
+                getStoryLikes()
             } else {
                 iv_like.setImageResource(R.drawable.ic_thumbs_up_hand_symbol)
                 isLiked = true
                 addStoryLikes()
                 addLikedStory()
+                getStoryLikes()
             }
 
         }
@@ -115,27 +119,27 @@ class ReadActivity : AppCompatActivity() {
 
     }
 
-    private fun addBookmark(){
+    private fun addBookmark() {
         database.child(main.bookmark).child(myid).child(sid).setValue(true)
     }
 
-    private fun removeBookmark(){
+    private fun removeBookmark() {
         database.child(main.bookmark).child(myid).child(sid).removeValue()
     }
 
-    private fun addStoryLikes(){
+    private fun addStoryLikes() {
         database.child(main.storyLikes).child(sid).child(myid).setValue(true)
     }
 
-    private fun removeStoryLikes(){
+    private fun removeStoryLikes() {
         database.child(main.storyLikes).child(sid).child(myid).removeValue()
     }
 
-    private fun addLikedStory(){
+    private fun addLikedStory() {
         database.child(main.likedStory).child(myid).child(sid).setValue(true)
     }
 
-    private fun removeLikedStory(){
+    private fun removeLikedStory() {
         database.child(main.likedStory).child(myid).child(sid).removeValue()
     }
 
@@ -156,6 +160,7 @@ class ReadActivity : AppCompatActivity() {
                    , textContent
             ->
             getStoryContent(textContent)
+            getStoryLikes()
             getMyPic()
             database.child("user").child(uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -187,6 +192,29 @@ class ReadActivity : AppCompatActivity() {
         }
     }
 
+    private fun getStoryLikes() {
+        database.child(main.storyLikes).child(sid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    log(p0.message)
+                }
+
+                @SuppressLint("SetTextI18n")
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val ds = dataSnapshot.children
+                    storyLikesId.clear()
+                    ds.mapNotNull {
+                        val id = it.key
+                        if (id != null) {
+                            storyLikesId.add(id)
+                        }
+                    }
+                    tv_like.text= "${storyLikesId.size} ${getString(R.string.likes)}"
+                }
+            })
+
+    }
+
     private fun getStory(
         onDataChange: (
             String
@@ -196,7 +224,7 @@ class ReadActivity : AppCompatActivity() {
         database.child(main.story).child(sid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-                    toast(p0.message)
+                    log(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -238,6 +266,7 @@ class ReadActivity : AppCompatActivity() {
             database.child(main.storyContent).child(sid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
+                        log(p0.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -377,7 +406,7 @@ class ReadActivity : AppCompatActivity() {
         database.child("following").child(myid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-                    toast(p0.message)
+                    log(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -420,7 +449,7 @@ class ReadActivity : AppCompatActivity() {
             .child(main.getUId())
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-
+                    log(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
