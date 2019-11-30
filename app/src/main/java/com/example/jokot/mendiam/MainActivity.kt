@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val headerView = header.findViewById<LinearLayout>(R.id.ll_nav_bar)
         headerView.setOnClickListener {
             intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra(main.userId,main.uid)
             startActivity(intent)
         }
 

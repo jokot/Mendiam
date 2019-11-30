@@ -1,5 +1,6 @@
 package com.example.jokot.mendiam
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -19,14 +20,16 @@ import java.io.File
 
 class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
 
-
     private lateinit var mSectionPageAdapter: SectionPageAdapter
 
     private var firebaseAuth = FirebaseAuth.getInstance()
 
-    private var firebaseUser = firebaseAuth.currentUser
     private var database: DatabaseReference = FirebaseDatabase.getInstance().reference
     private var main = MainApps()
+
+    private val editId = 1
+
+    private var uid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +37,23 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
 
         mSectionPageAdapter = SectionPageAdapter(supportFragmentManager)
 
+        uid = intent.getStringExtra(main.userId)
+
+        changeUiIfNotMe()
+
         initData()
 
         container_profile.adapter = mSectionPageAdapter
-        container_profile.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab_layout_profile))
-        tab_layout_profile.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container_profile))
+        container_profile.addOnPageChangeListener(
+            TabLayout.TabLayoutOnPageChangeListener(
+                tab_layout_profile
+            )
+        )
+        tab_layout_profile.addOnTabSelectedListener(
+            TabLayout.ViewPagerOnTabSelectedListener(
+                container_profile
+            )
+        )
 
         iv_back.setOnClickListener(this)
         iv_toolbar_back.setOnClickListener(this)
@@ -57,16 +72,13 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         val id = v?.id
         when (id) {
             R.id.iv_back -> {
-                intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finishAffinity()
+                finish()
             }
             R.id.tv_keluar -> {
                 firebaseAuth.signOut()
-                intent = Intent(applicationContext, SignInActivity::class.java)
-                startActivity(intent)
-                deletAppDir(this)
-                finishAffinity()
+
+                deleteAppDir(this)
+                finish()
             }
 
             R.id.ll_following -> {
@@ -83,8 +95,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
 
             R.id.tv_edit -> {
                 intent = Intent(this, EditProfileActivity::class.java)
-                startActivity(intent)
-                finish()
+                startActivityForResult(intent,editId)
             }
 
             R.id.cl_profile -> {
@@ -96,33 +107,43 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             }
 
             R.id.iv_more -> {
-
                 ll_more.visibility = View.VISIBLE
             }
             R.id.iv_toolbar_back -> {
-                intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finishAffinity()
+                finish()
             }
         }
     }
 
-    private fun deletAppDir(context: Context) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == editId && resultCode == Activity.RESULT_OK){
+            initData()
+        }
+    }
+
+    private fun changeUiIfNotMe(){
+        if(uid != main.getUId()){
+            iv_more.visibility = View.GONE
+        }
+    }
+
+    private fun deleteAppDir(context: Context) {
         try {
             val dir = context.cacheDir
             log(dir.parent)
             val dirApp = File(dir.parent)
-            deletDir(dirApp)
+            deleteDir(dirApp)
         } catch (e: Exception) {
-
+            log("deleteAppDir ${e.message}")
         }
     }
 
-    private fun deletDir(dir: File?): Boolean {
+    private fun deleteDir(dir: File?): Boolean {
         if (dir != null && dir.isDirectory) {
             val children = dir.list()
             for (fileName in children) {
-                val success: Boolean = deletDir(File(dir, fileName))
+                val success: Boolean = deleteDir(File(dir, fileName))
                 log("delete dir")
                 if (!success) {
                     log("delet selesai")
@@ -140,17 +161,18 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     }
 
     private fun getFollowing(CountChild: (Int) -> Unit) {
-        database.child(main.following).child(main.getUId()).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
+        database.child(main.following).child(uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
 
-            }
+                }
 
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                log(dataSnapshot.childrenCount.toString())
-                CountChild(dataSnapshot.childrenCount.toInt())
-            }
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    log(dataSnapshot.childrenCount.toString())
+                    CountChild(dataSnapshot.childrenCount.toInt())
+                }
 
-        })
+            })
 //            .addChildEventListener(object : ChildEventListener {
 //                override fun onCancelled(p0: DatabaseError) {
 //                }
@@ -174,16 +196,17 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     }
 
     private fun getFollower(CountChild: (Int) -> Unit) {
-        database.child(main.follower).child(main.getUId()).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
+        database.child(main.follower).child(uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
 
-            }
+                }
 
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                CountChild(dataSnapshot.childrenCount.toInt())
-            }
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    CountChild(dataSnapshot.childrenCount.toInt())
+                }
 
-        })
+            })
 //            .addChildEventListener(object : ChildEventListener {
 //            override fun onCancelled(p0: DatabaseError) {
 //
@@ -254,58 +277,57 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     }
 
     private fun getProfile(callbackLoading: CallbackLoading) {
-        firebaseUser?.uid?.let {
-            database.child("user").child(it)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
+        database.child(main.user).child(uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val name = dataSnapshot.child("userName").getValue(String::class.java)
+                    val autor = dataSnapshot.child("about").getValue(String::class.java)
+                    //                    val fingCount = dataSnapshot.child("fingCount").getValue(Int::class.java)
+                    //                    val ferCount = dataSnapshot.child("ferCount").getValue(Int::class.java)
+                    val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
+                    tv_profile.text = name
+                    tv_toolbar_profile.text = name
+
+                    //                    if (fingCount!=null){
+                    //                        tv_jml_following.text = fingCount.toString()
+                    //                    }
+                    //                    if(ferCount != null){
+                    //                        tv_jml_follower.text = ferCount.toString()
+                    //                    }
+                    getFollower {
+                        tv_jml_follower.text = it.toString()
+                    }
+                    getFollowing {
+                        tv_jml_following.text = it.toString()
                     }
 
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val name = dataSnapshot.child("userName").getValue(String::class.java)
-                        val autor = dataSnapshot.child("about").getValue(String::class.java)
-    //                    val fingCount = dataSnapshot.child("fingCount").getValue(Int::class.java)
-    //                    val ferCount = dataSnapshot.child("ferCount").getValue(Int::class.java)
-                        val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
-                        tv_profile.text = name
-                        tv_toolbar_profile.text = name
-
-    //                    if (fingCount!=null){
-    //                        tv_jml_following.text = fingCount.toString()
-    //                    }
-    //                    if(ferCount != null){
-    //                        tv_jml_follower.text = ferCount.toString()
-    //                    }
-                        getFollower {
-                            tv_jml_follower.text = it.toString()
-                        }
-                        getFollowing {
-                            tv_jml_following.text = it.toString()
-                        }
-
-                        if (autor != null) {
-                            tv_about.text = autor
-                        }
-                        if (urlPic != "") {
-                            Picasso.get()
-                                .load(urlPic).error(R.drawable.ic_broken_image_24dp)
-                                .into(iv_profile, object : Callback {
-                                    override fun onSuccess() {
-                                        pb_image.visibility = View.GONE
-                                    }
-
-                                    override fun onError(e: Exception?) {
-                                        pb_image.visibility = View.GONE
-                                    }
-
-                                })
-                        } else {
-                            pb_image.visibility = View.GONE
-                            iv_profile.setImageResource(R.drawable.ic_person_24dp)
-                        }
-                        callbackLoading.onCallback()
+                    if (autor != null) {
+                        tv_about.text = autor
                     }
-                })
-        }
+                    if (urlPic != "") {
+                        Picasso.get()
+                            .load(urlPic).error(R.drawable.ic_broken_image_24dp)
+                            .into(iv_profile, object : Callback {
+                                override fun onSuccess() {
+                                    pb_image.visibility = View.GONE
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    pb_image.visibility = View.GONE
+                                }
+
+                            })
+                    } else {
+                        pb_image.visibility = View.GONE
+                        iv_profile.setImageResource(R.drawable.ic_person_24dp)
+                    }
+                    callbackLoading.onCallback()
+                }
+            })
+
     }
 
     inner class SectionPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {

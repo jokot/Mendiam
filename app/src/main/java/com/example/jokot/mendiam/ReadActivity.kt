@@ -73,8 +73,9 @@ class ReadActivity : AppCompatActivity() {
             follow()
         }
         ll_author.setOnClickListener {
-            startActivity(Intent(applicationContext, ProfileActivity::class.java))
-            finish()
+            val intent = Intent(applicationContext, ProfileActivity::class.java)
+            intent.putExtra(main.userId,authorId)
+            startActivity(intent)
         }
         ll_write_response.setOnClickListener {
             toast("Coming soon")

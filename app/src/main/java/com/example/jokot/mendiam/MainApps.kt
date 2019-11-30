@@ -35,6 +35,7 @@ class MainApps : Application() {
     val uid = auth.currentUser?.uid
     val name = auth.currentUser?.displayName
 
+    val userId = "uid"
     val storyLikes = "storyLikes"
     val likedStory = "likedStory"
     val bookmark = "bookmark"

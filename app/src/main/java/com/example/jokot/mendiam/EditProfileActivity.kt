@@ -1,9 +1,7 @@
 package com.example.jokot.mendiam
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -36,13 +34,10 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
         val id = v?.id
         when (id) {
             R.id.iv_close -> {
-                startActivity(Intent(applicationContext,ProfileActivity::class.java))
-                finish()
+                finishCancel()
             }
             R.id.tv_save -> {
                 saveData()
-                finish()
-                startActivity(Intent(applicationContext,ProfileActivity::class.java))
             }
             R.id.ll_chose_img -> {
                 main.showImagePicker(this)
@@ -88,22 +83,46 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
     private fun saveData() {
         val name = et_nama.text.toString()
         val about = et_about.text.toString()
-        dataBase("userName", name)
-        dataBase("about", about)
         if(urlPic !=""){
-            uploadUrlImage(urlPic)
+            uploadUrlImage(urlPic){
+                dataBase("userName", name){
+                    dataBase("about", about){
+                        finishSuccess()
+                    }
+                }
+            }
+        }else{
+            dataBase("userName", name){
+                dataBase("about", about){
+                    finishSuccess()
+                }
+            }
         }
     }
 
-    private fun dataBase(key: String, value: String) {
+    private fun dataBase(key: String, value: String,onSuccess : () -> Unit) {
         main.editorPref(key,value,this)
         main.uid?.let {
             database.child(main.user)
                 .child(it)
-                .child(key).setValue(value)
+                .child(key).setValue(value).addOnSuccessListener {
+                    onSuccess()
+                }
         }
     }
 
+    private fun finishSuccess() {
+        val data = Intent()
+        setResult(RESULT_OK,data)
+        finish()
+    }
+
+    private fun finishCancel() {
+        val data = Intent()
+        setResult(Activity.RESULT_CANCELED,data)
+        finish()
+    }
+    
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && requestCode == main.G_CODE){
@@ -125,7 +144,9 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun uploadUrlImage(url:String){
-        database.child(main.user).child(main.auth.uid.toString()).child("urlPic").setValue(url)
+    private fun uploadUrlImage(url:String, onSuccess: () -> Unit){
+        database.child(main.user).child(main.auth.uid.toString()).child("urlPic").setValue(url).addOnSuccessListener {
+           onSuccess()
+        }
     }
 }

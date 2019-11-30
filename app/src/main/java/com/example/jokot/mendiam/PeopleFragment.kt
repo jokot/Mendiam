@@ -28,6 +28,7 @@ class PeopleFragment : Fragment() {
 
     private var database = FirebaseDatabase.getInstance().reference
     private var auth = FirebaseAuth.getInstance()
+    private val main = MainApps()
     private var uid = auth.currentUser?.uid.toString()
 
 
@@ -51,6 +52,7 @@ class PeopleFragment : Fragment() {
     private fun initRecycler() {
         peopleAdapter = PeopleAdapter(listUser,listFollowingId, {
             val intent = Intent(context, ProfileActivity::class.java)
+            intent.putExtra(main.userId,it.id)
             startActivity(intent)
         },{
             database.child("following").child(uid).child(it.id).removeValue()
