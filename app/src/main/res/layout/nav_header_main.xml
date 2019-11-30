@@ -40,10 +40,9 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-
-            android:text="@string/nav_header_title"
+            android:text=""
             android:id="@+id/tv_header_main"
             android:textSize="18sp"
             android:textColor="@color/colorPrimary"/>
@@ -51,11 +50,10 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/nav_header_subtitle"
             android:textColor="@color/colorDarkGrey"
             android:textSize="14sp"
             android:id="@+id/textView"/>
-
 </LinearLayout>
