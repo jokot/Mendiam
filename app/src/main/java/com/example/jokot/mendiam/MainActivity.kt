@@ -77,8 +77,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             toast("Coming soon")
         }
         iv_search.setOnClickListener {
-            intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
+            toast("Coming soon")
+//            intent = Intent(this, SearchActivity::class.java)
+//            startActivity(intent)
         }
     }
 
@@ -109,41 +110,43 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun loadProfile() {
 
-        database
-            .child("user")
-            .child(auth.currentUser!!.uid)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                    toast("Selamat Datang di Mendiam")
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val name = dataSnapshot.child("userName").getValue(String::class.java)
-                    val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
-                    val navigationView: NavigationView = findViewById(R.id.nav_view)
-                    val header = navigationView.getHeaderView(0)
-                    val headerText = header.findViewById<TextView>(R.id.tv_header_main)
-                    val headerImage = header.findViewById<ImageView>(R.id.iv_header)
-                    if(urlPic != ""){
-                        Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(headerImage,object:
-                            Callback {
-                            override fun onSuccess() {
-                                pb_header.visibility = View.GONE
-                            }
-
-                            override fun onError(e: Exception?) {
-                                pb_header.visibility = View.GONE
-                            }
-
-                        })
-                    }else{
-                        pb_header.visibility = View.GONE
-                        headerImage.setImageResource(R.drawable.ic_person_24dp)
+        auth.currentUser?.uid?.let {
+            database
+                .child("user")
+                .child(it)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        toast("Selamat Datang di Mendiam")
                     }
-                    headerText.text = name
-                }
 
-            })
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val name = dataSnapshot.child("userName").getValue(String::class.java)
+                        val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
+                        val navigationView: NavigationView = findViewById(R.id.nav_view)
+                        val header = navigationView.getHeaderView(0)
+                        val headerText = header.findViewById<TextView>(R.id.tv_header_main)
+                        val headerImage = header.findViewById<ImageView>(R.id.iv_header)
+                        if(urlPic != ""){
+                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(headerImage,object:
+                                Callback {
+                                override fun onSuccess() {
+                                    pb_header.visibility = View.GONE
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    pb_header.visibility = View.GONE
+                                }
+
+                            })
+                        }else{
+                            pb_header.visibility = View.GONE
+                            headerImage.setImageResource(R.drawable.ic_person_24dp)
+                        }
+                        headerText.text = name
+                    }
+
+                })
+        }
 
     }
 

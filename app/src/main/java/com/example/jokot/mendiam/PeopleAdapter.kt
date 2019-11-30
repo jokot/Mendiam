@@ -62,7 +62,7 @@ class PeopleAdapter(
                     break
                 } else {
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
-                    itemView.btn_follow.setTextColor(Color.parseColor("#04b595"))
+                    itemView.btn_follow.setTextColor(Color.parseColor("#AF0505"))
                     itemView.btn_follow.text = "Follow"
                 }
             }
@@ -82,7 +82,7 @@ class PeopleAdapter(
                 } else {
                     n--
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
-                    itemView.btn_follow.setTextColor(Color.parseColor("#04b595"))
+                    itemView.btn_follow.setTextColor(Color.parseColor("#AF0505"))
                     itemView.btn_follow.text = "Follow"
                     clickUnFollow(list)
                 }

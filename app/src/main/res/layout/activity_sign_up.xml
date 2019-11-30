@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:background="@color/colorEggGreen"
+        android:background="@color/colorRedis"
         tools:context=".SignUpActivity">
 
     <LinearLayout
@@ -96,7 +96,7 @@
                       android:text="Sudah punya akun ? "/>
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:textColor="@color/colorGreen"
+                      android:textColor="@color/colorRed"
                       android:id="@+id/tv_sign_in"
                       android:text=" Sign In"/>
         </LinearLayout>

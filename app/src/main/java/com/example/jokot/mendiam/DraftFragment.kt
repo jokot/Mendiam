@@ -64,8 +64,8 @@ class DraftFragment : Fragment() {
             intent.putExtra("did",it.sid)
             startActivity(intent)
         },{
-            database.child(main.draft).child(uid).child(it.sid).removeValue()
-            database.child(main.draftContent).child(uid).child(it.sid).removeValue()
+            uid?.let { it1 -> database.child(main.draft).child(it1).child(it.sid).removeValue() }
+            uid?.let { it1 -> database.child(main.draftContent).child(it1).child(it.sid).removeValue() }
             listDraft.remove(it)
             adapter.notifyDataSetChanged()
         })
@@ -87,34 +87,36 @@ class DraftFragment : Fragment() {
     }
 
     private fun getDraft(callbackLoading: CallbackLoading) {
-        database.child(main.draft).child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
+        uid?.let {
+            database.child(main.draft).child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
 
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val ds = dataSnapshot.children
-                    tempListDraft.clear()
-                    ds.mapNotNull {
-                        val judul = it.child("judul").getValue(String::class.java).toString()
-                        val deskripsi = it.child("deskripsi").getValue(String::class.java).toString()
-                        val did = it.child("did").getValue(String::class.java).toString()
-                        val date = it.child("date").getValue(String::class.java).toString()
-                        tempListDraft.add(
-                            Story(
-                                judul = judul,
-                                deskripsi = deskripsi,
-                                sid = did,
-                                date = date
-                            )
-                        )
                     }
-                    listDraft.clear()
-                    listDraft.addAll(tempListDraft)
-                    adapter.notifyDataSetChanged()
-                    callbackLoading.onCallback()
-                }
-            })
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val ds = dataSnapshot.children
+                        tempListDraft.clear()
+                        ds.mapNotNull {
+                            val judul = it.child("judul").getValue(String::class.java).toString()
+                            val deskripsi = it.child("deskripsi").getValue(String::class.java).toString()
+                            val did = it.child("did").getValue(String::class.java).toString()
+                            val date = it.child("date").getValue(String::class.java).toString()
+                            tempListDraft.add(
+                                Story(
+                                    judul = judul,
+                                    deskripsi = deskripsi,
+                                    sid = did,
+                                    date = date
+                                )
+                            )
+                        }
+                        listDraft.clear()
+                        listDraft.addAll(tempListDraft)
+                        adapter.notifyDataSetChanged()
+                        callbackLoading.onCallback()
+                    }
+                })
+        }
     }
 }

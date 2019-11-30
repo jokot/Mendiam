@@ -14,7 +14,7 @@ class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
     private var firebaseDatabase = FirebaseDatabase.getInstance()
     var rootRef = firebaseDatabase.reference
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firebaseUser: FirebaseUser
+    private var firebaseUser: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +46,16 @@ class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
                 .createUserWithEmailAndPassword(et_email.text.toString(), et_password.text.toString())
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        firebaseUser = this.firebaseAuth.currentUser!!
+                        firebaseUser = this.firebaseAuth.currentUser
 
                         val user =
-                            User(
-                                firebaseUser.uid,
-                                et_name.text.toString().trim(),
-                                et_email.text.toString().trim()
-                            )
+                            firebaseUser?.uid?.let {
+                                User(
+                                    it,
+                                    et_name.text.toString().trim(),
+                                    et_email.text.toString().trim()
+                                )
+                            }
                         writeNewUser(user)
 
                         startActivity(Intent(applicationContext, MainActivity::class.java))
@@ -68,7 +70,7 @@ class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
     }
 
     //  memasukkan data user ke database
-    private fun writeNewUser(user: User) {
+    private fun writeNewUser(user: User?) {
         rootRef
             .child("user")
             .child(firebaseAuth.uid.toString())

@@ -6,6 +6,7 @@
         android:orientation="vertical">
     <FrameLayout
             android:layout_width="match_parent"
+            android:background="?selectableItemBackground"
             android:layout_height="wrap_content">
         <LinearLayout
                 android:layout_width="match_parent"
@@ -33,6 +34,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/iv_more"
+                        android:background="?selectableItemBackground"
                         app:srcCompat="@drawable/ic_more_vert_black_24dp"/>
 
             </LinearLayout>
@@ -94,6 +96,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:paddingTop="8dp"
+                    android:background="?selectableItemBackground"
                     android:paddingBottom="4dp"
                     android:text="@string/edit"
                     android:paddingLeft="16dp"
@@ -104,6 +107,7 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp"
+                    android:background="?selectableItemBackground"
                     android:paddingLeft="16dp"
                     android:paddingStart="16dp"
                     android:paddingTop="4dp"

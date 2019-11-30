@@ -60,9 +60,9 @@ class BookmarkFragment : Fragment() {
 
     private fun initRecycle() {
         adapter = StoryAdapter(listBookmark, listBookmarkId, {
-            database.child(main.bookmark).child(uid).child(it.sid).setValue(true)
+            uid?.let { it1 -> database.child(main.bookmark).child(it1).child(it.sid).setValue(true) }
         }, {
-            database.child(main.bookmark).child(uid).child(it.sid).removeValue()
+            uid?.let { it1 -> database.child(main.bookmark).child(it1).child(it.sid).removeValue() }
             listBookmark.remove(it)
 //            adapter.notifyDataSetChanged()
         }, {
@@ -86,24 +86,26 @@ class BookmarkFragment : Fragment() {
     }
 
     private fun getBookmarkId(callbackLoading: CallbackLoading) {
-        database.child(main.bookmark).child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
+        uid?.let {
+            database.child(main.bookmark).child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
 
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val ds = dataSnapshot.children
-                    listBookmarkId.clear()
-                    ds.mapNotNull {
-                        val id = it.key
-                        if (id != null) {
-                            listBookmarkId.add(id)
-                        }
                     }
-                    callbackLoading.onCallback()
-                }
-            })
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val ds = dataSnapshot.children
+                        listBookmarkId.clear()
+                        ds.mapNotNull {
+                            val id = it.key
+                            if (id != null) {
+                                listBookmarkId.add(id)
+                            }
+                        }
+                        callbackLoading.onCallback()
+                    }
+                })
+        }
     }
 
     private fun getBookmarks() {
@@ -158,7 +160,7 @@ class BookmarkFragment : Fragment() {
                                 )
                             )
                         }else{
-                            database.child(main.bookmark).child(uid).child(sid).removeValue()
+                            uid?.let { database.child(main.bookmark).child(it).child(sid).removeValue() }
                         }
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(sid)

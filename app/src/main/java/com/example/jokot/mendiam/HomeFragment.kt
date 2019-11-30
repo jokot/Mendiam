@@ -75,8 +75,12 @@ class HomeFragment : Fragment() {
 
     private fun initData() {
         rvMain.visibility = View.INVISIBLE
+        listStory.clear()
+        listBookmarkId.clear()
+
         getBookmarkId(object : CallbackLoading{
             override fun onCallback() {
+                adapter.notifyDataSetChanged()
                 getStory()
                 pb_home.visibility = View.INVISIBLE
                 sr_home.isRefreshing = false
@@ -87,10 +91,10 @@ class HomeFragment : Fragment() {
 
     private fun initRecycler() {
         adapter = StoryAdapter(listStory,listBookmarkId,{
-            database.child(main.bookmark).child(uid).child(it.sid).setValue(true)
+            uid?.let { it1 -> database.child(main.bookmark).child(it1).child(it.sid).setValue(true) }
 
         }, {
-            database.child(main.bookmark).child(uid).child(it.sid).removeValue()
+            uid?.let { it1 -> database.child(main.bookmark).child(it1).child(it.sid).removeValue() }
 //            listStory.remove(it)
 //            adapter.notifyDataSetChanged()
         },{
@@ -147,25 +151,28 @@ class HomeFragment : Fragment() {
     }
 
     private fun getBookmarkId(callbackLoading: CallbackLoading){
-        database.child(main.bookmark).child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val ds = dataSnapshot.children
-                    listBookmarkId.clear()
-                    ds.mapNotNull {
-                        val bid = it.key
-                        if(bid != null){
-                            listBookmarkId.add(bid)
-                        }
-
+        uid?.let {
+            database.child(main.bookmark).child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
-                    callbackLoading.onCallback()
-                }
 
-            })
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val ds = dataSnapshot.children
+                        listBookmarkId.clear()
+                        ds.mapNotNull {
+                            val bid = it.key
+                            if(bid != null){
+                                listBookmarkId.add(bid)
+                            }
+
+                        }
+                        callbackLoading.onCallback()
+                    }
+
+                })
+        }
     }
 
 //    // TODO: Rename method, update argument and hook method into UI event

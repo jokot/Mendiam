@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@color/colorDarkEggGreen"
+        android:background="@color/colorDarkRedis"
         android:gravity="center"
         tools:context=".SignInActivity">
 
@@ -90,7 +90,7 @@
                       android:text="Belum punya akun ? "/>
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:textColor="@color/colorGreen"
+                      android:textColor="@color/colorRed"
                       android:id="@+id/tv_sign_up"
                       android:text=" Sign Up"/>
         </LinearLayout>

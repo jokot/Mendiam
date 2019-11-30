@@ -12,7 +12,6 @@ import com.example.jokot.mendiam.model.Story
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_view.view.*
-import kotlinx.android.synthetic.main.item_view_sotries.view.*
 import java.lang.Exception
 
 class StoryAdapter(
@@ -22,7 +21,7 @@ class StoryAdapter(
     ,private var clickRemoveBookmark: (Story) -> Unit
     , private var clickListener: (Story) -> Unit
 ) : RecyclerView.Adapter<StoryAdapter.ItemViewHolder>() {
-    private var n = 0
+    private var n = false
     override fun onCreateViewHolder(group: ViewGroup, position: Int): StoryAdapter.ItemViewHolder {
         return ItemViewHolder(LayoutInflater.from(group.context).inflate(R.layout.item_view, group, false))
     }
@@ -59,11 +58,11 @@ class StoryAdapter(
 
             for (id in listBookmarkId) {
                 if (id == listStory.sid) {
-                    n =1
-                    itemView.iv_bookmark.setBackgroundResource(R.drawable.ic_bookmark_green_24dp)
+                    n = true
+                    itemView.iv_bookmark.setBackgroundResource(R.drawable.ic_bookmark_red_24dp)
                     break
                 } else {
-                    n =0
+                    n = false
                     itemView.iv_bookmark.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp)
                 }
             }
@@ -99,12 +98,12 @@ class StoryAdapter(
                 image.setImageResource(R.color.colorWhite)
             }
             itemView.iv_bookmark.setOnClickListener {
-                if (n == 0) {
-                    n++
+                if (!n) {
+                    n = true
                     clickBookmark(listStory)
-                    itemView.iv_bookmark.setBackgroundResource(R.drawable.ic_bookmark_green_24dp)
+                    itemView.iv_bookmark.setBackgroundResource(R.drawable.ic_bookmark_red_24dp)
                 } else {
-                    n--
+                    n = false
                     clickRemoveBookmark(listStory)
                     itemView.iv_bookmark.setBackgroundResource(R.drawable.ic_bookmark_border_black_24dp)
                 }

@@ -1,5 +1,6 @@
 package com.example.jokot.mendiam
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -85,12 +86,12 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_UP) {
+        if (requestCode == RC_SIGN_UP && resultCode == Activity.RESULT_OK) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account!!)
+                firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed = ${e.statusCode}", e)
@@ -103,13 +104,13 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
     // [END onactivityresult]
 
     // [START auth_with_google]
-    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount?) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct?.id)
         // [START_EXCLUDE silent]
         showProgressDialog()
         // [END_EXCLUDE]
 
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -118,12 +119,14 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                     Log.d(TAG, "signInWithCredential:success")
 
                     val user = auth.currentUser
-                    val dataUser = User(
-                        user!!.uid,
-                        user.displayName.toString(),
-                        user.email.toString()
-                    )
-                    rootRef.child("user").child(user.uid).setValue(dataUser)
+                    val dataUser = user?.uid?.let {
+                        User(
+                            it,
+                            user.displayName.toString(),
+                            user.email.toString()
+                        )
+                    }
+                    writeNewUser(dataUser)
 
                     updateUI(user, null)
 
@@ -147,6 +150,13 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
         startActivityForResult(signInIntent, RC_SIGN_UP)
     }
     // [END signin]
+
+    private fun writeNewUser(user: User?) {
+        rootRef
+            .child("user")
+            .child(auth.uid.toString())
+            .setValue(user)
+    }
 
     private fun updateUI(user: FirebaseUser?, msg: String?) {
         if (user != null) {

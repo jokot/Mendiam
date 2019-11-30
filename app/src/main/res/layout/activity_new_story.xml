@@ -37,7 +37,7 @@
                         android:layout_marginRight="16dp"
                         android:textSize="20sp"
                         android:id="@+id/tv_publish"
-                        android:textColor="@color/colorGreen"
+                        android:textColor="@color/colorRed"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
 

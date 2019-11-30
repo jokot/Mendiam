@@ -29,11 +29,11 @@ class MainApps : Application() {
 
     val database = FirebaseDatabase.getInstance()
     val storage = FirebaseStorage.getInstance()
-    val auth = FirebaseAuth.getInstance()!!
+    val auth = FirebaseAuth.getInstance()
     //    val editor = getSharedPreferences(sharePref, Context.MODE_PRIVATE).edit()
 //    val pref = getSharedPreferences(sharePref, Context.MODE_PRIVATE)
-    val uid = auth.currentUser!!.uid
-    val name = auth.currentUser!!.displayName
+    val uid = auth.currentUser?.uid
+    val name = auth.currentUser?.displayName
 
     val bookmark = "bookmark"
     val draft = "draft"
@@ -124,10 +124,14 @@ class MainApps : Application() {
             firebaseDatabase.child("user").child(uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
+                        log(p0.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val name = dataSnapshot.child("userName").getValue(String::class.java)!!
+                        var name = dataSnapshot.child("userName").getValue(String::class.java)
+                        if(name == null){
+                            name = ""
+                        }
                         onDataChange(name)
                     }
                 })

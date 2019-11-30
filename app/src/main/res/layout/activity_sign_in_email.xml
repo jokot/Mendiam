@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorDarkEggGreen"
+        android:background="@color/colorDarkRedis"
         tools:context=".SignInEmailActivity">
 
     <LinearLayout
@@ -64,7 +64,7 @@
                 android:layout_marginTop="8dp"
                 android:id="@+id/btn_continue"
                 android:textColor="@color/colorWhite"
-                android:backgroundTint="@color/colorGreen"
+                android:backgroundTint="@color/colorRed"
                 android:text="Continue"/>
     </LinearLayout>
 </ScrollView>

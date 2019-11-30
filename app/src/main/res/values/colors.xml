@@ -3,15 +3,18 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorAccent">#000000</color>
+    <color name="colorAccent">#AF0505</color>
     <color name="colorPink">#D81B60</color>
+    <color name="colorRed">#AF0505</color>
+    <color name="colorRedis">#FD9595</color>
+    <color name="colorDarkRedis">#DF8181</color>
     <color name="colorGrey">#e1e1e1</color>
     <color name="colorDarkGrey">#585858</color>
     <color name="colorDarkWhite">#f7f7f7</color>
     <color name="colorWhite">#ffff</color>
     <color name="colorBackground">#f9f9f9</color>
-    <color name="colorEggGreen">#e7f2eb</color>
-    <color name="colorGreen">#04b595</color>
-    <color name="colorDarkEggGreen">#d6eeed</color>
+<!--    <color name="colorEggGreen">#e7f2eb</color>-->
+<!--    <color name="colorGreen">#04b595</color>-->
+<!--    <color name="colorDarkEggGreen">#d6eeed</color>-->
     <color name="black_overlay">#66000000</color>
 </resources>

@@ -3,7 +3,6 @@ package com.example.jokot.mendiam
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
@@ -30,58 +29,33 @@ class ReadActivity : AppCompatActivity() {
     private var database = main.database.reference
     private var myid = main.auth.uid.toString()
     private var authorId = ""
-
-    private val mHideHandler = Handler()
-    private val mHidePart2Runnable = Runnable {
-        // Delayed removal of status and navigation bar
-
-        // Note that some of these constants are new as of API 16 (Jelly Bean)
-        // and API 19 (KitKat). It is safe to use them, as they are inlined
-        // at compile-time and do nothing on earlier devices.
-        fullscreen_content.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LOW_PROFILE or
-                    View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-    }
-    private val mShowPart2Runnable = Runnable {
-        // Delayed display of UI elements
-        supportActionBar?.show()
-//        fullscreen_content_controls.visibility = View.VISIBLE
-    }
-    private var mVisible: Boolean = false
-    private val mHideRunnable = Runnable { hide() }
+    private var isBookmarked = false
+    private var oldY = 1
+    private var currentY = 0
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
      * while interacting with activity UI.
      */
-    private val mDelayHideTouchListener = View.OnTouchListener { _, _ ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
-        }
-        false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_read)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        
+
         if (intent.getStringExtra("sid") != null) {
             sid = intent.getStringExtra("sid")
         }
 
         initData()
-        setUpClick()
+        getBookmarkId {
+            setUpClick()
+        }
 
-        mVisible = true
 
 //         Set up the user interaction to manually show or hide the system UI.
-        fullscreen_content.setOnClickListener { toggle() }
+
 //
 //         Upon interacting with UI controls, delay any scheduled hide()
 //         operations to prevent the jarring behavior of controls going away
@@ -97,6 +71,34 @@ class ReadActivity : AppCompatActivity() {
             startActivity(Intent(applicationContext, ProfileActivity::class.java))
             finish()
         }
+        ll_write_response.setOnClickListener {
+            toast("Coming soon")
+        }
+        iv_like.setOnClickListener {
+            toast("Coming soon")
+        }
+        iv_bookmark.setOnClickListener {
+            if (isBookmarked) {
+                iv_bookmark.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
+                isBookmarked = false
+                database.child(main.bookmark).child(myid).child(sid).removeValue()
+            } else {
+                iv_bookmark.setImageResource(R.drawable.ic_bookmark_red_24dp)
+                isBookmarked = true
+                database.child(main.bookmark).child(myid).child(sid).setValue(true)
+            }
+        }
+        iv_share.setOnClickListener {
+            toast("Coming soon")
+        }
+//        scrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+//            if (scrollY > oldScrollY) {
+//                ll_tool.animate().translationY(ll_tool.height.toFloat())
+//            } else if (scrollY < oldScrollY) {
+//                ll_tool.animate().translationY(0f)
+//            }
+//        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -133,8 +135,10 @@ class ReadActivity : AppCompatActivity() {
                             tv_author_about.text = about
                         }
                         if (urlPic != "") {
-                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(iv_user)
-                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(iv_author)
+                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp)
+                                .into(iv_user)
+                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp)
+                                .into(iv_author)
                         }
                         tv_author.text = name
                         tv_author_name.text = name
@@ -170,16 +174,20 @@ class ReadActivity : AppCompatActivity() {
 //                    tv_deskripsi.text = deskipsi
 
                     if (uid != main.getUId()) {
-                        cekFollow(uid!!)
+                        uid?.let { cekFollow(it) }
                     } else {
                         btn_follow.visibility = View.GONE
                     }
 
-                    authorId = uid
-                    onDataChange(
-                        uid!!
-                        , textContent!!
-                    )
+                    authorId = uid.toString()
+                    uid?.let {
+                        textContent?.let { it1 ->
+                            onDataChange(
+                                it
+                                , it1
+                            )
+                        }
+                    }
 
 //                    getStoryContent(textContent)
                 }
@@ -187,8 +195,8 @@ class ReadActivity : AppCompatActivity() {
             })
     }
 
-    private fun getStoryContent(textContent: Int?) {
-        for (i in 0 until textContent!!) {
+    private fun getStoryContent(textContent: Int) {
+        for (i in 0 until textContent) {
             database.child(main.storyContent).child(sid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -279,23 +287,24 @@ class ReadActivity : AppCompatActivity() {
             newImage.adjustViewBounds = true
             newLayout.addView(newImage)
             if (url != "") {
-                Picasso.get().load(url).error(R.drawable.ic_broken_image_24dp).into(newImage, object : Callback {
-                    override fun onSuccess() {
-                        progress.visibility = View.GONE
-                        val newLayoutParam = (
-                                LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                ))
-                        newImage.setBackgroundResource(R.color.colorWhite)
-                        newLayout.layoutParams = newLayoutParam
-                    }
+                Picasso.get().load(url).error(R.drawable.ic_broken_image_24dp)
+                    .into(newImage, object : Callback {
+                        override fun onSuccess() {
+                            progress.visibility = View.GONE
+                            val newLayoutParam = (
+                                    LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                    ))
+                            newImage.setBackgroundResource(R.color.colorWhite)
+                            newLayout.layoutParams = newLayoutParam
+                        }
 
-                    override fun onError(e: Exception?) {
+                        override fun onError(e: Exception?) {
 
-                    }
+                        }
 
-                })
+                    })
             }
 
             //            add text
@@ -316,7 +325,10 @@ class ReadActivity : AppCompatActivity() {
             textView.text = text
             textView.setTextColor(Color.parseColor("#000000"))
             textView.setBackgroundResource(R.color.colorWhite)
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_size))
+            textView.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                resources.getDimension(R.dimen.font_size)
+            )
             layoutParent.addView(textView)
         } else {
 //            tv_deskripsi.text = text
@@ -383,54 +395,32 @@ class ReadActivity : AppCompatActivity() {
             })
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100)
+    private fun getBookmarkId(onSucsess: () -> Unit) {
+        database.child(main.bookmark).child(myid).child(sid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val ds = dataSnapshot.value
+                    isBookmarked = ds != null
+                    if (isBookmarked) {
+                        iv_bookmark.setImageResource(R.drawable.ic_bookmark_red_24dp)
+                    } else {
+                        iv_bookmark.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
+                    }
+                    onSucsess()
+                }
+            })
     }
 
-    private fun toggle() {
-        if (mVisible) {
-            hide()
-        } else {
-            show()
-        }
-    }
-
-    private fun hide() {
-        // Hide UI first
-        supportActionBar?.hide()
-//        fullscreen_content_controls.visibility = View.GONE
-        mVisible = false
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable)
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY.toLong())
-    }
-
-    private fun show() {
-        // Show the system bar
-        fullscreen_content.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        mVisible = true
-
-//         Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable)
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY.toLong())
-    }
 
     /**
      * Schedules a call to hide() in [delayMillis], canceling any
      * previously scheduled calls.
      */
-    private fun delayedHide(delayMillis: Int) {
-        mHideHandler.removeCallbacks(mHideRunnable)
-        mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
-    }
 
     companion object {
         /**

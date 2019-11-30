@@ -41,7 +41,7 @@ class TopicAdapter(private val clickListener: (String) -> Unit) : RecyclerView.A
                 } else {
                     follow.text = "Follow"
                     follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
-                    follow.setTextColor(Color.parseColor("#04b595"))
+                    follow.setTextColor(Color.parseColor("#AF0505"))
                     n--
                 }
             }

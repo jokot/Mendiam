@@ -55,12 +55,12 @@ class FollowActivity : AppCompatActivity() {
             }, {
 
             }, {
-                database.child(main.following).child(uid).child(it.id).removeValue()
-                database.child(main.follower).child(it.id).child(uid).removeValue()
+                uid?.let { it1 -> database.child(main.following).child(it1).child(it.id).removeValue() }
+                uid?.let { it1 -> database.child(main.follower).child(it.id).child(it1).removeValue() }
                 listUser.remove(it)
             }, {
-                database.child(main.following).child(uid).child(it.id).setValue(true)
-                database.child(main.follower).child(it.id).child(uid).setValue(true)
+                uid?.let { it1 -> database.child(main.following).child(it1).child(it.id).setValue(true) }
+                uid?.let { it1 -> database.child(main.follower).child(it.id).child(it1).setValue(true) }
             })
 
         rv_follow.adapter = adapter
@@ -90,47 +90,51 @@ class FollowActivity : AppCompatActivity() {
     }
 
     private fun getUserId(callbackLoading: CallbackLoading) {
-        database.child(follow).child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
+        uid?.let {
+            database.child(follow).child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
 
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val ds = dataSnapshot.children
-                    tempUserId.clear()
-                    ds.mapNotNull {
-                        val id = it.key
-                        tempUserId.add(id.toString())
                     }
-                    listUserId.clear()
-                    listUserId.addAll(tempUserId)
-                    callbackLoading.onCallback()
-                }
 
-            })
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val ds = dataSnapshot.children
+                        tempUserId.clear()
+                        ds.mapNotNull {
+                            val id = it.key
+                            tempUserId.add(id.toString())
+                        }
+                        listUserId.clear()
+                        listUserId.addAll(tempUserId)
+                        callbackLoading.onCallback()
+                    }
+
+                })
+        }
     }
 
     private fun getFollowingId(callbackLoading: CallbackLoading) {
-        database.child(main.following).child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
+        uid?.let {
+            database.child(main.following).child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
 
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val ds = dataSnapshot.children
-                    tempUserId.clear()
-                    ds.mapNotNull {
-                        val id = it.key
-                        tempUserId.add(id.toString())
                     }
-                    listFollowingId.clear()
-                    listFollowingId.addAll(tempUserId)
-                    callbackLoading.onCallback()
-                }
 
-            })
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val ds = dataSnapshot.children
+                        tempUserId.clear()
+                        ds.mapNotNull {
+                            val id = it.key
+                            tempUserId.add(id.toString())
+                        }
+                        listFollowingId.clear()
+                        listFollowingId.addAll(tempUserId)
+                        callbackLoading.onCallback()
+                    }
+
+                })
+        }
     }
 
     private fun getUser(callbackString: CallbackString) {

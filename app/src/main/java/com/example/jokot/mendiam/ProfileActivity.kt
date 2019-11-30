@@ -254,56 +254,58 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     }
 
     private fun getProfile(callbackLoading: CallbackLoading) {
-        database.child("user").child(firebaseUser!!.uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val name = dataSnapshot.child("userName").getValue(String::class.java)
-                    val autor = dataSnapshot.child("about").getValue(String::class.java)
-//                    val fingCount = dataSnapshot.child("fingCount").getValue(Int::class.java)
-//                    val ferCount = dataSnapshot.child("ferCount").getValue(Int::class.java)
-                    val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
-                    tv_profile.text = name
-                    tv_toolbar_profile.text = name
-
-//                    if (fingCount!=null){
-//                        tv_jml_following.text = fingCount.toString()
-//                    }
-//                    if(ferCount != null){
-//                        tv_jml_follower.text = ferCount.toString()
-//                    }
-                    getFollower {
-                        tv_jml_follower.text = it.toString()
-                    }
-                    getFollowing {
-                        tv_jml_following.text = it.toString()
+        firebaseUser?.uid?.let {
+            database.child("user").child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
                     }
 
-                    if (autor != null) {
-                        tv_about.text = autor
-                    }
-                    if (urlPic != "") {
-                        Picasso.get()
-                            .load(urlPic).error(R.drawable.ic_broken_image_24dp)
-                            .into(iv_profile, object : Callback {
-                                override fun onSuccess() {
-                                    pb_image.visibility = View.GONE
-                                }
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val name = dataSnapshot.child("userName").getValue(String::class.java)
+                        val autor = dataSnapshot.child("about").getValue(String::class.java)
+    //                    val fingCount = dataSnapshot.child("fingCount").getValue(Int::class.java)
+    //                    val ferCount = dataSnapshot.child("ferCount").getValue(Int::class.java)
+                        val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
+                        tv_profile.text = name
+                        tv_toolbar_profile.text = name
 
-                                override fun onError(e: Exception?) {
-                                    pb_image.visibility = View.GONE
-                                }
+    //                    if (fingCount!=null){
+    //                        tv_jml_following.text = fingCount.toString()
+    //                    }
+    //                    if(ferCount != null){
+    //                        tv_jml_follower.text = ferCount.toString()
+    //                    }
+                        getFollower {
+                            tv_jml_follower.text = it.toString()
+                        }
+                        getFollowing {
+                            tv_jml_following.text = it.toString()
+                        }
 
-                            })
-                    } else {
-                        pb_image.visibility = View.GONE
-                        iv_profile.setImageResource(R.drawable.ic_person_24dp)
+                        if (autor != null) {
+                            tv_about.text = autor
+                        }
+                        if (urlPic != "") {
+                            Picasso.get()
+                                .load(urlPic).error(R.drawable.ic_broken_image_24dp)
+                                .into(iv_profile, object : Callback {
+                                    override fun onSuccess() {
+                                        pb_image.visibility = View.GONE
+                                    }
+
+                                    override fun onError(e: Exception?) {
+                                        pb_image.visibility = View.GONE
+                                    }
+
+                                })
+                        } else {
+                            pb_image.visibility = View.GONE
+                            iv_profile.setImageResource(R.drawable.ic_person_24dp)
+                        }
+                        callbackLoading.onCallback()
                     }
-                    callbackLoading.onCallback()
-                }
-            })
+                })
+        }
     }
 
     inner class SectionPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
@@ -313,7 +315,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                     PublishedFragment()
                 }
                 1 -> {
-                    PeopleFragment()
+                    HomeFragment()
                 }
                 else -> {
                     null

@@ -99,6 +99,7 @@
                             android:paddingBottom="4dp"
                             android:text="@string/edit"
                             android:paddingLeft="16dp"
+                            android:background="?selectableItemBackground"
                             android:paddingStart="16dp"
                             android:id="@+id/tv_edit"
                             android:textColor="@color/colorBlack"/>
@@ -110,6 +111,7 @@
                             android:paddingStart="16dp"
                             android:paddingTop="4dp"
                             android:textSize="16sp"
+                            android:background="?selectableItemBackground"
                             android:id="@+id/tv_keluar"
                             android:textColor="@color/colorBlack"
                             android:text="@string/keluar"/>
@@ -270,7 +272,7 @@
             <android.support.design.widget.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/claps"/>
+                    android:text="@string/like"/>
 
         </android.support.design.widget.TabLayout>
 

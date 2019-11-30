@@ -60,27 +60,29 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun getData(callbackLoading: CallbackLoading) {
-        database.child(main.user).child(main.uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
+        main.uid?.let {
+            database.child(main.user).child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
 
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val name = dataSnapshot.child("userName").getValue(String::class.java)
-                    val about = dataSnapshot.child("about").getValue(String::class.java)
-                    val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
-                    et_nama.setText(name)
-                    if (about != "") {
-                        et_about.setText(about)
                     }
-                    if(urlPic != ""){
-                        Picasso.get().load(urlPic).into(iv_edit)
-                    }
-                    callbackLoading.onCallback()
-                }
 
-            })
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val name = dataSnapshot.child("userName").getValue(String::class.java)
+                        val about = dataSnapshot.child("about").getValue(String::class.java)
+                        val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
+                        et_nama.setText(name)
+                        if (about != "") {
+                            et_about.setText(about)
+                        }
+                        if(urlPic != ""){
+                            Picasso.get().load(urlPic).into(iv_edit)
+                        }
+                        callbackLoading.onCallback()
+                    }
+
+                })
+        }
     }
 
     private fun saveData() {
@@ -95,9 +97,11 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun dataBase(key: String, value: String) {
         main.editorPref(key,value,this)
-        database.child(main.user)
-            .child(main.uid)
-            .child(key).setValue(value)
+        main.uid?.let {
+            database.child(main.user)
+                .child(it)
+                .child(key).setValue(value)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -105,17 +109,19 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
         if(resultCode == Activity.RESULT_OK && requestCode == main.G_CODE){
             val uri = data?.data
             main.showProgressBar(pb_edit)
-            main.uploadImage(uri!!,{
-                main.hideProgresBar(pb_edit)
-                toast(it)
-            },{
-                main.hideProgresBar(pb_edit)
-                toast(it)
-            },{
-                urlPic = it
-                iv_edit.setImageURI(uri)
-                main.hideProgresBar(pb_edit)
-            })
+            uri?.let {
+                main.uploadImage(it,{
+                    main.hideProgresBar(pb_edit)
+                    toast(it)
+                },{
+                    main.hideProgresBar(pb_edit)
+                    toast(it)
+                },{
+                    urlPic = it
+                    iv_edit.setImageURI(uri)
+                    main.hideProgresBar(pb_edit)
+                })
+            }
         }
     }
 

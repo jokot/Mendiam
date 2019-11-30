@@ -5,12 +5,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".SplashScreenActivity">
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="40sp"
-            android:textColor="@color/colorGreen"
-            android:text="SPLASH SCREEN"/>
-
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/splash"
+            />
 </FrameLayout>

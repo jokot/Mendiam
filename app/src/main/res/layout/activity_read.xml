@@ -6,9 +6,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent" android:layout_height="match_parent">
     <ScrollView
-            android:id="@+id/fullscreen_content"
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
             android:background="@color/colorBackground"
             tools:context=".ReadActivity">
         <android.support.design.widget.CoordinatorLayout
@@ -130,8 +131,8 @@
                             android:layout_marginBottom="16dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 Claps"
-                            android:id="@+id/tv_clap"
+                            android:text="0 Likes"
+                            android:id="@+id/tv_like"
                             android:layout_marginLeft="16dp"/>
 
                     <View
@@ -215,7 +216,6 @@
                         android:gravity="center_vertical">
                     <LinearLayout
                             android:layout_width="match_parent"
-
                             android:layout_height="50dp"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
@@ -237,13 +237,13 @@
                                 android:text="Write a Response..."
                                 android:layout_marginLeft="8dp"/>
                     </LinearLayout>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="Response(10)"
-                            android:id="@+id/tv_response"
-                            android:layout_marginLeft="16dp"/>
+<!--                    <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginStart="16dp"-->
+<!--                            android:text="Response(10)"-->
+<!--                            android:id="@+id/tv_response"-->
+<!--                            android:layout_marginLeft="16dp"/>-->
                 </LinearLayout>
                 <View android:layout_width="match_parent"
                       android:layout_height="100dp"/>
@@ -267,25 +267,27 @@
             android:orientation="horizontal"
             android:elevation="5dp">
         <ImageView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:id="@+id/iv_like"
-                app:srcCompat="@drawable/ic_thumbs_up" android:layout_marginLeft="8dp"/>
+                app:srcCompat="@drawable/ic_thumbs_up"
+                android:layout_marginLeft="8dp"
+                android:background="?selectableItemBackground"/>
         <ImageView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:id="@+id/iv_bookmark"
                 app:srcCompat="@drawable/ic_bookmark_border_black_24dp"
+                android:background="?selectableItemBackground"
                 />
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:id="@+id/iv_share"
-                app:srcCompat="@drawable/ic_share_black_24dp"/>
+                app:srcCompat="@drawable/ic_share_black_24dp"
+                android:background="?selectableItemBackground"/>
     </LinearLayout>
 </RelativeLayout>
