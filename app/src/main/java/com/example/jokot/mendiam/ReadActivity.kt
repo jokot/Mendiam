@@ -30,6 +30,7 @@ class ReadActivity : AppCompatActivity() {
     private var myid = main.auth.uid.toString()
     private var authorId = ""
     private var isBookmarked = false
+    private var isLiked = false
     private var oldY = 1
     private var currentY = 0
     /**
@@ -50,7 +51,9 @@ class ReadActivity : AppCompatActivity() {
 
         initData()
         getBookmarkId {
-            setUpClick()
+            getLiked {
+                setUpClick()
+            }
         }
 
 
@@ -75,17 +78,28 @@ class ReadActivity : AppCompatActivity() {
             toast("Coming soon")
         }
         iv_like.setOnClickListener {
-            toast("Coming soon")
+            if (isLiked) {
+                iv_like.setImageResource(R.drawable.ic_thumbs_up)
+                isLiked = false
+                removeStoryLikes()
+                removeLikedStory()
+            } else {
+                iv_like.setImageResource(R.drawable.ic_thumbs_up_hand_symbol)
+                isLiked = true
+                addStoryLikes()
+                addLikedStory()
+            }
+
         }
         iv_bookmark.setOnClickListener {
             if (isBookmarked) {
                 iv_bookmark.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
                 isBookmarked = false
-                database.child(main.bookmark).child(myid).child(sid).removeValue()
+                removeBookmark()
             } else {
                 iv_bookmark.setImageResource(R.drawable.ic_bookmark_red_24dp)
                 isBookmarked = true
-                database.child(main.bookmark).child(myid).child(sid).setValue(true)
+                addBookmark()
             }
         }
         iv_share.setOnClickListener {
@@ -99,6 +113,30 @@ class ReadActivity : AppCompatActivity() {
 //            }
 //        }
 
+    }
+
+    private fun addBookmark(){
+        database.child(main.bookmark).child(myid).child(sid).setValue(true)
+    }
+
+    private fun removeBookmark(){
+        database.child(main.bookmark).child(myid).child(sid).removeValue()
+    }
+
+    private fun addStoryLikes(){
+        database.child(main.storyLikes).child(sid).child(myid).setValue(true)
+    }
+
+    private fun removeStoryLikes(){
+        database.child(main.storyLikes).child(sid).child(myid).removeValue()
+    }
+
+    private fun addLikedStory(){
+        database.child(main.likedStory).child(myid).child(sid).setValue(true)
+    }
+
+    private fun removeLikedStory(){
+        database.child(main.likedStory).child(myid).child(sid).removeValue()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -400,7 +438,7 @@ class ReadActivity : AppCompatActivity() {
         database.child(main.bookmark).child(myid).child(sid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    log(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -410,6 +448,26 @@ class ReadActivity : AppCompatActivity() {
                         iv_bookmark.setImageResource(R.drawable.ic_bookmark_red_24dp)
                     } else {
                         iv_bookmark.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
+                    }
+                    onSucsess()
+                }
+            })
+    }
+
+    private fun getLiked(onSucsess: () -> Unit) {
+        database.child(main.likedStory).child(myid).child(sid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    log(p0.message)
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val ds = dataSnapshot.value
+                    isLiked = ds != null
+                    if (isLiked) {
+                        iv_like.setImageResource(R.drawable.ic_thumbs_up_hand_symbol)
+                    } else {
+                        iv_like.setImageResource(R.drawable.ic_thumbs_up)
                     }
                     onSucsess()
                 }
