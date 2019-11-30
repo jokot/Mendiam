@@ -84,7 +84,7 @@ class PeopleFragment : Fragment() {
         database.child("following").child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
-
+                    requireActivity().log(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -107,7 +107,7 @@ class PeopleFragment : Fragment() {
     private fun getPeople(callbackLoading: CallbackLoading) {
         database.child("user").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                requireActivity().log(p0.message)
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -133,6 +133,4 @@ class PeopleFragment : Fragment() {
             }
         })
     }
-
-
 }

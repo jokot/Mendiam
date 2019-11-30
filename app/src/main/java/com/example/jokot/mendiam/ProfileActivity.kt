@@ -315,7 +315,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                     PublishedFragment()
                 }
                 1 -> {
-                    HomeFragment()
+                    LikedStoryFragment()
                 }
                 else -> {
                     null
