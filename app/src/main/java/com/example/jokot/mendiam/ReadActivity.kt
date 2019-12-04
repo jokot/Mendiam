@@ -447,7 +447,6 @@ class ReadActivity : AppCompatActivity() {
             btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
             btn_follow.setTextColor(Color.parseColor("#000000"))
         }
-
     }
 
     private fun getMyPic() {

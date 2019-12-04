@@ -3,6 +3,7 @@ package com.example.jokot.mendiam
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.TabLayout
@@ -16,6 +17,8 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.activity_profile.btn_follow
+import kotlinx.android.synthetic.main.activity_read.*
 import java.io.File
 
 class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
@@ -30,6 +33,8 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     private val editId = 1
 
     private var uid = ""
+
+    private var myUid = main.getUId()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +69,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         tv_keluar.setOnClickListener(this)
         ll_follower.setOnClickListener(this)
         ll_following.setOnClickListener(this)
+        btn_follow.setOnClickListener(this)
 
         app_bar_profile.addOnOffsetChangedListener(this)
     }
@@ -114,6 +120,9 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             R.id.iv_toolbar_back -> {
                 finish()
             }
+            R.id.btn_follow -> {
+                follow()
+            }
         }
     }
 
@@ -127,6 +136,51 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     private fun changeUiIfNotMe(){
         if(uid != main.getUId()){
             iv_more.visibility = View.GONE
+            btn_follow.visibility = View.VISIBLE
+            cekFollow(uid)
+        }
+    }
+
+    private fun follow() {
+        if (btn_follow.text.toString() == "Follow") {
+            database.child("following").child(myUid).child(uid).setValue(true)
+            database.child("follower").child(uid).child(myUid).setValue(true)
+            changeButtonFollow("Following")
+            initData()
+        } else {
+            database.child("following").child(myUid).child(uid).removeValue()
+            database.child("follower").child(uid).child(myUid).removeValue()
+            changeButtonFollow("Follow")
+            initData()
+        }
+    }
+
+    private fun cekFollow(uid: String) {
+        database.child("following").child(main.getUId())
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    log(p0.message)
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.child(uid).exists()) {
+                        changeButtonFollow("Following")
+                    } else {
+                        changeButtonFollow("Follow")
+                    }
+                }
+
+            })
+    }
+
+    private fun changeButtonFollow(string: String) {
+        btn_follow.text = string
+        if (string == "Following") {
+            btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)
+            btn_follow.setTextColor(Color.parseColor("#ffffff"))
+        } else {
+            btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
+            btn_follow.setTextColor(Color.parseColor("#000000"))
         }
     }
 
