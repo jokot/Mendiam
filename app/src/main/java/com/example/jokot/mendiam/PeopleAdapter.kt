@@ -55,6 +55,11 @@ class PeopleAdapter(
             clickUnFollow: (User) -> Unit,
             clickFollowing: (User) -> Unit
         ) {
+            if(list.id == main.getUId()){
+                itemView.btn_follow.visibility = View.GONE
+            }else{
+                itemView.btn_follow.visibility = View.VISIBLE
+            }
 
             for (uid in listUserFollowing) {
                 if (uid == list.id) {

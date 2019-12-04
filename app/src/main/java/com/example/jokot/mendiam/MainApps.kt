@@ -42,6 +42,7 @@ class MainApps : Application() {
     val draft = "draft"
     val draftContent = "draftContent"
     val follower = "follower"
+    val follow = "follow"
     val following = "following"
     val story = "story"
     val storyContent = "storyContent"

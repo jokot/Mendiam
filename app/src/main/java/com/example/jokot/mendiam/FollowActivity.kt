@@ -23,6 +23,7 @@ class FollowActivity : AppCompatActivity() {
 
     private var follow = ""
     private var uid = ""
+    private var myUid = main.getUId()
     private var listUser: MutableList<User> = mutableListOf()
     private var listUserId: MutableList<String> = mutableListOf()
     private var tempUserId: MutableList<String> = mutableListOf()
@@ -33,7 +34,7 @@ class FollowActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_follow)
 
-        follow = intent.getStringExtra("follow")
+        follow = intent.getStringExtra(main.follow)
         uid = intent.getStringExtra(main.userId)
 
         tv_toolbar_name.text = follow.capitalize()
@@ -51,21 +52,27 @@ class FollowActivity : AppCompatActivity() {
 
     private fun initRecycler() {
         adapter = PeopleAdapter(
-            listUser, if (follow == main.follower) {
-                listFollowingId
-            } else {
-                listUserId
-            }, {
-                val intent = Intent(this,ProfileActivity::class.java)
-                intent.putExtra(main.userId,it.id)
+            listUser,
+            listFollowingId
+            , {
+                val intent = Intent(this, ProfileActivity::class.java)
+                intent.putExtra(main.userId, it.id)
                 startActivity(intent)
             }, {
-                uid.let { it1 -> database.child(main.following).child(it1).child(it.id).removeValue() }
-                uid.let { it1 -> database.child(main.follower).child(it.id).child(it1).removeValue() }
+                myUid.let { it1 ->
+                    database.child(main.following).child(it1).child(it.id).removeValue()
+                }
+                myUid.let { it1 ->
+                    database.child(main.follower).child(it.id).child(it1).removeValue()
+                }
                 listUser.remove(it)
             }, {
-                uid.let { it1 -> database.child(main.following).child(it1).child(it.id).setValue(true) }
-                uid.let { it1 -> database.child(main.follower).child(it.id).child(it1).setValue(true) }
+                myUid.let { it1 ->
+                    database.child(main.following).child(it1).child(it.id).setValue(true)
+                }
+                myUid.let { it1 ->
+                    database.child(main.follower).child(it.id).child(it1).setValue(true)
+                }
             })
 
         rv_follow.adapter = adapter
@@ -75,27 +82,20 @@ class FollowActivity : AppCompatActivity() {
 
     private fun initData() {
         rv_follow.visibility = View.GONE
-        if (follow == main.follower) {
-            getFollowingId(object : CallbackLoading {
-                override fun onCallback() {
-                    getUserId(object : CallbackLoading {
-                        override fun onCallback() {
-                            getUsers()
-                        }
-                    })
-                }
-            })
-        } else {
-            getUserId(object : CallbackLoading {
-                override fun onCallback() {
-                    getUsers()
-                }
-            })
-        }
+//        if (follow == main.follower) {
+        getFollowingId(object : CallbackLoading {
+            override fun onCallback() {
+                getUserId(object : CallbackLoading {
+                    override fun onCallback() {
+                        getUsers()
+                    }
+                })
+            }
+        })
     }
 
     private fun getUserId(callbackLoading: CallbackLoading) {
-        uid?.let {
+        uid.let {
             database.child(follow).child(it)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -113,13 +113,12 @@ class FollowActivity : AppCompatActivity() {
                         listUserId.addAll(tempUserId)
                         callbackLoading.onCallback()
                     }
-
                 })
         }
     }
 
     private fun getFollowingId(callbackLoading: CallbackLoading) {
-        uid?.let {
+        myUid.let {
             database.child(main.following).child(it)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -152,14 +151,17 @@ class FollowActivity : AppCompatActivity() {
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val userName = dataSnapshot.child("userName").getValue(String::class.java).toString()
-                        val email = dataSnapshot.child("email").getValue(String::class.java).toString()
-                        val about = dataSnapshot.child("about").getValue(String::class.java).toString()
-                        val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java).toString()
+                        val userName =
+                            dataSnapshot.child("userName").getValue(String::class.java).toString()
+                        val email =
+                            dataSnapshot.child("email").getValue(String::class.java).toString()
+                        val about =
+                            dataSnapshot.child("about").getValue(String::class.java).toString()
+                        val urlPic =
+                            dataSnapshot.child("urlPic").getValue(String::class.java).toString()
 
-                        if(id != main.getUId()){
-                            listUser.add(User(id, userName, email, about,urlPic))
-                        }
+                        listUser.add(User(id, userName, email, about, urlPic))
+
 
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(id)

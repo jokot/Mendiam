@@ -28,6 +28,7 @@ class LikedStoryFragment : Fragment() {
 
     private val main = MainApps()
     private var database = main.database.reference
+    private val myUid = main.getUId()
     private var uid = ""
 
     override fun onCreateView(
@@ -50,9 +51,13 @@ class LikedStoryFragment : Fragment() {
 
     private fun initRecycle() {
         adapter = StoryAdapter(listStory, listBookmarkId, {
-            uid?.let { it1 -> database.child(main.likedStory).child(it1).child(it.sid).setValue(true) }
+            uid?.let { it1 ->
+                database.child(main.likedStory).child(it1).child(it.sid).setValue(true)
+            }
         }, {
-            uid?.let { it1 -> database.child(main.likedStory).child(it1).child(it.sid).removeValue() }
+            uid?.let { it1 ->
+                database.child(main.likedStory).child(it1).child(it.sid).removeValue()
+            }
             listStory.remove(it)
 //            adapter.notifyDataSetChanged()
         }, {
@@ -62,7 +67,8 @@ class LikedStoryFragment : Fragment() {
         })
 
         rv_liked_story.adapter = adapter
-        rv_liked_story.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rv_liked_story.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
     }
 
@@ -103,32 +109,36 @@ class LikedStoryFragment : Fragment() {
     }
 
     private fun getStories() {
-        adapter.notifyDataSetChanged()
-        rv_liked_story.visibility = View.GONE
-        if (listLikedStoryId.size != 0) {
-            val lastBId = listLikedStoryId[listLikedStoryId.size - 1]
-            getStory(object : CallbackString {
-                override fun onCallback(lastId: String) {
-                    if (lastId == lastBId) {
-                        rv_liked_story.visibility = View.VISIBLE
-                        pb_liked_story.visibility = View.GONE
-                        sr_liked_story.isRefreshing = false
-                    }
-                }
-            })
-        } else {
-            listStory.clear()
+        try {
             adapter.notifyDataSetChanged()
-            rv_liked_story.visibility = View.VISIBLE
-            pb_liked_story.visibility = View.GONE
-            sr_liked_story.isRefreshing = false
+            rv_liked_story.visibility = View.GONE
+            if (listLikedStoryId.size != 0) {
+                val lastBId = listLikedStoryId[listLikedStoryId.size - 1]
+                getStory(object : CallbackString {
+                    override fun onCallback(lastId: String) {
+                        if (lastId == lastBId) {
+                            rv_liked_story.visibility = View.VISIBLE
+                            pb_liked_story.visibility = View.GONE
+                            sr_liked_story.isRefreshing = false
+                        }
+                    }
+                })
+            } else {
+                listStory.clear()
+                adapter.notifyDataSetChanged()
+                rv_liked_story.visibility = View.VISIBLE
+                pb_liked_story.visibility = View.GONE
+                sr_liked_story.isRefreshing = false
+            }
+        }catch (e:Exception){
+            requireActivity().log(e.message)
         }
     }
 
-    private fun getBookmarkId(callbackLoading: CallbackLoading){
-        uid?.let {
+    private fun getBookmarkId(callbackLoading: CallbackLoading) {
+        myUid.let {
             database.child(main.bookmark).child(it)
-                .addListenerForSingleValueEvent(object : ValueEventListener{
+                .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
@@ -138,7 +148,7 @@ class LikedStoryFragment : Fragment() {
                         listBookmarkId.clear()
                         ds.mapNotNull {
                             val bid = it.key
-                            if(bid != null){
+                            if (bid != null) {
                                 listBookmarkId.add(bid)
                             }
 
@@ -167,7 +177,7 @@ class LikedStoryFragment : Fragment() {
                         val name = dataSnapshot.child("name").getValue(String::class.java)
                         val date = dataSnapshot.child("date").getValue(String::class.java)
                         val image = dataSnapshot.child("image").getValue(String::class.java)
-                        if(id!=null){
+                        if (id != null) {
                             listStory.add(
                                 Story(
                                     sid,
@@ -179,8 +189,10 @@ class LikedStoryFragment : Fragment() {
                                     image.toString()
                                 )
                             )
-                        }else{
-                            uid?.let { database.child(main.likedStory).child(it).child(sid).removeValue() }
+                        } else {
+                            uid?.let {
+                                database.child(main.likedStory).child(it).child(sid).removeValue()
+                            }
                         }
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(sid)

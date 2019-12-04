@@ -17,8 +17,6 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
-import kotlinx.android.synthetic.main.activity_profile.btn_follow
-import kotlinx.android.synthetic.main.activity_read.*
 import java.io.File
 
 class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
@@ -89,14 +87,14 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
 
             R.id.ll_following -> {
                 intent = Intent(this, FollowActivity::class.java)
-                intent.putExtra("follow", "following")
+                intent.putExtra(main.follow, main.following)
                 intent.putExtra(main.userId, uid)
                 startActivity(intent)
             }
 
             R.id.ll_follower -> {
                 intent = Intent(this, FollowActivity::class.java)
-                intent.putExtra("follow", "follower")
+                intent.putExtra(main.follow, main.follower)
                 intent.putExtra(main.userId, uid)
                 startActivity(intent)
             }
