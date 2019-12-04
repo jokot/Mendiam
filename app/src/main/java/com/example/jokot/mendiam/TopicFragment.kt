@@ -38,8 +38,9 @@ class TopicFragment : Fragment() {
 
     private fun initRecyclerView() {
         topicAdapter = TopicAdapter() {
-            val intent = Intent(context, ReadActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(context, ReadActivity::class.java)
+//            startActivity(intent)
+            requireActivity().toast("Coming soon")
         }
 
         rv_topic.adapter = topicAdapter

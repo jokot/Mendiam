@@ -80,6 +80,11 @@ class ReadActivity : AppCompatActivity() {
         ll_write_response.setOnClickListener {
             toast("Coming soon")
         }
+        ll_small_author.setOnClickListener {
+            val intent = Intent(applicationContext, ProfileActivity::class.java)
+            intent.putExtra(main.userId,authorId)
+            startActivity(intent)
+        }
         iv_like.setOnClickListener {
             if (isLiked) {
                 iv_like.setImageResource(R.drawable.ic_thumbs_up)
