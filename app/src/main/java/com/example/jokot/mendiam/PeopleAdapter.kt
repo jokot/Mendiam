@@ -57,9 +57,6 @@ class PeopleAdapter(
         ) {
 
             for (uid in listUserFollowing) {
-                if(uid == main.getUId()){
-                    itemView.btn_follow.visibility = View.GONE
-                }
                 if (uid == list.id) {
                     n = 1
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)

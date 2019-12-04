@@ -157,7 +157,9 @@ class FollowActivity : AppCompatActivity() {
                         val about = dataSnapshot.child("about").getValue(String::class.java).toString()
                         val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java).toString()
 
-                        listUser.add(User(id, userName, email, about,urlPic))
+                        if(id != main.getUId()){
+                            listUser.add(User(id, userName, email, about,urlPic))
+                        }
 
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(id)
