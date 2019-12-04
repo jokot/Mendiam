@@ -14,6 +14,8 @@ class StoriesAdapter(
     private var clickEdit: (Story) -> Unit,
     private var clickDelete: (Story) -> Unit
 ) : RecyclerView.Adapter<StoriesAdapter.ItemViewHolder>() {
+    private val main = MainApps()
+
     override fun onCreateViewHolder(group: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder(LayoutInflater.from(group.context).inflate(R.layout.item_view_sotries, group, false))
     }
@@ -31,11 +33,14 @@ class StoriesAdapter(
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bindItem(keterangan: String,
+        fun bindItem(description    : String,
                      listStory: Story,
                      clickListener: (Story) -> Unit,
                      clickEdit: (Story) -> Unit,
                      clickDelete: (Story) -> Unit) {
+            if (listStory.uid != main.getUId()){
+                itemView.iv_more.visibility = View.GONE
+            }
 
             itemView.ll_more.visibility = View.GONE
             itemView.ll_for_gone.visibility = View.GONE
@@ -60,7 +65,7 @@ class StoriesAdapter(
                 itemView.ll_for_gone.visibility = View.GONE
             }
 
-            itemView.tv_keterangan.text = keterangan
+            itemView.tv_keterangan.text = description
             itemView.tv_judul.text = listStory.judul
             itemView.tv_deskripsi.text = listStory.deskripsi
             itemView.tv_date.text = listStory.date

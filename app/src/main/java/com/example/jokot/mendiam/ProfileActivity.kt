@@ -336,7 +336,11 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         override fun getItem(position: Int): Fragment? {
             return when (position) {
                 0 -> {
-                    PublishedFragment()
+                    val bundle = Bundle()
+                    bundle.putString(main.userId, uid)
+                    val fragment = PublishedFragment()
+                    fragment.arguments = bundle
+                    fragment
                 }
                 1 -> {
                     LikedStoryFragment()

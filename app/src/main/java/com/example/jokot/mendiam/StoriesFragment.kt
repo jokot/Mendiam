@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_stories.*
 class StoriesFragment : Fragment() {
 
     private lateinit var mSectionPageAdapter: SectionPagesAdapter
+    private val main = MainApps()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +50,13 @@ class StoriesFragment : Fragment() {
         override fun getItem(position: Int): Fragment? {
             return when(position){
                 0 -> DraftFragment()
-                1-> PublishedFragment()
+                1-> {
+                    val bundle = Bundle()
+                    bundle.putString(main.userId, main.getUId())
+                    val fragment = PublishedFragment()
+                    fragment.arguments = bundle
+                    fragment
+                }
                 else -> null
             }
         }

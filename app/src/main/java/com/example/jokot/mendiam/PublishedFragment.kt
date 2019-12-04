@@ -39,12 +39,16 @@ class PublishedFragment : Fragment() {
 
     private var database = FirebaseDatabase.getInstance().reference
     private var auth = FirebaseAuth.getInstance()
-    private val uid = auth.currentUser?.uid.toString()
+//    private val uid = auth.currentUser?.uid.toString()
+    private var uid =""
+    private val main = MainApps()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        uid = arguments?.getString(main.userId).toString()
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_published, container, false)
     }
