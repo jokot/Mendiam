@@ -22,6 +22,8 @@ class PeopleAdapter(
     private val clickFollowing: (User) -> Unit
 ) : RecyclerView.Adapter<PeopleAdapter.ItemViewHolder>() {
 
+    private val main = MainApps()
+
     private var n = 0
 
     override fun onCreateViewHolder(group: ViewGroup, viewType: Int): PeopleAdapter.ItemViewHolder {
@@ -53,7 +55,11 @@ class PeopleAdapter(
             clickUnFollow: (User) -> Unit,
             clickFollowing: (User) -> Unit
         ) {
+
             for (uid in listUserFollowing) {
+                if(uid == main.getUId()){
+                    itemView.btn_follow.visibility = View.GONE
+                }
                 if (uid == list.id) {
                     n = 1
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)

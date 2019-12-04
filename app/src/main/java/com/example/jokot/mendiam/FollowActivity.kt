@@ -1,5 +1,6 @@
 package com.example.jokot.mendiam
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -17,11 +18,11 @@ class FollowActivity : AppCompatActivity() {
 
     private val main = MainApps()
     private var database = main.database.reference
-    private val uid = main.uid
 
     private lateinit var adapter: PeopleAdapter
 
     private var follow = ""
+    private var uid = ""
     private var listUser: MutableList<User> = mutableListOf()
     private var listUserId: MutableList<String> = mutableListOf()
     private var tempUserId: MutableList<String> = mutableListOf()
@@ -33,6 +34,8 @@ class FollowActivity : AppCompatActivity() {
         setContentView(R.layout.activity_follow)
 
         follow = intent.getStringExtra("follow")
+        uid = intent.getStringExtra(main.userId)
+
         tv_toolbar_name.text = follow.capitalize()
         iv_toolbar_back.setOnClickListener {
             finish()
@@ -53,14 +56,16 @@ class FollowActivity : AppCompatActivity() {
             } else {
                 listUserId
             }, {
-
+                val intent = Intent(this,ProfileActivity::class.java)
+                intent.putExtra(main.userId,it.id)
+                startActivity(intent)
             }, {
-                uid?.let { it1 -> database.child(main.following).child(it1).child(it.id).removeValue() }
-                uid?.let { it1 -> database.child(main.follower).child(it.id).child(it1).removeValue() }
+                uid.let { it1 -> database.child(main.following).child(it1).child(it.id).removeValue() }
+                uid.let { it1 -> database.child(main.follower).child(it.id).child(it1).removeValue() }
                 listUser.remove(it)
             }, {
-                uid?.let { it1 -> database.child(main.following).child(it1).child(it.id).setValue(true) }
-                uid?.let { it1 -> database.child(main.follower).child(it.id).child(it1).setValue(true) }
+                uid.let { it1 -> database.child(main.following).child(it1).child(it.id).setValue(true) }
+                uid.let { it1 -> database.child(main.follower).child(it.id).child(it1).setValue(true) }
             })
 
         rv_follow.adapter = adapter

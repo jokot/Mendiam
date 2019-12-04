@@ -84,12 +84,14 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             R.id.ll_following -> {
                 intent = Intent(this, FollowActivity::class.java)
                 intent.putExtra("follow", "following")
+                intent.putExtra(main.userId, uid)
                 startActivity(intent)
             }
 
             R.id.ll_follower -> {
                 intent = Intent(this, FollowActivity::class.java)
                 intent.putExtra("follow", "follower")
+                intent.putExtra(main.userId, uid)
                 startActivity(intent)
             }
 
