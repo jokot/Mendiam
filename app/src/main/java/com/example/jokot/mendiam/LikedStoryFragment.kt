@@ -24,14 +24,17 @@ class LikedStoryFragment : Fragment() {
     //    private var tempStoryId : MutableList<StoryId> = mutableListOf()
     private var listStory: MutableList<Story> = mutableListOf()
 
+    private var listBookmarkId: MutableList<String> = mutableListOf()
+
     private val main = MainApps()
     private var database = main.database.reference
-    private val uid = main.uid
+    private var uid = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        uid = arguments?.getString(main.userId).toString()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_liked_story, container, false)
     }
@@ -46,7 +49,7 @@ class LikedStoryFragment : Fragment() {
     }
 
     private fun initRecycle() {
-        adapter = StoryAdapter(listStory, listLikedStoryId, {
+        adapter = StoryAdapter(listStory, listBookmarkId, {
             uid?.let { it1 -> database.child(main.likedStory).child(it1).child(it.sid).setValue(true) }
         }, {
             uid?.let { it1 -> database.child(main.likedStory).child(it1).child(it.sid).removeValue() }
@@ -65,9 +68,13 @@ class LikedStoryFragment : Fragment() {
 
     private fun initData() {
         rv_liked_story.visibility = View.GONE
-        getLikedStoryId(object : CallbackLoading {
+        getBookmarkId(object : CallbackLoading {
             override fun onCallback() {
-                getStories()
+                getLikedStoryId(object : CallbackLoading {
+                    override fun onCallback() {
+                        getStories()
+                    }
+                })
             }
         })
     }
@@ -118,6 +125,32 @@ class LikedStoryFragment : Fragment() {
         }
     }
 
+    private fun getBookmarkId(callbackLoading: CallbackLoading){
+        uid?.let {
+            database.child(main.bookmark).child(it)
+                .addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val ds = dataSnapshot.children
+                        listBookmarkId.clear()
+                        ds.mapNotNull {
+                            val bid = it.key
+                            if(bid != null){
+                                listBookmarkId.add(bid)
+                            }
+
+                        }
+                        callbackLoading.onCallback()
+                    }
+
+                })
+        }
+    }
+
+
     private fun getStory(callbackString: CallbackString) {
         listStory.clear()
         for (sid in listLikedStoryId) {
@@ -153,7 +186,6 @@ class LikedStoryFragment : Fragment() {
                         callbackString.onCallback(sid)
                     }
                 })
-
         }
     }
 }

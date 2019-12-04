@@ -343,7 +343,11 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                     fragment
                 }
                 1 -> {
-                    LikedStoryFragment()
+                    val bundle = Bundle()
+                    bundle.putString(main.userId, uid)
+                    val fragment = LikedStoryFragment()
+                    fragment.arguments = bundle
+                    fragment
                 }
                 else -> {
                     null
@@ -354,7 +358,6 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         override fun getCount(): Int {
             return 2
         }
-
     }
 
 }
