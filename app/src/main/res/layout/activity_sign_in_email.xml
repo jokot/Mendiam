@@ -4,10 +4,10 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorDarkRedis"
         tools:context=".SignInEmailActivity">
 
     <LinearLayout
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="32dp"
@@ -22,14 +22,7 @@
                 android:textSize="25sp"
                 android:textColor="@color/colorBlack"/>
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:textColor="@color/colorBlack"
-                android:text="Silakan masuk\nmenggunakan email anda\ngunakan email yang benar\njika tidak tidak bisa dong"
-                android:layout_margin="8dp"/>
+
 
 
         <TextView
@@ -37,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textSize="12sp"
-                android:text="Your Email"/>
+                android:text="@string/your_email"/>
 
         <EditText android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -49,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textSize="12sp"
-                android:text="Password"/>
+                android:text="@string/password"/>
 
         <EditText
                 android:layout_width="match_parent"
@@ -65,6 +58,6 @@
                 android:id="@+id/btn_continue"
                 android:textColor="@color/colorWhite"
                 android:backgroundTint="@color/colorRed"
-                android:text="Continue"/>
+                android:text="@string/next"/>
     </LinearLayout>
 </ScrollView>

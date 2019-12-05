@@ -181,16 +181,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.nav_home -> {
                 changeFragment(HomeFragment())
-                tb_label.text = "Home"
+                tb_label.text = getString(R.string.home)
             }
             R.id.nav_bookmark -> {
                 changeFragment(BookmarkFragment())
-                tb_label.text = "Bookmark"
+                tb_label.text = getString(R.string.bookmark)
 
             }
             R.id.nav_interest -> {
                 changeFragment(InterestFragment())
-                tb_label.text = "Interest"
+                tb_label.text = getString(R.string.interest)
 
             }
             R.id.nav_new_story -> {
@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.nav_stories ->{
                 changeFragment(StoriesFragment())
-                tb_label.text = "Stories"
+                tb_label.text = getString(R.string.stories)
             }
 //            R.id.nav_full_screen ->{
 //                startActivity(Intent(this,FullscreenActivity::class.java))

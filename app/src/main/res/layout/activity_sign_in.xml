@@ -3,8 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@color/colorDarkRedis"
+        android:layout_height="match_parent"
         android:gravity="center"
         tools:context=".SignInActivity">
 
@@ -20,7 +19,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorBlack"
                 android:layout_height="wrap_content"
-                android:text="MENDIAM"
+                android:text="@string/mendiam"
                 android:layout_margin="8dp"
                 android:textSize="50sp"/>
         <TextView
@@ -31,7 +30,7 @@
                 android:layout_marginBottom="40dp"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="Selamat Datang Kembali"/>
+                android:text="@string/welcome_back"/>
 
         <!--<Button android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
@@ -67,14 +66,14 @@
             <Button android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorBlack"
-                    android:text="Sign In with Email"
+                    android:text="@string/sign_in_with_email"
                     android:textAllCaps="false"
                     android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
                     android:layout_margin="8dp"
                     android:id="@+id/btn_in_email"
-                    android:drawableLeft="@drawable/ic_mail_outline_black_24dp"
-                    android:background="@drawable/rectangle_corner"
-                    android:paddingLeft="8dp"/>
+                    android:drawableStart="@drawable/ic_mail_outline_black_24dp"
+                    android:background="@drawable/rectangle_corner" />
         </FrameLayout>
 
 
@@ -87,12 +86,13 @@
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:textColor="@color/colorDarkGrey"
-                      android:text="Belum punya akun ? "/>
+                      android:text="@string/doesn_t_have_account"/>
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                       android:textColor="@color/colorRed"
                       android:id="@+id/tv_sign_up"
-                      android:text=" Sign Up"/>
+                      android:text="@string/sign_up"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -49,7 +49,13 @@ class StoriesFragment : Fragment() {
     inner class SectionPagesAdapter(fm : FragmentManager) : FragmentPagerAdapter(fm){
         override fun getItem(position: Int): Fragment? {
             return when(position){
-                0 -> DraftFragment()
+                0 -> {
+                    val bundle = Bundle()
+                    bundle.putString(main.userId, main.getUId())
+                    val fragment = DraftFragment()
+                    fragment.arguments = bundle
+                    fragment
+                }
                 1-> {
                     val bundle = Bundle()
                     bundle.putString(main.userId, main.getUId())

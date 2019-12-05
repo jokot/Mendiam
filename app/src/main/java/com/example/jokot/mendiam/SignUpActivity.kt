@@ -53,7 +53,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
         auth = FirebaseAuth.getInstance()
 
         val tv = btn_up_google.getChildAt(0) as TextView
-        tv.text = "Sign up with Google"
+        tv.text = getString(R.string.sign_up_with_google)
         tv.setTextColor(Color.parseColor("#000000"))
     }
 

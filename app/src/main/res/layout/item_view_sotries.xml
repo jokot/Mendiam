@@ -23,7 +23,6 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="Judul"
                         android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -35,14 +34,14 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/iv_more"
                         android:background="?selectableItemBackground"
-                        app:srcCompat="@drawable/ic_more_vert_black_24dp"/>
+                        app:srcCompat="@drawable/ic_more_vert_black_24dp"
+                        android:contentDescription="@string/more" />
 
             </LinearLayout>
 
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="deskripsi"
                     android:maxLines="3"
                     android:layout_marginTop="8dp"
                     android:id="@+id/tv_deskripsi"/>
@@ -56,16 +55,13 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Published"
                         android:textSize="12sp"
                         android:id="@+id/tv_keterangan"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"/>
+                        android:layout_marginEnd="8dp"/>
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/date_create"
                         android:id="@+id/tv_date"
                         android:textSize="12sp"/>
             </LinearLayout>
@@ -99,7 +95,7 @@
                     android:background="?selectableItemBackground"
                     android:paddingBottom="4dp"
                     android:text="@string/edit"
-                    android:paddingLeft="16dp"
+                    android:paddingEnd="16dp"
                     android:paddingStart="16dp"
                     android:id="@+id/tv_edit"
                     android:textColor="@color/colorBlack"/>
@@ -108,13 +104,13 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp"
                     android:background="?selectableItemBackground"
-                    android:paddingLeft="16dp"
+                    android:paddingEnd="16dp"
                     android:paddingStart="16dp"
                     android:paddingTop="4dp"
                     android:textSize="14sp"
                     android:id="@+id/tv_delete"
                     android:textColor="@color/colorBlack"
-                    android:text="Delete"/>
+                    android:text="@string/delete"/>
         </LinearLayout>
 
     </FrameLayout>

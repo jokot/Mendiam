@@ -1,93 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SignUpEmailActivity"
-        android:background="@color/colorRedis">
+        tools:context=".SignUpEmailActivity">
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="32dp"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="32dp">
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sign_up_email"
                 android:layout_margin="16dp"
-                android:textSize="25sp"
-                android:textColor="@color/colorBlack"/>
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:gravity="center"
-                  android:textSize="16sp"
-                  android:textColor="@color/colorBlack"
-                  android:text="Silakan daftar\nmenggunakan akun email anda\ngunakan email yang original"
-                  android:layout_margin="8dp"/>
+                android:text="@string/sign_up_email"
+                android:textColor="@color/colorBlack"
+                android:textSize="25sp" />
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="12sp"
-                android:text="Your Full Name"/>
-
-        <EditText android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:gravity="center"
-                  android:id="@+id/et_name"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textSize="12sp"
-                android:text="Your Email"/>
-
-        <EditText android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:gravity="center"
-                  android:id="@+id/et_email"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textSize="12sp"
-                android:text="Password"/>
-
-        <EditText android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:gravity="center"
-                  android:inputType="textPassword"
-                  android:id="@+id/et_password"/>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_marginTop="8dp"
-                android:text="Confirm Password"/>
+                android:layout_marginTop="32dp"
+                android:text="@string/your_full_name"
+                android:textSize="12sp" />
 
         <EditText
+                android:id="@+id/et_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:inputType="textPassword"
-                android:id="@+id/et_confirm_password"/>
+                tools:ignore="LabelFor" />
 
-        <Button android:layout_width="wrap_content"
+        <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAllCaps="false"
                 android:layout_marginTop="8dp"
+                android:text="@string/your_email"
+                android:textSize="12sp" />
+
+        <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/password"
+                android:textSize="12sp" />
+
+        <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="textPassword" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/confirm_password"
+                android:textSize="12sp" />
+
+        <EditText
+                android:id="@+id/et_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="textPassword" />
+
+        <Button
                 android:id="@+id/btn_create_acc"
-                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:backgroundTint="@color/colorRed"
-                android:text="Creat account"/>
+                android:text="@string/create_account"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite" />
     </LinearLayout>
 
 </ScrollView>

@@ -35,12 +35,15 @@ class DraftFragment : Fragment() {
 
     private val main = MainApps()
     private var database = main.database.reference
-    private val uid = main.uid
+
+    private var uid =""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        uid = arguments?.getString(main.userId).toString()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_draft, container, false)
     }
@@ -64,8 +67,8 @@ class DraftFragment : Fragment() {
             intent.putExtra("did",it.sid)
             startActivity(intent)
         },{
-            uid?.let { it1 -> database.child(main.draft).child(it1).child(it.sid).removeValue() }
-            uid?.let { it1 -> database.child(main.draftContent).child(it1).child(it.sid).removeValue() }
+            uid.let { it1 -> database.child(main.draft).child(it1).child(it.sid).removeValue() }
+            uid.let { it1 -> database.child(main.draftContent).child(it1).child(it.sid).removeValue() }
             listDraft.remove(it)
             adapter.notifyDataSetChanged()
         })
@@ -87,7 +90,7 @@ class DraftFragment : Fragment() {
     }
 
     private fun getDraft(callbackLoading: CallbackLoading) {
-        uid?.let {
+        uid.let { it ->
             database.child(main.draft).child(it)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -102,8 +105,10 @@ class DraftFragment : Fragment() {
                             val deskripsi = it.child("deskripsi").getValue(String::class.java).toString()
                             val did = it.child("did").getValue(String::class.java).toString()
                             val date = it.child("date").getValue(String::class.java).toString()
+                            val uid = main.getUId()
                             tempListDraft.add(
                                 Story(
+                                    uid = uid,
                                     judul = judul,
                                     deskripsi = deskripsi,
                                     sid = did,

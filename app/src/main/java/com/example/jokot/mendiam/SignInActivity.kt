@@ -56,7 +56,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         google_button.setOnClickListener(this)
 
         val tv = google_button.getChildAt(0) as TextView
-        tv.text = "Sign in with Google"
+        tv.text = getString(R.string.sign_in_with_google)
         tv.setTextColor(Color.parseColor("#000000"))
     }
 

@@ -690,7 +690,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
     private fun getCurrentDate(): String {
         val c = Calendar.getInstance().time
-        val currentDate = SimpleDateFormat("d MMM YYYY")
+        val currentDate = SimpleDateFormat("d MMM YYYY", Locale.getDefault())
         return currentDate.format(c)
     }
 

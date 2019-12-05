@@ -80,9 +80,9 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             }
             R.id.tv_keluar -> {
                 firebaseAuth.signOut()
-
                 deleteAppDir(this)
-                finish()
+                startActivity(Intent(this,SignInActivity::class.java))
+                finishAffinity()
             }
 
             R.id.ll_following -> {

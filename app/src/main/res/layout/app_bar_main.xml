@@ -28,7 +28,8 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorWhite"
                         android:textSize="18sp"
-                        android:text="Home" android:layout_marginBottom="8dp"
+                        android:text="@string/home"
+                        android:layout_marginBottom="8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         android:layout_marginTop="8dp"
                         android:id="@+id/tb_label"
@@ -43,15 +44,16 @@
                         android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
                         android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
                         android:layout_marginEnd="16dp" app:layout_constraintEnd_toStartOf="@+id/iv_search"
-                        android:layout_marginRight="16dp"/>
+                        android:contentDescription="@string/notification" />
                 <ImageView
                         android:background="?selectableItemBackground"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         app:srcCompat="@drawable/ic_search_white_24dp" app:layout_constraintBottom_toBottomOf="parent"
                         android:layout_marginBottom="8dp" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="16dp" android:layout_marginRight="16dp" android:layout_marginTop="8dp"
-                        app:layout_constraintTop_toTopOf="parent" android:id="@+id/iv_search"/>
+                        android:layout_marginEnd="16dp" android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toTopOf="parent" android:id="@+id/iv_search"
+                        android:contentDescription="@string/search" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.Toolbar>
 

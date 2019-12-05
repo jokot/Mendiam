@@ -6,23 +6,23 @@
     <group android:checkableBehavior="single">
         <item
                 android:id="@+id/nav_home"
-                android:title="Home"/>
+                android:title="@string/home"/>
         <item
                 android:id="@+id/nav_bookmark"
 
-                android:title="Bookmark"/>
+                android:title="@string/bookmark"/>
         <item
                 android:id="@+id/nav_interest"
 
-                android:title="Interest"/>
+                android:title="@string/interest"/>
         <item
                 android:id="@+id/nav_new_story"
 
-                android:title="New Story"/>
+                android:title="@string/new_story"/>
         <item
                 android:id="@+id/nav_stories"
 
-                android:title="Stories"/>
+                android:title="@string/stories"/>
 
         <!--<item android:id="@+id/nav_full_screen"-->
               <!--android:title="fulls creen"/>-->

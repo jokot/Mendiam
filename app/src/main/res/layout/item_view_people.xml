@@ -37,15 +37,13 @@
 
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="Joko Triyanto"
                       android:id="@+id/tv_nama_people"
                       android:textColor="@color/colorBlack"
                       android:textSize="18sp"/>
 
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:id="@+id/tv_about"
-                      android:text="Trying to be Android Developer"/>
+                      android:id="@+id/tv_about"/>
 
         </LinearLayout>
 
@@ -55,7 +53,7 @@
                 android:textAllCaps="false"
                 android:id="@+id/btn_follow"
                 android:textColor="@color/colorRed"
-                android:text="Follow"/>
+                android:text="@string/follow"/>
     </LinearLayout>
 
     <View

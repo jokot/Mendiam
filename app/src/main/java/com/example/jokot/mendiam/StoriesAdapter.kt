@@ -1,6 +1,7 @@
 package com.example.jokot.mendiam
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +39,13 @@ class StoriesAdapter(
                      clickListener: (Story) -> Unit,
                      clickEdit: (Story) -> Unit,
                      clickDelete: (Story) -> Unit) {
+
             if (listStory.uid != main.getUId()){
+                Log.d("UID gone", "${listStory.uid} ? ${main.getUId()}")
                 itemView.iv_more.visibility = View.GONE
+            }else{
+                Log.d("UID visible", "${listStory.uid} ? ${main.getUId()}")
+                itemView.iv_more.visibility = View.VISIBLE
             }
 
             itemView.ll_more.visibility = View.GONE
