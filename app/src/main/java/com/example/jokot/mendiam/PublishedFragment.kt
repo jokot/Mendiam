@@ -3,15 +3,14 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.Story
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -19,28 +18,15 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_published.*
 
 
-//// TODO: Rename parameter arguments, choose names that match
-//// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
-//
-///**
-// * A simple [Fragment] subclass.
-// *
-// */
 class PublishedFragment : Fragment() {
 
     private lateinit var adapter: StoriesAdapter
 
-    private var tempId: MutableList<String> = mutableListOf()
     private var listStoryId: MutableList<String> = mutableListOf()
-    private var temp: MutableList<Story> = mutableListOf()
     private var listStory: MutableList<Story> = mutableListOf()
 
     private var database = FirebaseDatabase.getInstance().reference
-    private var auth = FirebaseAuth.getInstance()
-//    private val uid = auth.currentUser?.uid.toString()
-    private var uid =""
+    private var uid = ""
     private val main = MainApps()
 
     override fun onCreateView(
@@ -71,7 +57,7 @@ class PublishedFragment : Fragment() {
         }, {
             val intent = Intent(context, NewStoryActivity::class.java)
             intent.putExtra("sid", it.sid)
-            intent.putExtra("edit","true")
+            intent.putExtra("edit", "true")
             startActivity(intent)
         }, {
             database.child("story").child(it.sid).removeValue()
@@ -162,18 +148,18 @@ class PublishedFragment : Fragment() {
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val uid = dataSnapshot.child("uid").getValue(String::class.java)
-                        val judul = dataSnapshot.child("judul").getValue(String::class.java)
-                        val deskripsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
+                        val tittle = dataSnapshot.child("judul").getValue(String::class.java)
+                        val description = dataSnapshot.child("deskripsi").getValue(String::class.java)
                         val name = dataSnapshot.child("name").getValue(String::class.java)
                         val date = dataSnapshot.child("date").getValue(String::class.java)
 
-                        if(uid!=null){
+                        if (uid != null) {
                             listStory.add(
                                 Story(
                                     sid,
                                     uid.toString(),
-                                    judul.toString(),
-                                    deskripsi.toString(),
+                                    tittle.toString(),
+                                    description.toString(),
                                     name.toString(),
                                     date.toString()
                                 )

@@ -2,13 +2,13 @@ package com.example.jokot.mendiam
 
 
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_stories.*
 
 //
@@ -46,9 +46,9 @@ class StoriesFragment : Fragment() {
 
     }
 
-    inner class SectionPagesAdapter(fm : FragmentManager) : FragmentPagerAdapter(fm){
+    inner class SectionPagesAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         override fun getItem(position: Int): Fragment {
-            return when(position){
+            return when (position) {
                 0 -> {
                     val bundle = Bundle()
                     bundle.putString(main.userId, main.getUId())
@@ -56,7 +56,7 @@ class StoriesFragment : Fragment() {
                     fragment.arguments = bundle
                     fragment
                 }
-                else-> {
+                else -> {
                     val bundle = Bundle()
                     bundle.putString(main.userId, main.getUId())
                     val fragment = PublishedFragment()

@@ -36,7 +36,7 @@
                         android:padding="16dp">
 
                     <TextView
-                            android:id="@+id/tv_judul"
+                            android:id="@+id/tv_tittle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""
@@ -80,56 +80,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
-                        <!--<TextView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="@string/dummy_content"-->
-                        <!--android:textSize="@dimen/font_size"-->
-                        <!--android:paddingBottom="8dp"-->
-                        <!--android:fontFamily="@font/times_new_roman"-->
-                        <!--android:textColor="@color/colorBlack"-->
-                        <!--android:id="@+id/tv_deskripsi"/>-->
                     </LinearLayout>
 
-
-                    <!-- The primary full-screen view. This can be replaced with whatever view
-                         is needed to present your content, e.g. VideoView, SurfaceView,
-                         TextureView, etc. -->
-                    <!--<TextView-->
-                    <!--android:id="@+id/fullscreen_content"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:keepScreenOn="true"-->
-                    <!--android:textColor="@color/colorBlack"-->
-                    <!--android:textStyle="bold"-->
-                    <!--android:textSize="50sp"-->
-                    <!--android:gravity="center"-->
-                    <!--android:text="@string/dummy_content"/>-->
-
-                    <!-- This FrameLayout insets its children based on system windows using
-                         android:fitsSystemWindows. -->
-                    <!--<FrameLayout android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:fitsSystemWindows="true">-->
-
-                    <!--<LinearLayout android:id="@+id/fullscreen_content_controls"-->
-                    <!--style="?metaButtonBarStyle"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="bottom|center_horizontal"-->
-                    <!--android:background="@color/black_overlay"-->
-                    <!--android:orientation="horizontal"-->
-                    <!--tools:ignore="UselessParent">-->
-
-                    <!--<Button android:id="@+id/dummy_button"-->
-                    <!--style="?metaButtonBarButtonStyle"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:text="@string/dummy_button"/>-->
-
-                    <!--</LinearLayout>-->
-                    <!--</FrameLayout>-->
                 </LinearLayout>
 
                 <LinearLayout
@@ -219,7 +171,6 @@
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_read"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -280,7 +231,6 @@
     </ScrollView>
 
     <LinearLayout
-            android:id="@+id/ll_tool"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

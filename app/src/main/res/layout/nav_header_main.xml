@@ -54,6 +54,5 @@
             android:layout_marginTop="8dp"
             android:text="@string/nav_header_subtitle"
             android:textColor="@color/colorDarkGrey"
-            android:textSize="14sp"
-            android:id="@+id/textView"/>
+            android:textSize="14sp" />
 </LinearLayout>

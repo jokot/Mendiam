@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -18,28 +18,17 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_read.*
 
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
-
 class ReadActivity : AppCompatActivity() {
 
     private var sid = ""
     private val main = MainApps()
     private var database = main.database.reference
-    private var myid = main.auth.uid.toString()
+    private var myId = main.auth.uid.toString()
     private var authorId = ""
     private var isBookmarked = false
     private var isLiked = false
-    private var oldY = 1
-    private var currentY = 0
     private var storyLikesId: MutableList<String> = mutableListOf()
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +63,7 @@ class ReadActivity : AppCompatActivity() {
         }
         ll_author.setOnClickListener {
             val intent = Intent(applicationContext, ProfileActivity::class.java)
-            intent.putExtra(main.userId,authorId)
+            intent.putExtra(main.userId, authorId)
             startActivity(intent)
         }
         ll_write_response.setOnClickListener {
@@ -82,7 +71,7 @@ class ReadActivity : AppCompatActivity() {
         }
         ll_small_author.setOnClickListener {
             val intent = Intent(applicationContext, ProfileActivity::class.java)
-            intent.putExtra(main.userId,authorId)
+            intent.putExtra(main.userId, authorId)
             startActivity(intent)
         }
         iv_like.setOnClickListener {
@@ -126,27 +115,27 @@ class ReadActivity : AppCompatActivity() {
     }
 
     private fun addBookmark() {
-        database.child(main.bookmark).child(myid).child(sid).setValue(true)
+        database.child(main.bookmark).child(myId).child(sid).setValue(true)
     }
 
     private fun removeBookmark() {
-        database.child(main.bookmark).child(myid).child(sid).removeValue()
+        database.child(main.bookmark).child(myId).child(sid).removeValue()
     }
 
     private fun addStoryLikes() {
-        database.child(main.storyLikes).child(sid).child(myid).setValue(true)
+        database.child(main.storyLikes).child(sid).child(myId).setValue(true)
     }
 
     private fun removeStoryLikes() {
-        database.child(main.storyLikes).child(sid).child(myid).removeValue()
+        database.child(main.storyLikes).child(sid).child(myId).removeValue()
     }
 
     private fun addLikedStory() {
-        database.child(main.likedStory).child(myid).child(sid).setValue(true)
+        database.child(main.likedStory).child(myId).child(sid).setValue(true)
     }
 
     private fun removeLikedStory() {
-        database.child(main.likedStory).child(myid).child(sid).removeValue()
+        database.child(main.likedStory).child(myId).child(sid).removeValue()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -215,7 +204,7 @@ class ReadActivity : AppCompatActivity() {
                             storyLikesId.add(id)
                         }
                     }
-                    tv_like.text= "${storyLikesId.size} ${getString(R.string.likes)}"
+                    tv_like.text = "${storyLikesId.size} ${getString(R.string.likes)}"
                 }
             })
 
@@ -234,16 +223,14 @@ class ReadActivity : AppCompatActivity() {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val judul = dataSnapshot.child("judul").getValue(String::class.java)
+                    val tittle = dataSnapshot.child("judul").getValue(String::class.java)
                     val uid = dataSnapshot.child("uid").getValue(String::class.java)
                     val date = dataSnapshot.child("date").getValue(String::class.java)
-//                    val imageContent = dataSnapshot.child("imageContent").getValue(Int::class.java)
+
                     val textContent = dataSnapshot.child("textContent").getValue(Int::class.java)
 
-//                    toast(this@ReadActivity,"$imageContent $textContent")
-                    tv_judul.text = judul
+                    tv_tittle.text = tittle
                     tv_date.text = date
-//                    tv_deskripsi.text = deskipsi
 
                     if (uid != main.getUId()) {
                         uid?.let { cekFollow(it) }
@@ -403,13 +390,11 @@ class ReadActivity : AppCompatActivity() {
                 resources.getDimension(R.dimen.font_size)
             )
             layoutParent.addView(textView)
-        } else {
-//            tv_deskripsi.text = text
         }
     }
 
     private fun cekFollow(uid: String) {
-        database.child("following").child(myid)
+        database.child("following").child(myId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     log(p0.message)
@@ -428,12 +413,12 @@ class ReadActivity : AppCompatActivity() {
 
     private fun follow() {
         if (btn_follow.text.toString() == "Follow") {
-            database.child("following").child(myid).child(authorId).setValue(true)
-            database.child("follower").child(authorId).child(myid).setValue(true)
+            database.child("following").child(myId).child(authorId).setValue(true)
+            database.child("follower").child(authorId).child(myId).setValue(true)
             changeButtonFollow("Following")
         } else {
-            database.child("following").child(myid).child(authorId).removeValue()
-            database.child("follower").child(authorId).child(myid).removeValue()
+            database.child("following").child(myId).child(authorId).removeValue()
+            database.child("follower").child(authorId).child(myId).removeValue()
             changeButtonFollow("Follow")
         }
     }
@@ -468,8 +453,8 @@ class ReadActivity : AppCompatActivity() {
     }
 
 
-    private fun getBookmarkId(onSucsess: () -> Unit) {
-        database.child(main.bookmark).child(myid).child(sid)
+    private fun getBookmarkId(onSuccess: () -> Unit) {
+        database.child(main.bookmark).child(myId).child(sid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     log(p0.message)
@@ -483,13 +468,13 @@ class ReadActivity : AppCompatActivity() {
                     } else {
                         iv_bookmark.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
                     }
-                    onSucsess()
+                    onSuccess()
                 }
             })
     }
 
-    private fun getLiked(onSucsess: () -> Unit) {
-        database.child(main.likedStory).child(myid).child(sid)
+    private fun getLiked(onSuccess: () -> Unit) {
+        database.child(main.likedStory).child(myId).child(sid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     log(p0.message)
@@ -503,56 +488,8 @@ class ReadActivity : AppCompatActivity() {
                     } else {
                         iv_like.setImageResource(R.drawable.ic_thumbs_up)
                     }
-                    onSucsess()
+                    onSuccess()
                 }
             })
     }
-
-
-    /**
-     * Schedules a call to hide() in [delayMillis], canceling any
-     * previously scheduled calls.
-     */
-
-    companion object {
-        /**
-         * Whether or not the system UI should be auto-hidden after
-         * [AUTO_HIDE_DELAY_MILLIS] milliseconds.
-         */
-        private val AUTO_HIDE = true
-
-        /**
-         * If [AUTO_HIDE] is set, the number of milliseconds to wait after
-         * user interaction before hiding the system UI.
-         */
-        private val AUTO_HIDE_DELAY_MILLIS = 3000
-
-        /**
-         * Some older devices needs a small delay between UI widget updates
-         * and a change of the status and navigation bar.
-         */
-        private val UI_ANIMATION_DELAY = 300
-    }
 }
-
-//@SuppressLint("StaticFieldLeak")
-//private class DownloadImageTask(internal var bmImage: ImageView) : AsyncTask<String, Void, Bitmap>() {
-//
-//    override fun doInBackground(vararg urls: String): Bitmap? {
-//        val urlDisplay = urls[0]
-//        var mIcon11: Bitmap? = null
-//        try {
-//            val `in` = java.net.URL(urlDisplay).openStream()
-//            mIcon11 = BitmapFactory.decodeStream(`in`)
-//        } catch (e: Exception) {
-//            Log.e("Error", e.message)
-//            e.printStackTrace()
-//        }
-//
-//        return mIcon11
-//    }
-//
-//    override fun onPostExecute(result: Bitmap) {
-//        bmImage.setImageBitmap(result)
-//    }
-//}

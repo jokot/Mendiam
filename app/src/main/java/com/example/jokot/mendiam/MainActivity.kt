@@ -2,27 +2,24 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-import androidx.fragment.app.Fragment
-import androidx.core.view.GravityCompat
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.google.firebase.auth.FirebaseAuth
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
-import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -44,7 +41,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .commit()
 
         val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this,
+            drawer_layout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         main.getUName(main.getUId()) {
-            if (main.getPref(main.userName,"s",this)=="") {
+            if (main.getPref(main.userName, "s", this) == "") {
                 main.editorPref(main.userName, it, this)
             }
         }
@@ -63,18 +64,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    private fun setUpOnClick(){
+    private fun setUpOnClick() {
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val header = navigationView.getHeaderView(0)
 
         val headerView = header.findViewById<LinearLayout>(R.id.ll_nav_bar)
         headerView.setOnClickListener {
             intent = Intent(this, ProfileActivity::class.java)
-            intent.putExtra(main.userId,main.uid)
+            intent.putExtra(main.userId, main.uid)
             startActivity(intent)
         }
 
-        iv_notif.setOnClickListener {
+        iv_notification.setOnClickListener {
             toast("Coming soon")
         }
         iv_search.setOnClickListener {
@@ -116,8 +117,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .child("user")
                 .child(it)
                 .addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        toast("Selamat Datang di Mendiam")
+                    override fun onCancelled(error: DatabaseError) {
+                        toast(error.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -127,19 +128,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         val header = navigationView.getHeaderView(0)
                         val headerText = header.findViewById<TextView>(R.id.tv_header_main)
                         val headerImage = header.findViewById<ImageView>(R.id.iv_header)
-                        if(urlPic != ""){
-                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp).into(headerImage,object:
-                                Callback {
-                                override fun onSuccess() {
-                                    pb_header.visibility = View.GONE
-                                }
+                        if (urlPic != "") {
+                            Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp)
+                                .into(headerImage, object :
+                                    Callback {
+                                    override fun onSuccess() {
+                                        pb_header.visibility = View.GONE
+                                    }
 
-                                override fun onError(e: Exception?) {
-                                    pb_header.visibility = View.GONE
-                                }
+                                    override fun onError(e: Exception?) {
+                                        pb_header.visibility = View.GONE
+                                    }
 
-                            })
-                        }else{
+                                })
+                        } else {
                             pb_header.visibility = View.GONE
                             headerImage.setImageResource(R.drawable.ic_person_24dp)
                         }
@@ -198,7 +200,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
 
-            R.id.nav_stories ->{
+            R.id.nav_stories -> {
                 changeFragment(StoriesFragment())
                 tb_label.text = getString(R.string.stories)
             }

@@ -3,11 +3,11 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +23,7 @@ class PeopleFragment : Fragment() {
 
     private var listUser: MutableList<User> = mutableListOf()
     private var temp: MutableList<User> = mutableListOf()
-    private var listFollowingId : MutableList<String> = mutableListOf()
+    private var listFollowingId: MutableList<String> = mutableListOf()
     private var tempId: MutableList<String> = mutableListOf()
 
     private var database = FirebaseDatabase.getInstance().reference
@@ -50,14 +50,14 @@ class PeopleFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        peopleAdapter = PeopleAdapter(listUser,listFollowingId, {
+        peopleAdapter = PeopleAdapter(listUser, listFollowingId, {
             val intent = Intent(context, ProfileActivity::class.java)
-            intent.putExtra(main.userId,it.id)
+            intent.putExtra(main.userId, it.id)
             startActivity(intent)
-        },{
+        }, {
             database.child("following").child(uid).child(it.id).removeValue()
             database.child("follower").child(it.id).child(uid).removeValue()
-        },{
+        }, {
             database.child("following").child(uid).child(it.id).setValue(true)
             database.child("follower").child(it.id).child(uid).setValue(true)
         })
@@ -72,9 +72,9 @@ class PeopleFragment : Fragment() {
 
     private fun initData() {
         rv_people.visibility = View.GONE
-        getFollowingId(object : CallbackLoading{
+        getFollowingId(object : CallbackLoading {
             override fun onCallback() {
-                getPeople(object : CallbackLoading{
+                getPeople(object : CallbackLoading {
                     override fun onCallback() {
                         rv_people.visibility = View.VISIBLE
                         pb_people.visibility = View.GONE
@@ -87,9 +87,9 @@ class PeopleFragment : Fragment() {
 
     }
 
-    private fun getFollowingId(callbackLoading: CallbackLoading){
+    private fun getFollowingId(callbackLoading: CallbackLoading) {
         database.child("following").child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener{
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     log(p0.message)
                 }
@@ -99,7 +99,7 @@ class PeopleFragment : Fragment() {
                     tempId.clear()
                     ds.mapNotNull {
                         val id = it.key
-                        if(id != null){
+                        if (id != null) {
                             tempId.add(id.toString())
                         }
                     }
@@ -128,7 +128,7 @@ class PeopleFragment : Fragment() {
                     val image = it.child("urlPic").getValue(String::class.java).toString()
 
 //                    if(id != uid && id != "null"){
-                        temp.add(User(id, userName, email,about,image))
+                    temp.add(User(id, userName, email, about, image))
 //                    }
                 }
                 listUser.clear()

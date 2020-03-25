@@ -5,13 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayout
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import android.view.View
 import com.example.jokot.mendiam.callback.CallbackLoading
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.squareup.picasso.Callback
@@ -64,7 +64,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         cl_profile.setOnClickListener(this)
         tv_edit.setOnClickListener(this)
         constrain_profile.setOnClickListener(this)
-        tv_keluar.setOnClickListener(this)
+        tv_exit.setOnClickListener(this)
         ll_follower.setOnClickListener(this)
         ll_following.setOnClickListener(this)
         btn_follow.setOnClickListener(this)
@@ -73,15 +73,14 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     }
 
     override fun onClick(v: View?) {
-        val id = v?.id
-        when (id) {
+        when (v?.id) {
             R.id.iv_back -> {
                 finish()
             }
-            R.id.tv_keluar -> {
+            R.id.tv_exit -> {
                 firebaseAuth.signOut()
                 deleteAppDir(this)
-                startActivity(Intent(this,SignInActivity::class.java))
+                startActivity(Intent(this, SignInActivity::class.java))
                 finishAffinity()
             }
 
@@ -101,7 +100,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
 
             R.id.tv_edit -> {
                 intent = Intent(this, EditProfileActivity::class.java)
-                startActivityForResult(intent,editId)
+                startActivityForResult(intent, editId)
             }
 
             R.id.cl_profile -> {
@@ -126,13 +125,13 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == editId && resultCode == Activity.RESULT_OK){
+        if (requestCode == editId && resultCode == Activity.RESULT_OK) {
             initData()
         }
     }
 
-    private fun changeUiIfNotMe(){
-        if(uid != main.getUId()){
+    private fun changeUiIfNotMe() {
+        if (uid != main.getUId()) {
             iv_more.visibility = View.GONE
             btn_follow.visibility = View.VISIBLE
             cekFollow(uid)
@@ -198,18 +197,17 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             val children = dir.list()
             for (fileName in children) {
                 val success: Boolean = deleteDir(File(dir, fileName))
-                log("delete dir")
+
                 if (!success) {
-                    log("delet selesai")
                     return false
                 }
             }
             return dir.delete()
         } else if (dir != null && dir.isFile) {
-            log("delet file")
+
             return dir.delete()
         } else {
-            log("gagal")
+
             return false
         }
     }
@@ -338,19 +336,11 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val name = dataSnapshot.child("userName").getValue(String::class.java)
-                    val autor = dataSnapshot.child("about").getValue(String::class.java)
-                    //                    val fingCount = dataSnapshot.child("fingCount").getValue(Int::class.java)
-                    //                    val ferCount = dataSnapshot.child("ferCount").getValue(Int::class.java)
+                    val about = dataSnapshot.child("about").getValue(String::class.java)
                     val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
                     tv_profile.text = name
                     tv_toolbar_profile.text = name
 
-                    //                    if (fingCount!=null){
-                    //                        tv_jml_following.text = fingCount.toString()
-                    //                    }
-                    //                    if(ferCount != null){
-                    //                        tv_jml_follower.text = ferCount.toString()
-                    //                    }
                     getFollower {
                         tv_jml_follower.text = it.toString()
                     }
@@ -358,8 +348,8 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                         tv_jml_following.text = it.toString()
                     }
 
-                    if (autor != null) {
-                        tv_about.text = autor
+                    if (about != null) {
+                        tv_about.text = about
                     }
                     if (urlPic != "") {
                         Picasso.get()

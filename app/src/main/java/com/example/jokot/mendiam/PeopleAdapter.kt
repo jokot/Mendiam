@@ -1,17 +1,15 @@
 package com.example.jokot.mendiam
 
 import android.graphics.Color
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jokot.mendiam.model.User
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_view_people.view.*
-import java.lang.Exception
 
 
 class PeopleAdapter(
@@ -26,7 +24,7 @@ class PeopleAdapter(
 
     private var n = 0
 
-    override fun onCreateViewHolder(group: ViewGroup, viewType: Int): PeopleAdapter.ItemViewHolder {
+    override fun onCreateViewHolder(group: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder(
             LayoutInflater.from(group.context).inflate(R.layout.item_view_people, group, false)
         )
@@ -47,7 +45,8 @@ class PeopleAdapter(
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val progressBar = view.findViewById<ProgressBar>(R.id.pb_item_people)
+        val progressBar: ProgressBar = view.findViewById(R.id.pb_item_people)
+
         fun bindItem(
             list: User,
             listUserFollowing: MutableList<String>,
@@ -55,9 +54,9 @@ class PeopleAdapter(
             clickUnFollow: (User) -> Unit,
             clickFollowing: (User) -> Unit
         ) {
-            if(list.id == main.getUId()){
+            if (list.id == main.getUId()) {
                 itemView.btn_follow.visibility = View.GONE
-            }else{
+            } else {
                 itemView.btn_follow.visibility = View.VISIBLE
             }
 
@@ -75,8 +74,8 @@ class PeopleAdapter(
                 }
             }
 
-            itemView.tv_nama_people.text = list.userName
-            itemView.tv_about.text  = list.about
+            itemView.tv_name_people.text = list.userName
+            itemView.tv_about.text = list.about
 
 
             itemView.btn_follow.setOnClickListener {
@@ -96,12 +95,12 @@ class PeopleAdapter(
                 }
 
             }
-            if(list.urlPic != ""){
+            if (list.urlPic != "") {
                 Picasso
                     .get()
                     .load(list.urlPic)
                     .error(R.drawable.ic_broken_image_24dp)
-                    .into(itemView.iv_user,object : Callback{
+                    .into(itemView.iv_user, object : Callback {
                         override fun onSuccess() {
                             progressBar.visibility = View.GONE
                         }
@@ -111,7 +110,7 @@ class PeopleAdapter(
                         }
 
                     })
-            }else{
+            } else {
                 itemView.iv_user.setImageResource(R.drawable.ic_person_24dp)
                 progressBar.visibility = View.GONE
             }

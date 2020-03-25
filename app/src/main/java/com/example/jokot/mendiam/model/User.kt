@@ -4,6 +4,6 @@ class User(
     val id: String = "",
     var userName: String = "",
     val email: String = "",
-    val about: String="",
-    val urlPic : String=""
+    val about: String = "",
+    val urlPic: String = ""
 )

@@ -34,12 +34,9 @@ import java.util.*
 class NewStoryActivity : BaseActivity(), View.OnClickListener {
     private val main = MainApps()
     private var database = main.database.reference
-    private var auth = main.auth
     private var uid = main.uid
     private var storage = main.storage
 
-    private var counterAdd = 1
-    private var counterRemove = 1
     private var edit = ""
     private var storyId = ""
     private var did = ""
@@ -53,9 +50,8 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
     private var viewId = 0
     private var focusEdit = 0
-    private var imageId = 0
-    private val hintAwal = ""
-    private val hintAkhir = ""
+    private val earlyHint = ""
+    private val lastHint = ""
     private var nextString = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,14 +66,8 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             storyId = intent.getStringExtra("sid")
             edit = intent.getStringExtra("edit")
             initEditStory()
-//            log(edit)
-//            log(storyId)
         }
-//        else {
-//            addEditable(hintAwal)
-//        }
-//        setupOnfocusJudul(et_judul)
-        setUpOnKeyEditText(et_judul)
+        setUpOnKeyEditText(et_tittle)
 
         img_add_image.setOnClickListener(this)
         iv_back.setOnClickListener(this)
@@ -151,24 +141,15 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupOnfocusJudul(editText: EditText) {
-        editText.setOnTouchListener { _, _ ->
-            toast(editText.id.toString())
-//            focusEdit = editText.id
-            return@setOnTouchListener false
-        }
-    }
-
     //    @RequiresApi(Build.VERSION_CODES.N)
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.iv_back -> {
-                if ((listId.isNotEmpty() || et_judul.text.isNotEmpty()) && edit == "") {
+                if ((listId.isNotEmpty() || et_tittle.text.isNotEmpty()) && edit == "") {
                     publishDraft()
-                } else if(edit!=""){
+                } else if (edit != "") {
                     publish()
-                } else{
+                } else {
                     finish()
                 }
             }
@@ -178,7 +159,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             R.id.img_add_image -> {
 //                toast("Coming soon")
                 requestImage()
-                getFocuse()
+                getFocus()
                 log(focusEdit.toString())
             }
         }
@@ -186,23 +167,24 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
     private fun addEditable(hint: String) {
         val id = TEXT_BASE_ID + viewId
-//        addimageView(id)
+
         addText(hint, id)
         val newEditText = findViewById<EditText>(id)
         newEditText.requestFocus()
-//        focusEdit = id
+
     }
 
 
     private fun setUpOnKeyEditText(editText: EditText) {
-        if (editText != et_judul) {
+        if (editText != et_tittle) {
             editText.setOnKeyListener { v, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN) {
                     when (keyCode) {
                         KeyEvent.KEYCODE_DEL -> {
 
                             val id = editText.id
-                            val imageView = findViewById<ImageView>(id - TEXT_BASE_ID + IMAGE_BASE_ID)
+                            val imageView =
+                                findViewById<ImageView>(id - TEXT_BASE_ID + IMAGE_BASE_ID)
 
                             val index = getIndexId(id)
 
@@ -215,15 +197,13 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 //                                focusEdit = listId[index - 1]
                             } else if (index == 0) {
                                 removeView(editText, imageView)
-//                            val newEditText = findViewById<EditText>(listId[index])
-                                val newEditText = findViewById<EditText>(R.id.et_judul)
+
+                                val newEditText = findViewById<EditText>(R.id.et_tittle)
                                 newEditText.requestFocus()
-//                                focusEdit = R.id.et_judul
-//                            imageView.setImageDrawable(null)
+
                             }
                             log(listId.toString())
                             log(listImage.toString())
-//                            log(focusEdit.toString())
 
                             return@setOnKeyListener true
                         }
@@ -237,7 +217,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null && s.isNotEmpty()) {
-                    if (containtEnter(editText.text.toString())) {
+                    if (containsEnter(editText.text.toString())) {
 //
 //                    }
 //                    if (s.elementAt(s.length - 1) == '\n') {
@@ -250,9 +230,9 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 //                        editText.text.delete(s.length - 1, s.length)
                         editText.setText(prevString)
 
-                        if (editText != et_judul) {
+                        if (editText != et_tittle) {
 //                            delete hint
-                            editText.hint = hintAkhir
+                            editText.hint = lastHint
 
 //                            add created id to list
                             val index = getIndexId(editText.id)
@@ -260,7 +240,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                             listImage.add(index + 1, "")
 
 //                            add editText and imageView
-                            addText(hintAkhir, editText.id)
+                            addText(lastHint, editText.id)
                             changeViewEnterPosition(index)
 
 //                            set focus to created editText
@@ -269,9 +249,9 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 //                            focusEdit = listId[index + 1]
                         } else {
                             if (listId.isEmpty()) {
-                                addEditable(hintAwal)
+                                addEditable(earlyHint)
                             } else {
-                                addEditable(hintAkhir)
+                                addEditable(lastHint)
                                 listId.add(0, TEXT_BASE_ID + viewId - 1)
                                 listImage.add(0, "")
                                 changeViewDeletePosition(1)
@@ -295,7 +275,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         })
     }
 
-    private fun containtEnter(string: String): Boolean {
+    private fun containsEnter(string: String): Boolean {
         return string.contains("\n")
     }
 
@@ -332,7 +312,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private fun getFocuse() {
+    private fun getFocus() {
         var found = false
         for (i in listId) {
             val editText = findViewById<EditText>(i)
@@ -343,7 +323,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             }
         }
         if (!found) {
-            focusEdit = R.id.et_judul
+            focusEdit = R.id.et_tittle
         }
     }
 
@@ -361,7 +341,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         }?.addOnSuccessListener {
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             hideProgressDialog()
-    //            uploadTask = riversRef.putFile(file)
+            //            uploadTask = riversRef.putFile(file)
             val urlTask =
                 uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
                     if (!task.isSuccessful) {
@@ -371,25 +351,24 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                     }
                     return@Continuation riversRef.downloadUrl
                 })
-            urlTask?.addOnFailureListener {
+            urlTask.addOnFailureListener {
                 toast(this, it.message.toString())
             }
-            urlTask?.addOnCompleteListener { task ->
+            urlTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val downloadUri = task.result
-                    if (focusEdit != R.id.et_judul) {
+                    if (focusEdit != R.id.et_tittle) {
                         val index = getIndexId(focusEdit)
                         listImage.add(index, downloadUri.toString())
                         listImage.removeAt(index + 1)
 
-                    } else if (focusEdit == R.id.et_judul) {
+                    } else if (focusEdit == R.id.et_tittle) {
                         listImage.add(0, downloadUri.toString())
-                        listImage.removeAt(1)
+                        listImage.removeAt(0)
 
                     }
                     log(listId.toString())
                     log(listImage.toString())
-                    //                    log(focusEdit.toString())
 
                 } else {
                     toast(this, "Failed to upload")
@@ -409,14 +388,14 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         val imageStream: InputStream? = imageUri?.let { contentResolver.openInputStream(it) }
         val selectedImage: Bitmap = BitmapFactory.decodeStream(imageStream)
 
-        if (focusEdit != R.id.et_judul) {
+        if (focusEdit != R.id.et_tittle) {
             val newImage = findViewById<ImageView>(focusEdit - TEXT_BASE_ID + IMAGE_BASE_ID)
             newImage.setImageBitmap(selectedImage)
-        } else if (focusEdit == R.id.et_judul && listId.isEmpty()) {
-            addEditable(hintAwal)
+        } else if (focusEdit == R.id.et_tittle && listId.isEmpty()) {
+            addEditable(earlyHint)
             val newImage = findViewById<ImageView>(IMAGE_BASE_ID + viewId - 1)
             newImage.setImageBitmap(selectedImage)
-        } else if (focusEdit == R.id.et_judul && listId.isNotEmpty()) {
+        } else if (focusEdit == R.id.et_tittle && listId.isNotEmpty()) {
             val newImage = findViewById<ImageView>(listId[0] - TEXT_BASE_ID + IMAGE_BASE_ID)
             newImage.setImageBitmap(selectedImage)
         }
@@ -451,7 +430,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 //        imageId++
     }
 
-    private fun addimageView(idNow: Int) {
+    private fun addImageView(idNow: Int) {
         val layoutParent = findViewById<RelativeLayout>(R.id.rl_story)
         val newImage = ImageView(applicationContext)
 
@@ -504,7 +483,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             } else if (imageView.drawable == null && index == 0) {
                 val string = editText.text.toString()
 
-                val idBefore = R.id.et_judul
+                val idBefore = R.id.et_tittle
                 val textViewBefore = findViewById<EditText>(idBefore)
                 val stringBefore = textViewBefore.text.toString()
                 val stringNow = stringBefore + string
@@ -528,12 +507,12 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         }
 //            imageView.setImageResource(0)
         else {
-            val lastiIndex = listId.size - 1
+            val lastIndex = listId.size - 1
             removeId(index)
             listImage.removeAt(index)
             layoutParent.removeView(editText)
             layoutParent.removeView(imageView)
-            if (index != 0 && index != lastiIndex) {
+            if (index != 0 && index != lastIndex) {
                 changeViewDeletePosition(index)
             }
         }
@@ -567,7 +546,8 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         val lastIndex = listId.size - 1
         if (index + 1 != 0 && index + 1 != lastIndex) {
 //            val newImageView = findViewById<ImageView>(listId[index+1]- TEXT_BASE_ID+ IMAGE_BASE_ID)
-            val oldImageView = findViewById<ImageView>(listId[index + 2] - TEXT_BASE_ID + IMAGE_BASE_ID)
+            val oldImageView =
+                findViewById<ImageView>(listId[index + 2] - TEXT_BASE_ID + IMAGE_BASE_ID)
             val idNow = listId[index + 1]
 //            val idNext = listId[index+2]
             val paramOld = RelativeLayout.LayoutParams(
@@ -586,7 +566,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             listId.add(TEXT_BASE_ID + viewId)
             listImage.add("")
         }
-        addimageView(idNow)
+        addImageView(idNow)
 //        }
 //        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
         val layoutParent = findViewById<RelativeLayout>(R.id.rl_story)
@@ -615,7 +595,10 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         myEditText.hint = hint
         myEditText.setText(nextString)
         myEditText.setBackgroundResource(R.color.colorWhite)
-        myEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.font_size))
+        myEditText.setTextSize(
+            TypedValue.COMPLEX_UNIT_PX,
+            resources.getDimension(R.dimen.font_size)
+        )
         myEditText.id = TEXT_BASE_ID + viewId
 
 //        if(getIndexId(myEditText.id)>0){
@@ -656,9 +639,9 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 
             val story = id?.let {
                 Story(
-                    if (edit!="" ) storyId else sid
+                    if (edit != "") storyId else sid
                     , it
-                    , et_judul.text.toString()
+                    , et_tittle.text.toString()
                     , firstStory
                     , main.getPref(main.userName, "s", this).toString()
                     , getCurrentDate()
@@ -671,11 +654,11 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                 id?.let { database.child("draft").child(it).child(did).removeValue() }
                 id?.let { database.child(main.draftContent).child(it).child(did).removeValue() }
             }
-            if(edit!=""){
+            if (edit != "") {
                 database.child("story").child(storyId).removeValue()
                 database.child(main.storyContent).child(storyId).removeValue()
                 database.child("story").child(storyId).setValue(story)
-            }else{
+            } else {
                 id?.let { database.child("user").child(it).child("sCount").setValue(sCount) }
                 database.child("story").child(sid).setValue(story)
             }
@@ -702,10 +685,12 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         if (listImage.size > 0) {
             for (i in 0 until listImage.size) {
 //                    if(listImage[i] != ""){
-                if(edit!=""){
-                    database.child(main.storyContent).child(storyId).child("image$i").setValue(listImage[i])
-                }else{
-                    database.child(main.storyContent).child(sid).child("image$i").setValue(listImage[i])
+                if (edit != "") {
+                    database.child(main.storyContent).child(storyId).child("image$i")
+                        .setValue(listImage[i])
+                } else {
+                    database.child(main.storyContent).child(sid).child("image$i")
+                        .setValue(listImage[i])
                 }
 //                    }
             }
@@ -714,10 +699,12 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 //            upload text
         if (listText.size > 0) {
             for (i in 0 until listText.size) {
-                if(edit!=""){
-                    database.child(main.storyContent).child(storyId).child("text$i").setValue(listText[i])
-                }else{
-                    database.child(main.storyContent).child(sid).child("text$i").setValue(listText[i])
+                if (edit != "") {
+                    database.child(main.storyContent).child(storyId).child("text$i")
+                        .setValue(listText[i])
+                } else {
+                    database.child(main.storyContent).child(sid).child("text$i")
+                        .setValue(listText[i])
                 }
 
             }
@@ -781,13 +768,13 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val judul = dataSnapshot.child("judul").getValue(String::class.java)
+                    val tittle = dataSnapshot.child("judul").getValue(String::class.java)
                     val textContent = dataSnapshot.child("textContent").getValue(Int::class.java)
-//                    val did = dataSnapshot.child("did").getValue(String::class.java)
+
                     if (textContent != null) {
                         onDataChange(textContent)
                     }
-                    et_judul.setText(judul)
+                    et_tittle.setText(tittle)
                 }
             })
     }
@@ -801,13 +788,14 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val judul = dataSnapshot.child("judul").getValue(String::class.java)
-                        val textContent = dataSnapshot.child("textContent").getValue(Int::class.java)
-    //                    val did = dataSnapshot.child("did").getValue(String::class.java)
+                        val tittle = dataSnapshot.child("judul").getValue(String::class.java)
+                        val textContent =
+                            dataSnapshot.child("textContent").getValue(Int::class.java)
+
                         if (textContent != null) {
                             onDataChange(textContent)
                         }
-                        et_judul.setText(judul)
+                        et_tittle.setText(tittle)
 
                     }
 
@@ -841,7 +829,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                 Draft(
                     draftId
                     , it
-                    , et_judul.text.toString()
+                    , et_tittle.text.toString()
                     , firstStory
                     , getCurrentDate()
                     , firstImage
@@ -849,7 +837,6 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
                     , if (listId.size > 0) listId.size else 0
                 )
             }
-            log("sampe buat objec draft")
 
             if (did != "") {
                 id?.let { database.child("draft").child(it).child(draftId).removeValue() }
@@ -858,7 +845,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
             if (did == "") {
                 id?.let { database.child("user").child(it).child("dCount").setValue(dCount) }
             }
-            log("sampe kirim ke draft dan dCount")
+
             if (listId.isNotEmpty()) {
                 publishDraftContent(dCount, id)
             }
@@ -879,7 +866,10 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
         if (listImage.size > 0) {
             for (i in 0 until listImage.size) {
 //                    if(listImage[i] != ""){
-                id?.let { database.child(main.draftContent).child(it).child(draftId).child("image$i").setValue(listImage[i]) }
+                id?.let {
+                    database.child(main.draftContent).child(it).child(draftId).child("image$i")
+                        .setValue(listImage[i])
+                }
 //                    }
             }
         }
@@ -887,7 +877,10 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 //            upload text
         if (listText.size > 0) {
             for (i in 0 until listText.size) {
-                id?.let { database.child(main.draftContent).child(it).child(draftId).child("text$i").setValue(listText[i]) }
+                id?.let {
+                    database.child(main.draftContent).child(it).child(draftId).child("text$i")
+                        .setValue(listText[i])
+                }
             }
         }
 

@@ -3,8 +3,8 @@ package com.example.jokot.mendiam
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -31,8 +31,7 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
 
 
     override fun onClick(v: View?) {
-        val id = v?.id
-        when (id) {
+        when (v?.id) {
             R.id.iv_close -> {
                 finishCancel()
             }
@@ -66,11 +65,11 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
                         val name = dataSnapshot.child("userName").getValue(String::class.java)
                         val about = dataSnapshot.child("about").getValue(String::class.java)
                         val urlPic = dataSnapshot.child("urlPic").getValue(String::class.java)
-                        et_nama.setText(name)
+                        et_name.setText(name)
                         if (about != "") {
                             et_about.setText(about)
                         }
-                        if(urlPic != ""){
+                        if (urlPic != "") {
                             Picasso.get().load(urlPic).into(iv_edit)
                         }
                         callbackLoading.onCallback()
@@ -81,27 +80,27 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun saveData() {
-        val name = et_nama.text.toString()
+        val name = et_name.text.toString()
         val about = et_about.text.toString()
-        if(urlPic !=""){
-            uploadUrlImage(urlPic){
-                dataBase("userName", name){
-                    dataBase("about", about){
+        if (urlPic != "") {
+            uploadUrlImage(urlPic) {
+                dataBase("userName", name) {
+                    dataBase("about", about) {
                         finishSuccess()
                     }
                 }
             }
-        }else{
-            dataBase("userName", name){
-                dataBase("about", about){
+        } else {
+            dataBase("userName", name) {
+                dataBase("about", about) {
                     finishSuccess()
                 }
             }
         }
     }
 
-    private fun dataBase(key: String, value: String,onSuccess : () -> Unit) {
-        main.editorPref(key,value,this)
+    private fun dataBase(key: String, value: String, onSuccess: () -> Unit) {
+        main.editorPref(key, value, this)
         main.uid?.let {
             database.child(main.user)
                 .child(it)
@@ -113,40 +112,41 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun finishSuccess() {
         val data = Intent()
-        setResult(RESULT_OK,data)
+        setResult(RESULT_OK, data)
         finish()
     }
 
     private fun finishCancel() {
         val data = Intent()
-        setResult(Activity.RESULT_CANCELED,data)
+        setResult(Activity.RESULT_CANCELED, data)
         finish()
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK && requestCode == main.G_CODE){
+        if (resultCode == Activity.RESULT_OK && requestCode == main.gCode) {
             val uri = data?.data
             main.showProgressBar(pb_edit)
-            uri?.let {
-                main.uploadImage(it,{
-                    main.hideProgresBar(pb_edit)
+            uri?.let { it ->
+                main.uploadImage(it, {
+                    main.hideProgressBar(pb_edit)
                     toast(it)
-                },{
-                    main.hideProgresBar(pb_edit)
+                }, {
+                    main.hideProgressBar(pb_edit)
                     toast(it)
-                },{
+                }, {
                     urlPic = it
                     iv_edit.setImageURI(uri)
-                    main.hideProgresBar(pb_edit)
+                    main.hideProgressBar(pb_edit)
                 })
             }
         }
     }
 
-    private fun uploadUrlImage(url:String, onSuccess: () -> Unit){
-        database.child(main.user).child(main.auth.uid.toString()).child("urlPic").setValue(url).addOnSuccessListener {
-           onSuccess()
-        }
+    private fun uploadUrlImage(url: String, onSuccess: () -> Unit) {
+        database.child(main.user).child(main.auth.uid.toString()).child("urlPic").setValue(url)
+            .addOnSuccessListener {
+                onSuccess()
+            }
     }
 }

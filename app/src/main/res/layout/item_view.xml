@@ -24,7 +24,7 @@
                     android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     android:visibility="gone"
-                    app:layout_constraintTop_toTopOf="parent" android:id="@+id/textView2"/>
+                    app:layout_constraintTop_toTopOf="parent" />
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
                     android:textSize="24sp"
                     android:layout_marginTop="8dp"
                     android:textStyle="bold"
-                    android:id="@+id/tv_judul"/>
+                    android:id="@+id/tv_tittle"/>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                     android:textSize="18sp"
                     android:maxLines="3"
                     android:layout_marginTop="8dp"
-                    android:id="@+id/tv_deskripsi"/>
+                    android:id="@+id/tv_description"/>
         </LinearLayout>
         <RelativeLayout
                 android:layout_width="80dp"

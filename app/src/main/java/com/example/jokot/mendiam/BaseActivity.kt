@@ -2,12 +2,12 @@ package com.example.jokot.mendiam
 
 import android.app.ProgressDialog
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 open class BaseActivity : AppCompatActivity() {
 
-    val pd by lazy {
+    private val pd by lazy {
         ProgressDialog(this)
     }
 

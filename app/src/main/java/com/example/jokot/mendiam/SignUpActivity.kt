@@ -44,7 +44,6 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        // [END config_signin]
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
@@ -58,10 +57,14 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val id = v?.id
-        when (id) {
+        when (v?.id) {
             R.id.btn_up_google -> signUp()
-            R.id.btn_up_email -> startActivity(Intent(applicationContext, SignUpEmailActivity::class.java))
+            R.id.btn_up_email -> startActivity(
+                Intent(
+                    applicationContext,
+                    SignUpEmailActivity::class.java
+                )
+            )
             R.id.tv_sign_in -> {
                 intent = Intent(applicationContext, SignInActivity::class.java)
                 startActivity(intent)
@@ -81,7 +84,6 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
     }
     // [END on_start_check_user]
 
-    // [START onactivityresult]
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -96,12 +98,11 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed = ${e.statusCode}", e)
                 // [START_EXCLUDE]
-                updateUI(null, "Registrasi dengan Google gagal")
+                updateUI(null, getString(R.string.failed_register_google))
                 // [END_EXCLUDE]
             }
         }
     }
-    // [END onactivityresult]
 
     // [START auth_with_google]
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount?) {
@@ -133,8 +134,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
-//                    Snackbar.make(main_layout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
-                    updateUI(null, "Gagal masuk, Coba Lagi")
+                    updateUI(null, getString(R.string.failed_sign_in))
                 }
 
                 // [START_EXCLUDE]
@@ -144,12 +144,10 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
     }
     // [END auth_with_google]
 
-    // [START signin]
     private fun signUp() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_UP)
     }
-    // [END signin]
 
     private fun writeNewUser(user: User?) {
         rootRef

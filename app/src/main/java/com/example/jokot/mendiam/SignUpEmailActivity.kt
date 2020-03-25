@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_sign_up_email.*
 class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
 
     private var firebaseDatabase = FirebaseDatabase.getInstance()
-    var rootRef = firebaseDatabase.reference
+    private var rootRef = firebaseDatabase.reference
     private lateinit var firebaseAuth: FirebaseAuth
     private var firebaseUser: FirebaseUser? = null
 
@@ -26,8 +26,7 @@ class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val id = v?.id
-        when (id) {
+        when (v?.id) {
             R.id.btn_create_acc -> signUp()
         }
     }
@@ -40,10 +39,13 @@ class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
             || (et_confirm_password.text.toString().isEmpty()
                     || et_confirm_password.text.toString() != et_password.text.toString())
         ) {
-            toast(applicationContext, "Isi Semua kolom dengan Benar !")
+            toast(applicationContext, getString(R.string.fill_in_all))
         } else {
             firebaseAuth
-                .createUserWithEmailAndPassword(et_email.text.toString(), et_password.text.toString())
+                .createUserWithEmailAndPassword(
+                    et_email.text.toString(),
+                    et_password.text.toString()
+                )
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         firebaseUser = this.firebaseAuth.currentUser
@@ -61,7 +63,7 @@ class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
                         startActivity(Intent(applicationContext, MainActivity::class.java))
                         finishAffinity()
                     } else {
-                        toast(applicationContext, "Email sudah di Registrasikan")
+                        toast(applicationContext, getString(R.string.email_already_registered))
                     }
                     hideProgressDialog()
                 }
@@ -69,7 +71,6 @@ class SignUpEmailActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    //  memasukkan data user ke database
     private fun writeNewUser(user: User?) {
         rootRef
             .child("user")

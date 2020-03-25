@@ -28,6 +28,7 @@
                 android:textSize="12sp" />
 
         <EditText
+                android:inputType="textPersonName"
                 android:id="@+id/et_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
                 android:textSize="12sp" />
 
         <EditText
+                android:inputType="textEmailAddress"
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

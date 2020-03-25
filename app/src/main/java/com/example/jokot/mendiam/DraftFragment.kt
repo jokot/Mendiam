@@ -3,17 +3,15 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.model.Story
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_draft.*
 
@@ -36,7 +34,7 @@ class DraftFragment : Fragment() {
     private val main = MainApps()
     private var database = main.database.reference
 
-    private var uid =""
+    private var uid = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,17 +56,19 @@ class DraftFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        adapter = StoriesAdapter("Edited", listDraft,{
-            val intent = Intent(context,NewStoryActivity::class.java)
-            intent.putExtra("did",it.sid)
+        adapter = StoriesAdapter("Edited", listDraft, {
+            val intent = Intent(context, NewStoryActivity::class.java)
+            intent.putExtra("did", it.sid)
             startActivity(intent)
-        },{
-            val intent = Intent(context,NewStoryActivity::class.java)
-            intent.putExtra("did",it.sid)
+        }, {
+            val intent = Intent(context, NewStoryActivity::class.java)
+            intent.putExtra("did", it.sid)
             startActivity(intent)
-        },{
+        }, {
             uid.let { it1 -> database.child(main.draft).child(it1).child(it.sid).removeValue() }
-            uid.let { it1 -> database.child(main.draftContent).child(it1).child(it.sid).removeValue() }
+            uid.let { it1 ->
+                database.child(main.draftContent).child(it1).child(it.sid).removeValue()
+            }
             listDraft.remove(it)
             adapter.notifyDataSetChanged()
         })
@@ -106,16 +106,17 @@ class DraftFragment : Fragment() {
                         val ds = dataSnapshot.children
                         tempListDraft.clear()
                         ds.mapNotNull {
-                            val judul = it.child("judul").getValue(String::class.java).toString()
-                            val deskripsi = it.child("deskripsi").getValue(String::class.java).toString()
+                            val tittle = it.child("judul").getValue(String::class.java).toString()
+                            val description =
+                                it.child("deskripsi").getValue(String::class.java).toString()
                             val did = it.child("did").getValue(String::class.java).toString()
                             val date = it.child("date").getValue(String::class.java).toString()
                             val uid = main.getUId()
                             tempListDraft.add(
                                 Story(
                                     uid = uid,
-                                    judul = judul,
-                                    deskripsi = deskripsi,
+                                    judul = tittle,
+                                    deskripsi = description,
                                     sid = did,
                                     date = date
                                 )

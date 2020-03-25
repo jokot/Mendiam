@@ -2,10 +2,10 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.User
@@ -101,8 +101,8 @@ class FollowActivity : AppCompatActivity() {
     }
 
     private fun getUserId(callbackLoading: CallbackLoading) {
-        uid.let {
-            database.child(follow).child(it)
+        uid.let { uid ->
+            database.child(follow).child(uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
 
@@ -124,8 +124,8 @@ class FollowActivity : AppCompatActivity() {
     }
 
     private fun getFollowingId(callbackLoading: CallbackLoading) {
-        myUid.let {
-            database.child(main.following).child(it)
+        myUid.let { uid ->
+            database.child(main.following).child(uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
 
@@ -153,7 +153,7 @@ class FollowActivity : AppCompatActivity() {
             database.child(main.user).child(id)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
-                        Log.d("getUser",error.message)
+                        Log.d("getUser", error.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {

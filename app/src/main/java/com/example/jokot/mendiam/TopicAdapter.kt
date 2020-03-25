@@ -1,33 +1,40 @@
 package com.example.jokot.mendiam
 
 import android.graphics.Color
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
-class TopicAdapter(private val clickListener: (String) -> Unit) : RecyclerView.Adapter<TopicAdapter.ItemViewHolder>() {
+class TopicAdapter(private val clickListener: (String) -> Unit) :
+    RecyclerView.Adapter<TopicAdapter.ItemViewHolder>() {
 
-    private val listTopic = mutableListOf("Buku", "Produktivitas", "Ngoding", "Komputer", "Komedi")
+    private val listTopic = mutableListOf("Book", "Coding", "Computer", "Comedy", "Productivity")
     private var n = 0
 
-    override fun onCreateViewHolder(group: ViewGroup, viewType: Int): TopicAdapter.ItemViewHolder {
-        return ItemViewHolder(LayoutInflater.from(group.context).inflate(R.layout.item_view_topic, group, false))
+    override fun onCreateViewHolder(group: ViewGroup, viewType: Int): ItemViewHolder {
+        return ItemViewHolder(
+            LayoutInflater.from(group.context).inflate(
+                R.layout.item_view_topic,
+                group,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int {
         return listTopic.size
     }
 
-    override fun onBindViewHolder(holder: TopicAdapter.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bindItem(listTopic[position], clickListener)
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var topic = view.findViewById<TextView>(R.id.tv_topic)
-        var follow = view.findViewById<Button>(R.id.btn_follow)
+        var topic: TextView = view.findViewById(R.id.tv_topic)
+        var follow: Button = view.findViewById(R.id.btn_follow)
 
         fun bindItem(list: String, clickListener: (String) -> Unit) {
             topic.text = list

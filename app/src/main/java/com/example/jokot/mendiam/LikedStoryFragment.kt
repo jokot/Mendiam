@@ -2,12 +2,12 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.Story
@@ -15,7 +15,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_liked_story.*
-import kotlin.math.log
 
 class LikedStoryFragment : Fragment() {
 
@@ -53,11 +52,11 @@ class LikedStoryFragment : Fragment() {
 
     private fun initRecycle() {
         adapter = StoryAdapter(listStory, listBookmarkId, {
-            uid?.let { it1 ->
+            uid.let { it1 ->
                 database.child(main.likedStory).child(it1).child(it.sid).setValue(true)
             }
         }, {
-            uid?.let { it1 ->
+            uid.let { it1 ->
                 database.child(main.likedStory).child(it1).child(it.sid).removeValue()
             }
             listStory.remove(it)
@@ -92,8 +91,8 @@ class LikedStoryFragment : Fragment() {
     }
 
     private fun getLikedStoryId(callbackLoading: CallbackLoading) {
-        uid.let {
-            database.child(main.likedStory).child(it)
+        uid.let { uid ->
+            database.child(main.likedStory).child(uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         log(p0.message)
@@ -136,17 +135,17 @@ class LikedStoryFragment : Fragment() {
                 pb_liked_story.visibility = View.GONE
                 sr_liked_story.isRefreshing = false
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.message?.let { log(it) }
         }
     }
 
     private fun getBookmarkId(callbackLoading: CallbackLoading) {
-        myUid.let {
-            database.child(main.bookmark).child(it)
+        myUid.let { uid ->
+            database.child(main.bookmark).child(uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
-                        Log.d("getBookmarkId",error.message)
+                        Log.d("getBookmarkId", error.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -178,8 +177,8 @@ class LikedStoryFragment : Fragment() {
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val id = dataSnapshot.child("uid").getValue(String::class.java)
-                        val judul = dataSnapshot.child("judul").getValue(String::class.java)
-                        val deskripsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
+                        val tittle = dataSnapshot.child("judul").getValue(String::class.java)
+                        val description = dataSnapshot.child("deskripsi").getValue(String::class.java)
                         val name = dataSnapshot.child("name").getValue(String::class.java)
                         val date = dataSnapshot.child("date").getValue(String::class.java)
                         val image = dataSnapshot.child("image").getValue(String::class.java)
@@ -188,15 +187,15 @@ class LikedStoryFragment : Fragment() {
                                 Story(
                                     sid,
                                     id.toString(),
-                                    judul.toString(),
-                                    deskripsi.toString(),
+                                    tittle.toString(),
+                                    description.toString(),
                                     name.toString(),
                                     date.toString(),
                                     image.toString()
                                 )
                             )
                         } else {
-                            uid?.let {
+                            uid.let {
                                 database.child(main.likedStory).child(it).child(sid).removeValue()
                             }
                         }

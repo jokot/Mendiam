@@ -6,14 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import com.example.jokot.mendiam.model.Story
 import com.example.jokot.mendiam.model.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.util.UidVerifier
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -61,8 +59,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val id = v?.id
-        when (id) {
+        when (v?.id) {
             R.id.google_button -> signIn()
 //            R.id.btn_in_google -> signIn()
             R.id.btn_in_email -> {
@@ -98,6 +95,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         val intent = googleSignInClient.signInIntent
         startActivityForResult(intent, RC_SIGN_IN)
     }
+
     private fun writeNewUser(user: User?) {
         rootRef
             .child("user")
@@ -114,7 +112,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                 firebaseSignIn(account)
             } catch (e: ApiException) {
                 Log.w(TAG, "Result Failed = ${e.statusCode}", e)
-                updateUI(null, "Gagal Masuk")
+                updateUI(null, getString(R.string.failed_sign_in))
 
             }
         }
@@ -135,8 +133,8 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         )
                     }
                     user?.uid?.let { it ->
-                        isRegistered(it){
-                            if (!it){
+                        isRegistered(it) {
+                            if (!it) {
                                 writeNewUser(dataUser)
                             }
                             updateUI(user, null)
@@ -146,13 +144,13 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
 
                 } else {
                     Log.w(TAG, "Sign in Filed")
-                    updateUI(null, "Gagal Masuk, Coba lagi")
+                    updateUI(null, getString(R.string.failed_sign_in))
                 }
                 hideProgressDialog()
             }
     }
 
-    fun isRegistered(uid: String, onSuccess : (Boolean) -> Unit){
+    private fun isRegistered(uid: String, onSuccess: (Boolean) -> Unit) {
         rootRef.child("user").child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
@@ -162,10 +160,10 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val isRegister = dataSnapshot.hasChildren()
 
-                    if(isRegister){
+                    if (isRegister) {
                         log("isRegistered registered $isRegister")
                         onSuccess(true)
-                    }else{
+                    } else {
                         log("isRegistered not registered $isRegister")
                         onSuccess(false)
 

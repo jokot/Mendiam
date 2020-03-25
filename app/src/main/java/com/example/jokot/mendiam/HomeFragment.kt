@@ -2,50 +2,21 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.model.Story
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
-//// TODO: Rename parameter arguments, choose names that match
-//// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [HomeFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class HomeFragment : Fragment() {
-//    // TODO: Rename and change types of parameters
-//    private var param1: String? = null
-//    private var param2: String? = null
-//    private var listener: OnFragmentInteractionListener? = null
-
-    //    override fun onCreate(savedInstanceState: Bundle?) {
-////        super.onCreate(savedInstanceState)
-////        arguments?.let {
-////            param1 = it.getString(ARG_PARAM1)
-////            param2 = it.getString(ARG_PARAM2)
-////        }
-////    }
-
     private lateinit var adapter: StoryAdapter
     private val main = MainApps()
     private var database = main.database.reference
@@ -79,7 +50,7 @@ class HomeFragment : Fragment() {
         listStory.clear()
         listBookmarkId.clear()
 
-        getBookmarkId(object : CallbackLoading{
+        getBookmarkId(object : CallbackLoading {
             override fun onCallback() {
                 adapter.notifyDataSetChanged()
                 getStory()
@@ -91,14 +62,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        adapter = StoryAdapter(listStory,listBookmarkId,{
-            uid?.let { it1 -> database.child(main.bookmark).child(it1).child(it.sid).setValue(true) }
+        adapter = StoryAdapter(listStory, listBookmarkId, {
+            uid?.let { it1 ->
+                database.child(main.bookmark).child(it1).child(it.sid).setValue(true)
+            }
 
         }, {
             uid?.let { it1 -> database.child(main.bookmark).child(it1).child(it.sid).removeValue() }
 //            listStory.remove(it)
 //            adapter.notifyDataSetChanged()
-        },{
+        }, {
             val intent = Intent(context, ReadActivity::class.java)
             intent.putExtra("sid", it.sid)
             startActivity(intent)
@@ -122,11 +95,11 @@ class HomeFragment : Fragment() {
                 val ds = dataSnapshot.children
                 tempStory.clear()
                 ds.mapNotNull {
-//                        it ->
+                    //                        it ->
                     val sid = it.child("sid").getValue(String::class.java)
                     val uid = it.child("uid").getValue(String::class.java)
-                    val judul = it.child("judul").getValue(String::class.java)
-                    val deskripsi = it.child("deskripsi").getValue(String::class.java)
+                    val tittle = it.child("judul").getValue(String::class.java)
+                    val description = it.child("deskripsi").getValue(String::class.java)
                     val date = it.child("date").getValue(String::class.java)
                     val image = it.child("image").getValue(String::class.java)
 
@@ -139,8 +112,8 @@ class HomeFragment : Fragment() {
                         Story(
                             sid.toString(),
                             uid.toString(),
-                            judul.toString(),
-                            deskripsi.toString(),
+                            tittle.toString(),
+                            description.toString(),
                             name.toString(),
                             date.toString(),
                             image.toString()
@@ -155,12 +128,12 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun getBookmarkId(callbackLoading: CallbackLoading){
-        uid?.let {
-            database.child(main.bookmark).child(it)
-                .addListenerForSingleValueEvent(object : ValueEventListener{
+    private fun getBookmarkId(callbackLoading: CallbackLoading) {
+        uid?.let { uid ->
+            database.child(main.bookmark).child(uid)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
-                        Log.d("getBookmarkId",error.message)
+                        Log.d("getBookmarkId", error.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -168,7 +141,7 @@ class HomeFragment : Fragment() {
                         listBookmarkId.clear()
                         ds.mapNotNull {
                             val bid = it.key
-                            if(bid != null){
+                            if (bid != null) {
                                 listBookmarkId.add(bid)
                             }
 

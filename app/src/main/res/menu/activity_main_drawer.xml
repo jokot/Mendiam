@@ -23,21 +23,7 @@
                 android:id="@+id/nav_stories"
 
                 android:title="@string/stories"/>
-
-        <!--<item android:id="@+id/nav_full_screen"-->
-              <!--android:title="fulls creen"/>-->
     </group>
-    <!--<item android:title="Communicate">-->
-    <!--<menu>-->
-    <!--<item-->
-    <!--android:id="@+id/nav_share"-->
 
-    <!--android:title="Share"/>-->
-    <!--<item-->
-    <!--android:id="@+id/nav_send"-->
-
-    <!--android:title="Send"/>-->
-    <!--</menu>-->
-    <!--</item>-->
 
 </menu>

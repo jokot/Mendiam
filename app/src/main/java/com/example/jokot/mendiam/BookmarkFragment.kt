@@ -3,18 +3,16 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.Story
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_bookmark.*
 
@@ -60,7 +58,9 @@ class BookmarkFragment : Fragment() {
 
     private fun initRecycle() {
         adapter = StoryAdapter(listBookmark, listBookmarkId, {
-            uid?.let { it1 -> database.child(main.bookmark).child(it1).child(it.sid).setValue(true) }
+            uid?.let { it1 ->
+                database.child(main.bookmark).child(it1).child(it.sid).setValue(true)
+            }
         }, {
             uid?.let { it1 -> database.child(main.bookmark).child(it1).child(it.sid).removeValue() }
             listBookmark.remove(it)
@@ -91,7 +91,7 @@ class BookmarkFragment : Fragment() {
     }
 
     private fun getBookmarkId(callbackLoading: CallbackLoading) {
-        uid?.let {
+        uid?.let { it ->
             database.child(main.bookmark).child(it)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
@@ -147,25 +147,27 @@ class BookmarkFragment : Fragment() {
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val id = dataSnapshot.child("uid").getValue(String::class.java)
-                        val judul = dataSnapshot.child("judul").getValue(String::class.java)
-                        val deskripsi = dataSnapshot.child("deskripsi").getValue(String::class.java)
+                        val tittle = dataSnapshot.child("judul").getValue(String::class.java)
+                        val description = dataSnapshot.child("deskripsi").getValue(String::class.java)
                         val name = dataSnapshot.child("name").getValue(String::class.java)
                         val date = dataSnapshot.child("date").getValue(String::class.java)
                         val image = dataSnapshot.child("image").getValue(String::class.java)
-                        if(id!=null){
+                        if (id != null) {
                             listBookmark.add(
                                 Story(
                                     sid,
                                     id.toString(),
-                                    judul.toString(),
-                                    deskripsi.toString(),
+                                    tittle.toString(),
+                                    description.toString(),
                                     name.toString(),
                                     date.toString(),
                                     image.toString()
                                 )
                             )
-                        }else{
-                            uid?.let { database.child(main.bookmark).child(it).child(sid).removeValue() }
+                        } else {
+                            uid?.let {
+                                database.child(main.bookmark).child(it).child(sid).removeValue()
+                            }
                         }
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(sid)

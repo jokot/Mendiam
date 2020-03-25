@@ -2,17 +2,13 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:orientation="vertical"
+        android:layout_gravity="center"
         tools:context=".SignInActivity">
 
-    <LinearLayout
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
         <TextView
                 android:layout_width="match_parent"
                 android:gravity="center"
@@ -54,7 +50,7 @@
         <com.google.android.gms.common.SignInButton
                 android:id="@+id/google_button"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:textSize="18sp">
         </com.google.android.gms.common.SignInButton>
@@ -86,7 +82,7 @@
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:textColor="@color/colorDarkGrey"
-                      android:text="@string/doesn_t_have_account"/>
+                      android:text="@string/does_not_have_account"/>
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -95,4 +91,3 @@
                       android:text="@string/sign_up"/>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>

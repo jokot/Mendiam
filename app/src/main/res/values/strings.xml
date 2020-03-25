@@ -2,111 +2,22 @@
     <string name="app_name">Mendiam</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Joko Triyanto</string>
     <string name="nav_header_subtitle">See Profile</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-    <string name="date_create">22 Jan 2018</string>
-    <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message
-        history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
-
-    <string name="title_activity_read">Read it bitch</string>
-    <string name="dummy_button_read">Dummy Button</string>
-    <string name="dummy_content_read">Programmers seem to have forgotten the real purpose of software, that is to solve
-        a
-        real-world problem. Programmers seem to have forgotten the real purpose of software, that is to solve a
-        real-world problem. Programmers seem to have forgotten the real purpose of software, that is to solve a
-        real-world problem. Programmers seem to have forgotten the real purpose of software, that is to solve a
-        real-world problem.
-    </string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="choose_an_image">Choose an Image</string>
     <string name="edit_profile">Edit Your Profile</string>
-    <string name="nama">Nama</string>
+    <string name="name">Name</string>
     <string name="about">About</string>
-    <string name="sign_up_email">Sign Up With Email</string>
-    <string name="sign_in_email">Sign In With Email</string>
+    <string name="sign_up_email">Sign up with email</string>
+    <string name="sign_in_email">Sign in with email</string>
     <string name="following">Following</string>
     <string name="follower">Follower</string>
     <string name="edit">Edit</string>
-    <string name="keluar">Keluar</string>
+    <string name="exit">Exit</string>
     <string name="like">Likes</string>
     <string name="topics">Topics</string>
-    <string name="draf">Draf</string>
-    <string name="story">Story</string>
+    <string name="draft">Draft</string>
     <string name="pub">Public</string>
     <string name="people">People</string>
     <string name="stories">Stories</string>
@@ -116,7 +27,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="likes">Likes</string>
     <string name="follow">Follow</string>
-    <string name="write_a_response">Write a Response...</string>
+    <string name="write_a_response">Write a Response…</string>
     <string name="close">close</string>
     <string name="save">Save</string>
     <string name="back">back</string>
@@ -129,18 +40,17 @@
     <string name="notification">notification</string>
     <string name="image">image</string>
     <string name="profile_picture">profile picture</string>
-    <string name="your_email">Your Email</string>
+    <string name="your_email">Your email</string>
     <string name="password">Password</string>
-    <string name="your_full_name">Your Full Name</string>
-    <string name="confirm_password">Confirm Password</string>
+    <string name="your_full_name">Your full name</string>
+    <string name="confirm_password">Confirm password</string>
     <string name="create_account">Create account</string>
-    <string name="sign_in_with_email">Sign In with Email</string>
+    <string name="sign_in_with_email">Sign in with Email</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="sign_up_with_email">Sign up with Email</string>
     <string name="delete">Delete</string>
     <string name="publish">Publish</string>
-    <string name="published">Published</string>
     <string name="books">Books</string>
     <string name="your_name">Your name</string>
     <string name="about_you">About you</string>
@@ -151,9 +61,18 @@
     <string name="_0">0</string>
     <string name="mendiam">MENDIAM</string>
     <string name="welcome_back">Welcome back</string>
-    <string name="doesn_t_have_account">Doesn\'t have account?</string>
+    <string name="does_not_have_account">Doesn\'t have account?</string>
     <string name="sign_up">Sign Up</string>
     <string name="have_account">Have account ?</string>
     <string name="sign_in">Sign In</string>
     <string name="next">Continue</string>
+    <string name="take_image_from">Add image from ?</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="failed_sign_in">Failed to sign in</string>
+    <string name="fill_in_all">Fill in all the fields !</string>
+    <string name="incorrect_email_or_password">Incorrect email or password</string>
+    <string name="failed_register_google">Failed to register with google</string>
+    <string name="email_already_registered">Email is already registered</string>
 </resources>

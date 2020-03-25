@@ -1,6 +1,5 @@
 package com.example.jokot.mendiam
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,22 +7,28 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jokot.mendiam.model.Story
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_view.view.*
-import java.lang.Exception
 
 class StoryAdapter(
     private var list: MutableList<Story>
     , private var listBookmark: MutableList<String>
     , private var clickBookmark: (Story) -> Unit
-    ,private var clickRemoveBookmark: (Story) -> Unit
+    , private var clickRemoveBookmark: (Story) -> Unit
     , private var clickListener: (Story) -> Unit
 ) : RecyclerView.Adapter<StoryAdapter.ItemViewHolder>() {
     private var n = false
-    override fun onCreateViewHolder(group: ViewGroup, position: Int): StoryAdapter.ItemViewHolder {
-        return ItemViewHolder(LayoutInflater.from(group.context).inflate(R.layout.item_view, group, false))
+    override fun onCreateViewHolder(group: ViewGroup, position: Int): ItemViewHolder {
+        return ItemViewHolder(
+            LayoutInflater.from(group.context).inflate(
+                R.layout.item_view,
+                group,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int {
@@ -41,12 +46,12 @@ class StoryAdapter(
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var judul = view.findViewById<TextView>(R.id.tv_judul)
-        var deskripsi = view.findViewById<TextView>(R.id.tv_deskripsi)
-        var date = view.findViewById<TextView>(R.id.tv_date)
-        var image = view.findViewById<ImageView>(R.id.iv_itemView_story)
-        var relativeLayout = view.findViewById<RelativeLayout>(R.id.rl_image)
-        var progress = view.findViewById<ProgressBar>(R.id.pb_image)
+        var tittle: TextView = view.findViewById(R.id.tv_tittle)
+        var description: TextView = view.findViewById(R.id.tv_description)
+        var date: TextView = view.findViewById(R.id.tv_date)
+        var image: ImageView = view.findViewById(R.id.iv_itemView_story)
+        var relativeLayout: RelativeLayout = view.findViewById(R.id.rl_image)
+        var progress: ProgressBar = view.findViewById(R.id.pb_image)
 
         fun bindItem(
             listStory: Story
@@ -67,32 +72,30 @@ class StoryAdapter(
                 }
             }
 
-            judul.text = listStory.judul
+            tittle.text = listStory.judul
             date.text = listStory.date
-            deskripsi.text = listStory.deskripsi
+            description.text = listStory.deskripsi
             itemView.tv_name.text = listStory.name
 
-            if(listStory.image!=""){
+            if (listStory.image != "") {
                 image.visibility = View.VISIBLE
                 relativeLayout.visibility = View.VISIBLE
 
                 progress.visibility = View.VISIBLE
                 Picasso.get()
-                    .load(listStory.image )
+                    .load(listStory.image)
 //                    .fit()
 //                    .placeholder(R.color.colorBlack)
-                    .error(R.drawable.ic_broken_image_24dp).
-                        into(image, object : Callback {
-                            override fun onSuccess() {
-                                progress.visibility = View.GONE
-                            }
+                    .error(R.drawable.ic_broken_image_24dp).into(image, object : Callback {
+                        override fun onSuccess() {
+                            progress.visibility = View.GONE
+                        }
 
-                            override fun onError(e: Exception?) {
-                                progress.visibility = View.GONE
-                            }
-                        })
-            }
-            else{
+                        override fun onError(e: Exception?) {
+                            progress.visibility = View.GONE
+                        }
+                    })
+            } else {
 //                image.visibility = View.GONE
                 relativeLayout.visibility = View.GONE
                 image.setImageResource(R.color.colorWhite)

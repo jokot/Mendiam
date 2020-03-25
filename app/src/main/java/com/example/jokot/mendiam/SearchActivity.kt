@@ -1,14 +1,12 @@
 package com.example.jokot.mendiam
 
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.activity_search.iv_search
-import kotlinx.android.synthetic.main.app_bar_main.*
 
 class SearchActivity : AppCompatActivity() {
 
@@ -23,11 +21,19 @@ class SearchActivity : AppCompatActivity() {
         setUpOnClick()
 
         container_search.adapter = mSectionPageAdapter
-        container_search.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab_layout_search))
-        tab_layout_search.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container_search))
+        container_search.addOnPageChangeListener(
+            TabLayout.TabLayoutOnPageChangeListener(
+                tab_layout_search
+            )
+        )
+        tab_layout_search.addOnTabSelectedListener(
+            TabLayout.ViewPagerOnTabSelectedListener(
+                container_search
+            )
+        )
     }
 
-    private fun setUpOnClick(){
+    private fun setUpOnClick() {
         iv_back.setOnClickListener {
             finish()
         }

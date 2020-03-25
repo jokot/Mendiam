@@ -1,13 +1,12 @@
 package com.example.jokot.mendiam
 
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_topic.*
 
 
@@ -37,8 +36,8 @@ class TopicFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        topicAdapter = TopicAdapter() {
-//            val intent = Intent(context, ReadActivity::class.java)
+        topicAdapter = TopicAdapter {
+            //            val intent = Intent(context, ReadActivity::class.java)
 //            startActivity(intent)
             requireActivity().toast("Coming soon")
         }

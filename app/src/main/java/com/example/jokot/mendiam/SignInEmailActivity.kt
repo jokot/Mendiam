@@ -17,7 +17,7 @@ class SignInEmailActivity : BaseActivity() {
             val password = et_password.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                toast(this, "Isi Semua kolom !")
+                toast(this, getString(R.string.fill_in_all))
             } else {
                 signIn(email, password)
             }
@@ -33,7 +33,7 @@ class SignInEmailActivity : BaseActivity() {
                     startActivity(intent)
                     finishAffinity()
                 } else {
-                    toast(applicationContext, "Email atau Password Anda Salah")
+                    toast(applicationContext, getString(R.string.incorrect_email_or_password))
                 }
                 hideProgressDialog()
             }

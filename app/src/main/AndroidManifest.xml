@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-            android:allowBackup="true"
+            android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@drawable/mendiam_icon"
@@ -48,7 +48,7 @@
         <activity
                 android:name=".ReadActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:screenOrientation="portrait"
+                android:screenOrientation="fullSensor"
                 android:theme="@style/Theme.FullScreen" /> <!-- android:label="@string/title_activity_read" -->
         <activity
                 android:name=".SignInActivity"

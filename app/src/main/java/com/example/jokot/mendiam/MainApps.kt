@@ -24,7 +24,6 @@ import java.sql.Timestamp
 class MainApps : Application() {
     companion object {
         const val sharePref = "MY PREF"
-        const val uName = "name"
     }
 
     val database = FirebaseDatabase.getInstance()
@@ -49,21 +48,21 @@ class MainApps : Application() {
     val user = "user"
     val userName = "userName"
 
-    val G_CODE = 56412
+    val gCode = 56412
 
-    val firebaseDatabase = FirebaseDatabase.getInstance().reference
-    val firebaseAuth = FirebaseAuth.getInstance()
+    private val firebaseDatabase = FirebaseDatabase.getInstance().reference
+    private val firebaseAuth = FirebaseAuth.getInstance()
 
     fun showImagePicker(activity: Activity) {
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle("Ambil Gambar dari ?")
-        builder.setNegativeButton("Camera") { _, _ ->
+        builder.setTitle(getString(R.string.take_image_from))
+        builder.setNegativeButton(getString(R.string.camera)) { _, _ ->
             openCamera()
         }
-        builder.setPositiveButton("Galery") { _, _ ->
+        builder.setPositiveButton(getString(R.string.gallery)) { _, _ ->
             openGallery(activity)
         }
-        builder.setNeutralButton("Batal") { _, _ ->
+        builder.setNeutralButton(getString(R.string.cancel)) { _, _ ->
 
         }
         val alert = builder.create()
@@ -77,7 +76,7 @@ class MainApps : Application() {
     private fun openGallery(activity: Activity) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-        activity.startActivityForResult(Intent.createChooser(intent, "Select Image"), G_CODE)
+        activity.startActivityForResult(Intent.createChooser(intent, "Select Image"), gCode)
     }
 
     fun uploadImage(
@@ -93,14 +92,15 @@ class MainApps : Application() {
         uploadTask.addOnFailureListener {
             onFailureUpload(it.message.toString())
         }.addOnSuccessListener {
-            val urlTask = uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
+            val urlTask =
+                uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
                     }
-                }
-                return@Continuation riversRef.downloadUrl
-            })
+                    return@Continuation riversRef.downloadUrl
+                })
 
             urlTask.addOnFailureListener {
                 onFailureGetUrl(it.message.toString())
@@ -118,40 +118,40 @@ class MainApps : Application() {
         pb.visibility = View.VISIBLE
     }
 
-    fun hideProgresBar(pb: ProgressBar) {
+    fun hideProgressBar(pb: ProgressBar) {
 
         pb.visibility = View.GONE
     }
 
-    fun getUName(uid:String,onDataChange:(String)->Unit) {
+    fun getUName(uid: String, onDataChange: (String) -> Unit) {
 
-            firebaseDatabase.child("user").child(uid)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        log(p0.message)
-                    }
+        firebaseDatabase.child("user").child(uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    log(p0.message)
+                }
 
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        var name = dataSnapshot.child("userName").getValue(String::class.java)
-                        if(name == null){
-                            name = ""
-                        }
-                        onDataChange(name)
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    var name = dataSnapshot.child("userName").getValue(String::class.java)
+                    if (name == null) {
+                        name = ""
                     }
-                })
+                    onDataChange(name)
+                }
+            })
     }
 
     fun getUId(): String {
         return firebaseAuth.uid.toString()
     }
 
-    fun editorPref(key: String, value: String,activity: Activity) {
+    fun editorPref(key: String, value: String, activity: Activity) {
         val editor = activity.getSharedPreferences(sharePref, Context.MODE_PRIVATE).edit()
         editor.putString(key, value)
         editor.apply()
     }
 
-    fun getPref(key: String, type: String,activity: Activity): Any? {
+    fun getPref(key: String, type: String, activity: Activity): Any? {
         val pref = activity.getSharedPreferences(sharePref, Context.MODE_PRIVATE)
         return when (type) {
             "s" -> pref.getString(key, "")
@@ -161,7 +161,7 @@ class MainApps : Application() {
         }
     }
 
-    fun getCurrentTimeStamp():String{
+    fun getCurrentTimeStamp(): String {
         val t = System.currentTimeMillis()
         val tT = Timestamp(t)
         return tT.toString()
