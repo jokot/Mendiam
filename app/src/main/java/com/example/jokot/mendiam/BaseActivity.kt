@@ -2,7 +2,7 @@ package com.example.jokot.mendiam
 
 import android.app.ProgressDialog
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 
 open class BaseActivity : AppCompatActivity() {

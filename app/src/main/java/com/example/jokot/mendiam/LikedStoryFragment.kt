@@ -2,8 +2,9 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_liked_story.*
+import kotlin.math.log
 
 class LikedStoryFragment : Fragment() {
 
@@ -68,7 +70,11 @@ class LikedStoryFragment : Fragment() {
 
         rv_liked_story.adapter = adapter
         rv_liked_story.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
 
     }
 
@@ -86,11 +92,11 @@ class LikedStoryFragment : Fragment() {
     }
 
     private fun getLikedStoryId(callbackLoading: CallbackLoading) {
-        uid?.let {
+        uid.let {
             database.child(main.likedStory).child(it)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
-                        requireActivity().log(p0.message)
+                        log(p0.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -131,7 +137,7 @@ class LikedStoryFragment : Fragment() {
                 sr_liked_story.isRefreshing = false
             }
         }catch (e:Exception){
-            requireActivity().log(e.message)
+            e.message?.let { log(it) }
         }
     }
 
@@ -139,8 +145,8 @@ class LikedStoryFragment : Fragment() {
         myUid.let {
             database.child(main.bookmark).child(it)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d("getBookmarkId",error.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {

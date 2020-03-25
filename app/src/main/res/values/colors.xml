@@ -4,10 +4,10 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorBlack">#000000</color>
     <color name="colorAccent">#AF0505</color>
-    <color name="colorPink">#D81B60</color>
+<!--    <color name="colorPink">#D81B60</color>-->
     <color name="colorRed">#AF0505</color>
-    <color name="colorRedis">#FD9595</color>
-    <color name="colorDarkRedis">#DF8181</color>
+<!--    <color name="colorRedis">#FD9595</color>-->
+<!--    <color name="colorDarkRedis">#DF8181</color>-->
     <color name="colorGrey">#e1e1e1</color>
     <color name="colorDarkGrey">#585858</color>
     <color name="colorDarkWhite">#f7f7f7</color>

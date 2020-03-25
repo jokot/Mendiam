@@ -1,7 +1,7 @@
 package com.example.jokot.mendiam
 
 import android.graphics.Color
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,12 +66,12 @@ class PeopleAdapter(
                     n = 1
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)
                     itemView.btn_follow.setTextColor(Color.parseColor("#ffffff"))
-                    itemView.btn_follow.text = "Following"
+                    itemView.btn_follow.text = itemView.context.getString(R.string.following)
                     break
                 } else {
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
                     itemView.btn_follow.setTextColor(Color.parseColor("#AF0505"))
-                    itemView.btn_follow.text = "Follow"
+                    itemView.btn_follow.text = itemView.context.getString(R.string.follow)
                 }
             }
 
@@ -85,13 +85,13 @@ class PeopleAdapter(
                     n++
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)
                     itemView.btn_follow.setTextColor(Color.parseColor("#ffffff"))
-                    itemView.btn_follow.text = "Following"
+                    itemView.btn_follow.text = itemView.context.getString(R.string.following)
                     clickFollowing(list)
                 } else {
                     n--
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
                     itemView.btn_follow.setTextColor(Color.parseColor("#AF0505"))
-                    itemView.btn_follow.text = "Follow"
+                    itemView.btn_follow.text = itemView.context.getString(R.string.follow)
                     clickUnFollow(list)
                 }
 

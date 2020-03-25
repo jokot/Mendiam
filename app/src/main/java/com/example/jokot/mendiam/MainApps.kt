@@ -151,7 +151,7 @@ class MainApps : Application() {
         editor.apply()
     }
 
-    fun getPref(key: String, type: String,activity: Activity): Any {
+    fun getPref(key: String, type: String,activity: Activity): Any? {
         val pref = activity.getSharedPreferences(sharePref, Context.MODE_PRIVATE)
         return when (type) {
             "s" -> pref.getString(key, "")

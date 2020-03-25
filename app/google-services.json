@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "278088700011-96jqgcj1qbiajq7tk6ru550nq7ahjvbf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jokot.mendiam",
+            "certificate_hash": "7214ecbcb252bdefc76c35e8f0b0f4b653c36b38"
+          }
+        },
+        {
+          "client_id": "278088700011-3mrnh4bo77mlb671113mv2ra0vp2sbaa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jokot.mendiam",
+            "certificate_hash": "0cab44df35067dbb5073cfb6c763f14adadef04f"
+          }
+        },
+        {
           "client_id": "278088700011-tl78er6990ibv40430k7oh98jbdu8lo1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -33,20 +49,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "278088700011-eegpu3gtn795f67cbd2mvs0i0ev28s53.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

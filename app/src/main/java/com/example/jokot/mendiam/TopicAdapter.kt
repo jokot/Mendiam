@@ -1,7 +1,7 @@
 package com.example.jokot.mendiam
 
 import android.graphics.Color
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,12 +34,12 @@ class TopicAdapter(private val clickListener: (String) -> Unit) : RecyclerView.A
 
             follow.setOnClickListener {
                 if (n == 0) {
-                    follow.text = "Following"
+                    follow.text = itemView.context.getString(R.string.following)
                     follow.setBackgroundResource(R.drawable.rectangle_btn_following)
                     follow.setTextColor(Color.parseColor("#ffffff"))
                     n++
                 } else {
-                    follow.text = "Follow"
+                    follow.text = itemView.context.getString(R.string.follow)
                     follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
                     follow.setTextColor(Color.parseColor("#AF0505"))
                     n--

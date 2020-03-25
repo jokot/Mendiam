@@ -406,7 +406,7 @@ class NewStoryActivity : BaseActivity(), View.OnClickListener {
 //        val layoutParent = findViewById<LinearLayout>(R.id.ll_dynamic)
 
         val imageUri: Uri? = data?.data
-        val imageStream: InputStream? = contentResolver.openInputStream(imageUri)
+        val imageStream: InputStream? = imageUri?.let { contentResolver.openInputStream(it) }
         val selectedImage: Bitmap = BitmapFactory.decodeStream(imageStream)
 
         if (focusEdit != R.id.et_judul) {

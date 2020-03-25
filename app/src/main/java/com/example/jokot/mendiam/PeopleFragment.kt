@@ -3,8 +3,8 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +62,12 @@ class PeopleFragment : Fragment() {
             database.child("follower").child(it.id).child(uid).setValue(true)
         })
         rv_people.adapter = peopleAdapter
-        rv_people.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rv_people.layoutManager =
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
     }
 
     private fun initData() {
@@ -86,7 +91,7 @@ class PeopleFragment : Fragment() {
         database.child("following").child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
-                    requireActivity().log(p0.message)
+                    log(p0.message)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -109,7 +114,7 @@ class PeopleFragment : Fragment() {
     private fun getPeople(callbackLoading: CallbackLoading) {
         database.child("user").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-                requireActivity().log(p0.message)
+                log(p0.message)
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {

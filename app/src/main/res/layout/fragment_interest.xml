@@ -8,11 +8,11 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".InterestFragment">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:theme="@style/AppTheme.PopupOverlay">
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 android:background="@color/colorBlack"
                 app:tabTextColor="@color/colorGrey"
@@ -23,25 +23,25 @@
                 app:tabTextAppearance="@style/MyCustomTextAppearance"
                 android:layout_height="match_parent">
 
-            <android.support.design.widget.TabItem
+            <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/topics"/>
 
-            <android.support.design.widget.TabItem
+            <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/people"/>
-        </android.support.design.widget.TabLayout>
+        </com.google.android.material.tabs.TabLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/container">
 
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

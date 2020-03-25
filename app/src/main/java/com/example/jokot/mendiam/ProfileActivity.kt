@@ -5,11 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import android.view.View
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.google.firebase.auth.FirebaseAuth
@@ -385,7 +385,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
     }
 
     inner class SectionPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> {
                     val bundle = Bundle()
@@ -394,15 +394,12 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                     fragment.arguments = bundle
                     fragment
                 }
-                1 -> {
+                else -> {
                     val bundle = Bundle()
                     bundle.putString(main.userId, uid)
                     val fragment = LikedStoryFragment()
                     fragment.arguments = bundle
                     fragment
-                }
-                else -> {
-                    null
                 }
             }
         }

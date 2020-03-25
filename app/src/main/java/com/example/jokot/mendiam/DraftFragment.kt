@@ -3,8 +3,8 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +74,12 @@ class DraftFragment : Fragment() {
         })
 
         rv_draft.adapter = adapter
-        rv_draft.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rv_draft.layoutManager =
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
     }
 
     private fun initData() {

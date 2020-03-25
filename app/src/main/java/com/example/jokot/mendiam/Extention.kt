@@ -8,7 +8,7 @@ fun Context.toast( msg: String, length: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, msg, length).show()
 }
 
-fun Context.log(msg: String?){
+fun log(msg: String){
     Log.d("LOG_D",msg)
 }
 

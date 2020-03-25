@@ -2,8 +2,9 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -104,7 +105,11 @@ class HomeFragment : Fragment() {
         })
 
         rvMain.adapter = adapter
-        rvMain.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rvMain.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
     }
 
     private fun getStory() {
@@ -154,8 +159,8 @@ class HomeFragment : Fragment() {
         uid?.let {
             database.child(main.bookmark).child(it)
                 .addListenerForSingleValueEvent(object : ValueEventListener{
-                    override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d("getBookmarkId",error.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {

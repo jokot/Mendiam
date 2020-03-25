@@ -2,8 +2,9 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.callback.CallbackString
@@ -76,7 +77,12 @@ class FollowActivity : AppCompatActivity() {
             })
 
         rv_follow.adapter = adapter
-        rv_follow.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rv_follow.layoutManager =
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
     }
 
 
@@ -146,8 +152,8 @@ class FollowActivity : AppCompatActivity() {
         for (id in listUserId) {
             database.child(main.user).child(id)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d("getUser",error.message)
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {

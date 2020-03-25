@@ -3,8 +3,8 @@ package com.example.jokot.mendiam
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,7 +81,12 @@ class PublishedFragment : Fragment() {
         })
 
         rv_my_story.adapter = adapter
-        rv_my_story.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rv_my_story.layoutManager =
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
     }
 
     private fun getStories() {
@@ -126,7 +131,7 @@ class PublishedFragment : Fragment() {
                     val sCount = dataSnapshot.child("sCount").getValue(Int::class.java)
                     if (sCount != null) {
                         makeListStoryID(sCount)
-                        activity?.log(sCount.toString())
+                        log(sCount.toString())
                     }
                     callbackLoading.onCallback()
                 }
@@ -138,16 +143,16 @@ class PublishedFragment : Fragment() {
         listStoryId.clear()
         for (count in 1..sCount) {
             listStoryId.add(uid + count.toString())
-            activity?.log(listStoryId[count - 1])
+            log(listStoryId[count - 1])
         }
     }
 
 
     private fun getStory(callbackString: CallbackString) {
         listStory.clear()
-        activity?.log(listStoryId.toString())
+        log(listStoryId.toString())
         for (sid in listStoryId) {
-            activity?.log(sid)
+            log(sid)
             database.child("story").child(sid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
 
