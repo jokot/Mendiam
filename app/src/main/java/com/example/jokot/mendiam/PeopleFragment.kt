@@ -77,7 +77,9 @@ class PeopleFragment : Fragment() {
                 getPeople(object : CallbackLoading {
                     override fun onCallback() {
                         rv_people.visibility = View.VISIBLE
-                        pb_people.visibility = View.GONE
+                        if(pb_people != null){
+                            pb_people.visibility = View.GONE
+                        }
                         sr_people.isRefreshing = false
                     }
                 })

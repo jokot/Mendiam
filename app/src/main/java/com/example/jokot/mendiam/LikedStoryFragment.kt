@@ -123,7 +123,9 @@ class LikedStoryFragment : Fragment() {
                     override fun onCallback(lastId: String) {
                         if (lastId == lastBId) {
                             rv_liked_story.visibility = View.VISIBLE
-                            pb_liked_story.visibility = View.GONE
+                            if(pb_liked_story != null){
+                                pb_liked_story.visibility = View.GONE
+                            }
                             sr_liked_story.isRefreshing = false
                         }
                     }
@@ -132,7 +134,9 @@ class LikedStoryFragment : Fragment() {
                 listStory.clear()
                 adapter.notifyDataSetChanged()
                 rv_liked_story.visibility = View.VISIBLE
-                pb_liked_story.visibility = View.GONE
+                if(pb_liked_story != null){
+                    pb_liked_story.visibility = View.GONE
+                }
                 sr_liked_story.isRefreshing = false
             }
         } catch (e: Exception) {

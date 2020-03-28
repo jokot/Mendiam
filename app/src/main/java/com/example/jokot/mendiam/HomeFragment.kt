@@ -54,7 +54,9 @@ class HomeFragment : Fragment() {
             override fun onCallback() {
                 adapter.notifyDataSetChanged()
                 getStory()
-                pb_home.visibility = View.INVISIBLE
+                if(pb_home != null){
+                    pb_home.visibility = View.GONE
+                }
                 sr_home.isRefreshing = false
                 rvMain.visibility = View.VISIBLE
             }

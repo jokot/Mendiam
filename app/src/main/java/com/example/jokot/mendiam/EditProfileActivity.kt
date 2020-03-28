@@ -126,18 +126,26 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == main.gCode) {
             val uri = data?.data
-            main.showProgressBar(pb_edit)
+            if (pb_edit != null) {
+                main.showProgressBar(pb_edit)
+            }
             uri?.let { it ->
                 main.uploadImage(it, {
-                    main.hideProgressBar(pb_edit)
+                    if (pb_edit != null) {
+                        main.hideProgressBar(pb_edit)
+                    }
                     toast(it)
                 }, {
-                    main.hideProgressBar(pb_edit)
+                    if (pb_edit != null) {
+                        main.hideProgressBar(pb_edit)
+                    }
                     toast(it)
                 }, {
                     urlPic = it
                     iv_edit.setImageURI(uri)
-                    main.hideProgressBar(pb_edit)
+                    if (pb_edit != null) {
+                        main.hideProgressBar(pb_edit)
+                    }
                 })
             }
         }

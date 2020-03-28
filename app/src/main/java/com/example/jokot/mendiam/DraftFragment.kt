@@ -87,7 +87,9 @@ class DraftFragment : Fragment() {
         getDraft(object : CallbackLoading {
             override fun onCallback() {
                 rv_draft.visibility = View.VISIBLE
-                pb_draft.visibility = View.GONE
+                if(pb_draft !=null){
+                    pb_draft.visibility = View.GONE
+                }
                 sr_draft.isRefreshing = false
             }
 

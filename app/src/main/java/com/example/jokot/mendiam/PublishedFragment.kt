@@ -83,7 +83,9 @@ class PublishedFragment : Fragment() {
                 override fun onCallback(lastId: String) {
                     if (lastId == lastSId) {
                         rv_my_story.visibility = View.VISIBLE
-                        pb_my_story.visibility = View.GONE
+                        if(pb_my_story != null){
+                            pb_my_story.visibility = View.GONE
+                        }
                         sr_my_story.isRefreshing = false
                     }
                 }
@@ -92,7 +94,9 @@ class PublishedFragment : Fragment() {
             listStory.clear()
             adapter.notifyDataSetChanged()
             rv_my_story.visibility = View.VISIBLE
-            pb_my_story.visibility = View.GONE
+            if(pb_my_story != null){
+                pb_my_story.visibility = View.GONE
+            }
             sr_my_story.isRefreshing = false
         }
     }

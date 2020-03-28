@@ -185,6 +185,9 @@ class FollowActivity : AppCompatActivity() {
                 override fun onCallback(lastId: String) {
                     if (lastUId == lastId) {
                         rv_follow.visibility = View.VISIBLE
+                        if(pb_follow != null){
+                            pb_follow.visibility = View.GONE
+                        }
                         pb_follow.visibility = View.GONE
                         sr_follow.isRefreshing = false
                     }
@@ -194,7 +197,9 @@ class FollowActivity : AppCompatActivity() {
             listUser.clear()
             adapter.notifyDataSetChanged()
             rv_follow.visibility = View.VISIBLE
-            pb_follow.visibility = View.GONE
+            if(pb_follow != null){
+                pb_follow.visibility = View.GONE
+            }
             sr_follow.isRefreshing = false
         }
     }

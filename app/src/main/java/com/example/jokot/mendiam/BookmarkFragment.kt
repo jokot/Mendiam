@@ -122,7 +122,9 @@ class BookmarkFragment : Fragment() {
                 override fun onCallback(lastId: String) {
                     if (lastId == lastBId) {
                         rv_bookmark.visibility = View.VISIBLE
-                        pb_bookmark.visibility = View.GONE
+                        if(pb_bookmark != null){
+                            pb_bookmark.visibility = View.GONE
+                        }
                         sr_bookmark.isRefreshing = false
                     }
                 }
@@ -131,7 +133,9 @@ class BookmarkFragment : Fragment() {
             listBookmark.clear()
             adapter.notifyDataSetChanged()
             rv_bookmark.visibility = View.VISIBLE
-            pb_bookmark.visibility = View.GONE
+            if(pb_bookmark != null){
+                pb_bookmark.visibility = View.GONE
+            }
             sr_bookmark.isRefreshing = false
         }
     }
