@@ -22,7 +22,7 @@
                 app:tabIndicatorColor="@color/colorWhite"
                 app:tabTextAppearance="@style/MyCustomTextAppearance"
                 android:id="@+id/tl_stories"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
             <com.google.android.material.tabs.TabItem
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"

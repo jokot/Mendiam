@@ -14,7 +14,7 @@
     <string name="following">Following</string>
     <string name="follower">Follower</string>
     <string name="edit">Edit</string>
-    <string name="exit">Exit</string>
+    <string name="sign_out">Sign out</string>
     <string name="like">Likes</string>
     <string name="topics">Topics</string>
     <string name="draft">Draft</string>
@@ -33,7 +33,7 @@
     <string name="back">back</string>
     <string name="add_image">add image</string>
     <string name="more">more</string>
-    <string name="bookmark">bookmark</string>
+    <string name="bookmark">Bookmark</string>
     <string name="share">share</string>
     <string name="search">Search</string>
     <string name="notification">notification</string>

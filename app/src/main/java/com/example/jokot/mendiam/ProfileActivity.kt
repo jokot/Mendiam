@@ -78,7 +78,7 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
                 finish()
             }
             R.id.tv_exit -> {
-                firebaseAuth.signOut()
+                FirebaseAuth.getInstance().signOut()
                 deleteAppDir(this)
                 startActivity(Intent(this, SignInActivity::class.java))
                 finishAffinity()
