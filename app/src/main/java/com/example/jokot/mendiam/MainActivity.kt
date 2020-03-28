@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -128,21 +129,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         val header = navigationView.getHeaderView(0)
                         val headerText = header.findViewById<TextView>(R.id.tv_header_main)
                         val headerImage = header.findViewById<ImageView>(R.id.iv_header)
+                        val headerProgressBar = header.findViewById<ProgressBar>(R.id.pb_header)
                         if (urlPic != "") {
                             Picasso.get().load(urlPic).error(R.drawable.ic_broken_image_24dp)
                                 .into(headerImage, object :
                                     Callback {
                                     override fun onSuccess() {
-                                        pb_header.visibility = View.GONE
+                                        headerProgressBar.visibility = View.GONE
                                     }
 
                                     override fun onError(e: Exception?) {
-                                        pb_header.visibility = View.GONE
+                                        headerProgressBar.visibility = View.GONE
                                     }
 
                                 })
                         } else {
-                            pb_header.visibility = View.GONE
+                            headerProgressBar.visibility = View.GONE
                             headerImage.setImageResource(R.drawable.ic_person_24dp)
                         }
                         headerText.text = name

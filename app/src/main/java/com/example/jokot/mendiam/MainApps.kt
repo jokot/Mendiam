@@ -48,36 +48,8 @@ class MainApps : Application() {
     val user = "user"
     val userName = "userName"
 
-    val gCode = 56412
-
     private val firebaseDatabase = FirebaseDatabase.getInstance().reference
     private val firebaseAuth = FirebaseAuth.getInstance()
-
-    fun showImagePicker(activity: Activity) {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(getString(R.string.take_image_from))
-        builder.setNegativeButton(getString(R.string.camera)) { _, _ ->
-            openCamera()
-        }
-        builder.setPositiveButton(getString(R.string.gallery)) { _, _ ->
-            openGallery(activity)
-        }
-        builder.setNeutralButton(getString(R.string.cancel)) { _, _ ->
-
-        }
-        val alert = builder.create()
-        alert.show()
-    }
-
-    private fun openCamera() {
-
-    }
-
-    private fun openGallery(activity: Activity) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        activity.startActivityForResult(Intent.createChooser(intent, "Select Image"), gCode)
-    }
 
     fun uploadImage(
         file: Uri,

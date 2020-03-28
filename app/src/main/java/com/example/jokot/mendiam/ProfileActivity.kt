@@ -1,7 +1,6 @@
 package com.example.jokot.mendiam
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -79,8 +78,10 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
             }
             R.id.tv_exit -> {
                 FirebaseAuth.getInstance().signOut()
-                deleteAppDir(this)
-                startActivity(Intent(this, SignInActivity::class.java))
+                clearApplicationData()
+//                deleteAppDir()
+//                apps.getInstance().clearApplicationData()
+//                startActivity(Intent(this, SignInActivity::class.java))
                 finishAffinity()
             }
 
@@ -181,9 +182,9 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         }
     }
 
-    private fun deleteAppDir(context: Context) {
+    private fun deleteAppDir() {
         try {
-            val dir = context.cacheDir
+            val dir = this.cacheDir
             log(dir.parent)
             val dirApp = File(dir.parent)
             deleteDir(dirApp)
@@ -399,4 +400,32 @@ class ProfileActivity : BaseActivity(), View.OnClickListener, AppBarLayout.OnOff
         }
     }
 
+    fun clearApplicationData() {
+        val cacheDirectory: File = cacheDir
+        val cacheDirectoryParent = cacheDirectory.parent
+        val applicationDirectory = File(cacheDirectoryParent)
+        if (applicationDirectory.exists()) {
+            val fileNames: Array<String> = applicationDirectory.list()
+            for (fileName in fileNames) {
+                if (fileName != "lib") {
+                    deleteFile(File(applicationDirectory, fileName))
+                }
+            }
+        }
+    }
+
+    fun deleteFile(file: File?): Boolean {
+        var deletedAll = true
+        if (file != null) {
+            if (file.isDirectory) {
+                val children: Array<String> = file.list()
+                for (i in children.indices) {
+                    deletedAll = deleteFile(File(file, children[i])) && deletedAll
+                }
+            } else {
+                deletedAll = file.delete()
+            }
+        }
+        return deletedAll
+    }
 }
