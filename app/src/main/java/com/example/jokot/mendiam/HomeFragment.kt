@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.model.Story
 import com.google.firebase.database.DataSnapshot
@@ -26,11 +27,12 @@ class HomeFragment : Fragment() {
     private var tempStory: MutableList<Story> = mutableListOf()
     private var listBookmarkId: MutableList<String> = mutableListOf()
 
+    private lateinit var rvHome : RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
         initRecycler()
+        initData()
         sr_home.setOnRefreshListener {
             initData()
         }
@@ -46,7 +48,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initData() {
-        rvMain.visibility = View.INVISIBLE
+        rvHome.visibility = View.INVISIBLE
         listStory.clear()
         listBookmarkId.clear()
 
@@ -58,7 +60,7 @@ class HomeFragment : Fragment() {
                     pb_home.visibility = View.GONE
                 }
                 sr_home.isRefreshing = false
-                rvMain.visibility = View.VISIBLE
+                rvHome.visibility = View.VISIBLE
             }
         })
     }
@@ -79,8 +81,9 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         })
 
-        rvMain.adapter = adapter
-        rvMain.layoutManager = LinearLayoutManager(
+        rvHome = requireActivity().findViewById(R.id.rv_home)
+        rvHome.adapter = adapter
+        rvHome.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,
             false

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.model.Story
 import com.google.firebase.database.DataSnapshot
@@ -35,6 +36,7 @@ class DraftFragment : Fragment() {
     private var database = main.database.reference
 
     private var uid = ""
+    private lateinit var rvDraft : RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +50,8 @@ class DraftFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
         initRecycler()
+        initData()
         sr_draft.setOnRefreshListener {
             initData()
         }
@@ -73,8 +75,9 @@ class DraftFragment : Fragment() {
             adapter.notifyDataSetChanged()
         })
 
-        rv_draft.adapter = adapter
-        rv_draft.layoutManager =
+        rvDraft = requireActivity().findViewById(R.id.rv_draft)
+        rvDraft.adapter = adapter
+        rvDraft.layoutManager =
             LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,
@@ -83,10 +86,10 @@ class DraftFragment : Fragment() {
     }
 
     private fun initData() {
-        rv_draft.visibility = View.GONE
+        rvDraft.visibility = View.GONE
         getDraft(object : CallbackLoading {
             override fun onCallback() {
-                rv_draft.visibility = View.VISIBLE
+                rvDraft.visibility = View.VISIBLE
                 if(pb_draft !=null){
                     pb_draft.visibility = View.GONE
                 }

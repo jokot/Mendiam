@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.Story
@@ -29,6 +30,8 @@ class PublishedFragment : Fragment() {
     private var uid = ""
     private val main = MainApps()
 
+    private lateinit var rvMyStory : RecyclerView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,9 +44,8 @@ class PublishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
         initRecycler()
-
+        initData()
         sr_my_story.setOnRefreshListener {
             initData()
         }
@@ -66,8 +68,9 @@ class PublishedFragment : Fragment() {
             adapter.notifyDataSetChanged()
         })
 
-        rv_my_story.adapter = adapter
-        rv_my_story.layoutManager =
+        rvMyStory = requireActivity().findViewById(R.id.rv_my_story)
+        rvMyStory.adapter = adapter
+        rvMyStory.layoutManager =
             LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,
@@ -76,13 +79,13 @@ class PublishedFragment : Fragment() {
     }
 
     private fun getStories() {
-        rv_my_story.visibility = View.GONE
+        rvMyStory.visibility = View.GONE
         if (listStoryId.size != 0) {
             val lastSId = listStoryId[listStoryId.size - 1]
             getStory(object : CallbackString {
                 override fun onCallback(lastId: String) {
                     if (lastId == lastSId) {
-                        rv_my_story.visibility = View.VISIBLE
+                        rvMyStory.visibility = View.VISIBLE
                         if(pb_my_story != null){
                             pb_my_story.visibility = View.GONE
                         }
@@ -93,7 +96,7 @@ class PublishedFragment : Fragment() {
         } else {
             listStory.clear()
             adapter.notifyDataSetChanged()
-            rv_my_story.visibility = View.VISIBLE
+            rvMyStory.visibility = View.VISIBLE
             if(pb_my_story != null){
                 pb_my_story.visibility = View.GONE
             }
@@ -102,7 +105,7 @@ class PublishedFragment : Fragment() {
     }
 
     private fun initData() {
-        rv_my_story.visibility = View.GONE
+        rvMyStory.visibility = View.GONE
         getSCount(object : CallbackLoading {
             override fun onCallback() {
                 getStories()

@@ -22,7 +22,7 @@ class PeopleAdapter(
 
     private val main = MainApps()
 
-    private var n = 0
+    private var following = false
 
     override fun onCreateViewHolder(group: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder(
@@ -62,7 +62,7 @@ class PeopleAdapter(
 
             for (uid in listUserFollowing) {
                 if (uid == list.id) {
-                    n = 1
+                    following = true
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)
                     itemView.btn_follow.setTextColor(Color.parseColor("#ffffff"))
                     itemView.btn_follow.text = itemView.context.getString(R.string.following)
@@ -80,14 +80,14 @@ class PeopleAdapter(
 
             itemView.btn_follow.setOnClickListener {
 
-                if (n == 0) {
-                    n++
+                if (!following) {
+                    following = true
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_following)
                     itemView.btn_follow.setTextColor(Color.parseColor("#ffffff"))
                     itemView.btn_follow.text = itemView.context.getString(R.string.following)
                     clickFollowing(list)
                 } else {
-                    n--
+                    following = false
                     itemView.btn_follow.setBackgroundResource(R.drawable.rectangle_btn_follow)
                     itemView.btn_follow.setTextColor(Color.parseColor("#AF0505"))
                     itemView.btn_follow.text = itemView.context.getString(R.string.follow)

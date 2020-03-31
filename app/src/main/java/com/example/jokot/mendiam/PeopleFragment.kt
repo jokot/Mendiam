@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +31,8 @@ class PeopleFragment : Fragment() {
     private var auth = FirebaseAuth.getInstance()
     private val main = MainApps()
     private var uid = auth.currentUser?.uid.toString()
-
+    
+    private lateinit var rvPeople : RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +44,8 @@ class PeopleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
         initRecycler()
+        initData()
         sr_people.setOnRefreshListener {
             initData()
         }
@@ -61,8 +63,10 @@ class PeopleFragment : Fragment() {
             database.child("following").child(uid).child(it.id).setValue(true)
             database.child("follower").child(it.id).child(uid).setValue(true)
         })
-        rv_people.adapter = peopleAdapter
-        rv_people.layoutManager =
+
+        rvPeople = requireActivity().findViewById(R.id.rv_people)
+        rvPeople.adapter = peopleAdapter
+        rvPeople.layoutManager =
             LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,
@@ -71,12 +75,12 @@ class PeopleFragment : Fragment() {
     }
 
     private fun initData() {
-        rv_people.visibility = View.GONE
+        rvPeople.visibility = View.GONE
         getFollowingId(object : CallbackLoading {
             override fun onCallback() {
                 getPeople(object : CallbackLoading {
                     override fun onCallback() {
-                        rv_people.visibility = View.VISIBLE
+                        rvPeople.visibility = View.VISIBLE
                         if(pb_people != null){
                             pb_people.visibility = View.GONE
                         }
@@ -136,7 +140,7 @@ class PeopleFragment : Fragment() {
                 listUser.clear()
                 listUser.addAll(temp)
                 peopleAdapter.notifyDataSetChanged()
-                rv_people.visibility = View.VISIBLE
+                rvPeople.visibility = View.VISIBLE
                 sr_people.isRefreshing = false
                 callbackLoading.onCallback()
             }

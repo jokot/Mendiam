@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_topic.*
 
 
 class TopicFragment : Fragment() {
     lateinit var topicAdapter: TopicAdapter
+    private lateinit var rvTopic : RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,8 +35,9 @@ class TopicFragment : Fragment() {
             requireActivity().toast("Coming soon")
         }
 
-        rv_topic.adapter = topicAdapter
-        rv_topic.layoutManager =
+        rvTopic = requireActivity().findViewById(R.id.rv_topic)
+        rvTopic.adapter = topicAdapter
+        rvTopic.layoutManager =
             LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,

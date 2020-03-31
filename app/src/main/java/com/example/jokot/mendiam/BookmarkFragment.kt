@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.Story
@@ -38,6 +39,7 @@ class BookmarkFragment : Fragment() {
     private val main = MainApps()
     private var database = main.database.reference
     private val uid = main.uid
+    private lateinit var rvBookmark: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +51,8 @@ class BookmarkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
         initRecycle()
+        initData()
         sr_bookmark.setOnRefreshListener {
             initData()
         }
@@ -71,8 +73,10 @@ class BookmarkFragment : Fragment() {
             startActivity(intent)
         })
 
-        rv_bookmark.adapter = adapter
-        rv_bookmark.layoutManager =
+        rvBookmark =  requireActivity().findViewById(R.id.rv_bookmark)
+
+        rvBookmark.adapter = adapter
+        rvBookmark.layoutManager =
             LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,
@@ -82,7 +86,7 @@ class BookmarkFragment : Fragment() {
     }
 
     private fun initData() {
-        rv_bookmark.visibility = View.GONE
+        rvBookmark.visibility = View.GONE
         getBookmarkId(object : CallbackLoading {
             override fun onCallback() {
                 getBookmarks()
@@ -115,13 +119,13 @@ class BookmarkFragment : Fragment() {
 
     private fun getBookmarks() {
         adapter.notifyDataSetChanged()
-        rv_bookmark.visibility = View.GONE
+        rvBookmark.visibility = View.GONE
         if (listBookmarkId.size != 0) {
             val lastBId = listBookmarkId[listBookmarkId.size - 1]
             getBookmark(object : CallbackString {
                 override fun onCallback(lastId: String) {
                     if (lastId == lastBId) {
-                        rv_bookmark.visibility = View.VISIBLE
+                        rvBookmark.visibility = View.VISIBLE
                         if(pb_bookmark != null){
                             pb_bookmark.visibility = View.GONE
                         }
@@ -132,7 +136,7 @@ class BookmarkFragment : Fragment() {
         } else {
             listBookmark.clear()
             adapter.notifyDataSetChanged()
-            rv_bookmark.visibility = View.VISIBLE
+            rvBookmark.visibility = View.VISIBLE
             if(pb_bookmark != null){
                 pb_bookmark.visibility = View.GONE
             }
@@ -173,6 +177,7 @@ class BookmarkFragment : Fragment() {
                                 database.child(main.bookmark).child(it).child(sid).removeValue()
                             }
                         }
+//                        rvBookmark.recycledViewPool.clear()
                         adapter.notifyDataSetChanged()
                         callbackString.onCallback(sid)
                     }

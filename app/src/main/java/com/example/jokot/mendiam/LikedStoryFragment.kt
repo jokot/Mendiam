@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jokot.mendiam.callback.CallbackLoading
 import com.example.jokot.mendiam.callback.CallbackString
 import com.example.jokot.mendiam.model.Story
@@ -31,6 +32,7 @@ class LikedStoryFragment : Fragment() {
     private var database = main.database.reference
     private val myUid = main.getUId()
     private var uid = ""
+    private lateinit var rvLikedStory : RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,8 +45,8 @@ class LikedStoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
         initRecycle()
+        initData()
         sr_liked_story.setOnRefreshListener {
             initData()
         }
@@ -67,8 +69,9 @@ class LikedStoryFragment : Fragment() {
             startActivity(intent)
         })
 
-        rv_liked_story.adapter = adapter
-        rv_liked_story.layoutManager =
+        rvLikedStory = requireActivity().findViewById(R.id.rv_liked_story)
+        rvLikedStory.adapter = adapter
+        rvLikedStory.layoutManager =
             LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,
@@ -78,7 +81,7 @@ class LikedStoryFragment : Fragment() {
     }
 
     private fun initData() {
-        rv_liked_story.visibility = View.GONE
+        rvLikedStory.visibility = View.GONE
         getBookmarkId(object : CallbackLoading {
             override fun onCallback() {
                 getLikedStoryId(object : CallbackLoading {
@@ -116,13 +119,13 @@ class LikedStoryFragment : Fragment() {
     private fun getStories() {
         try {
             adapter.notifyDataSetChanged()
-            rv_liked_story.visibility = View.GONE
+            rvLikedStory.visibility = View.GONE
             if (listLikedStoryId.size != 0) {
                 val lastBId = listLikedStoryId[listLikedStoryId.size - 1]
                 getStory(object : CallbackString {
                     override fun onCallback(lastId: String) {
                         if (lastId == lastBId) {
-                            rv_liked_story.visibility = View.VISIBLE
+                            rvLikedStory.visibility = View.VISIBLE
                             if(pb_liked_story != null){
                                 pb_liked_story.visibility = View.GONE
                             }
@@ -133,7 +136,7 @@ class LikedStoryFragment : Fragment() {
             } else {
                 listStory.clear()
                 adapter.notifyDataSetChanged()
-                rv_liked_story.visibility = View.VISIBLE
+                rvLikedStory.visibility = View.VISIBLE
                 if(pb_liked_story != null){
                     pb_liked_story.visibility = View.GONE
                 }
